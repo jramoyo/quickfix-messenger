@@ -335,22 +335,33 @@ public class QFixDictionaryParser implements FixDictionaryParser
 			throws FixParsingException
 	{
 		String groupName = groupElement.getAttributeValue("name");
-		Element firstTagElement = groupElement.getChild("field");
-		String firstTagName = null;
-		if (firstTagElement != null)
-		{
-			firstTagName = firstTagElement.getAttributeValue("name");
-		}
 
 		Field field = dictionary.getFields().get(groupName);
 		Map<Member, Boolean> members = parseMembers(dictionary, groupElement);
-		Field firstTag = null;
-		if (!StringUtil.isNullOrEmpty(firstTagName))
+
+		Member firstMember = null;
+		Element firstChildElement = (Element) groupElement.getChildren().get(0);
+		if (firstChildElement.getName().equals("field"))
 		{
-			firstTag = dictionary.getFields().get(firstTagName);
+			String firstFieldName = firstChildElement.getAttributeValue("name");
+			if (!StringUtil.isNullOrEmpty(firstFieldName))
+			{
+				firstMember = dictionary.getFields().get(firstFieldName);
+			}
 		}
 
-		return new Group(field, members, firstTag);
+		else if (firstChildElement.getName().equals("component"))
+		{
+			String firstComponentName = firstChildElement
+					.getAttributeValue("name");
+			if (!StringUtil.isNullOrEmpty(firstComponentName))
+			{
+				firstMember = dictionary.getComponents()
+						.get(firstComponentName);
+			}
+		}
+
+		return new Group(field, members, firstMember);
 	}
 
 	private void parseHeader(FixDictionary dictionary, Element headerElement)

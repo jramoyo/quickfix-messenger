@@ -47,9 +47,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import quickfix.ConfigError;
+import quickfix.Connector;
 import quickfix.DefaultMessageFactory;
 import quickfix.FileStoreFactory;
-import quickfix.Initiator;
 import quickfix.LogFactory;
 import quickfix.MessageFactory;
 import quickfix.MessageStoreFactory;
@@ -57,6 +57,7 @@ import quickfix.ScreenLogFactory;
 import quickfix.Session;
 import quickfix.SessionID;
 import quickfix.SessionSettings;
+import quickfix.SocketAcceptor;
 import quickfix.SocketInitiator;
 
 import com.jramoyo.fix.model.parser.FixDictionaryParser;
@@ -80,8 +81,8 @@ public class QFixMessenger
 	private final FixDictionaryParser parser;
 
 	private final QFixMessengerApplication application;
-	private final Initiator initiator;
-	private final AtomicBoolean initiatorStarted;
+	private final Connector connector;
+	private final AtomicBoolean connectorStarted;
 
 	private QFixMessenger(String configFileName, SessionSettings settings)
 			throws ConfigError, IOException
@@ -100,10 +101,17 @@ public class QFixMessenger
 		LogFactory logFactory = new ScreenLogFactory(true, true, true, true);
 		MessageFactory messageFactory = new DefaultMessageFactory();
 
-		initiator = new SocketInitiator(application, messageStoreFactory,
-				settings, logFactory, messageFactory);
+		if (config.isInitiator())
+		{
+			connector = new SocketInitiator(application, messageStoreFactory,
+					settings, logFactory, messageFactory);
+		} else
+		{
+			connector = new SocketAcceptor(application, messageStoreFactory,
+					settings, logFactory, messageFactory);
+		}
 
-		initiatorStarted = new AtomicBoolean(false);
+		connectorStarted = new AtomicBoolean(false);
 	}
 
 	public static void main(String[] args) throws Exception
@@ -172,7 +180,7 @@ public class QFixMessenger
 	public void exit()
 	{
 		logout();
-		initiator.stop();
+		connector.stop();
 		shutdownLatch.countDown();
 	}
 
@@ -186,9 +194,9 @@ public class QFixMessenger
 		return config;
 	}
 
-	public Initiator getInitiator()
+	public Connector getConnector()
 	{
-		return initiator;
+		return connector;
 	}
 
 	public FixDictionaryParser getParser()
@@ -198,19 +206,19 @@ public class QFixMessenger
 
 	public void logon()
 	{
-		if (!initiatorStarted.get())
+		if (!connectorStarted.get())
 		{
 			try
 			{
-				initiator.start();
-				initiatorStarted.getAndSet(true);
+				connector.start();
+				connectorStarted.getAndSet(true);
 			} catch (Exception ex)
 			{
 				logger.error("Logon failed!", ex);
 			}
 		} else
 		{
-			Iterator<SessionID> sessionIds = initiator.getSessions().iterator();
+			Iterator<SessionID> sessionIds = connector.getSessions().iterator();
 			while (sessionIds.hasNext())
 			{
 				SessionID sessionId = (SessionID) sessionIds.next();
@@ -221,7 +229,7 @@ public class QFixMessenger
 
 	public void logout()
 	{
-		Iterator<SessionID> sessionIds = initiator.getSessions().iterator();
+		Iterator<SessionID> sessionIds = connector.getSessions().iterator();
 		while (sessionIds.hasNext())
 		{
 			SessionID sessionId = (SessionID) sessionIds.next();

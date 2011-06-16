@@ -67,7 +67,7 @@ public class SessionStatusActionListener implements ActionListener
 		panel.setLayout(new GridLayout(7, 1));
 
 		JLabel versionLabel = new JLabel(
-				"<html><b>Version:</b> <i><font color='blue'>"
+				"<html><b>FIX Version:</b> <i><font color='blue'>"
 						+ session.getSessionID().getBeginString()
 						+ "</font></i></html>");
 

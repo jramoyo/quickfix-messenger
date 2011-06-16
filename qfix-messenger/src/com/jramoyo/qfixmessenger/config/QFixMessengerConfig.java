@@ -45,10 +45,13 @@ import com.jramoyo.qfixmessenger.QFixMessengerConstants;
  */
 public class QFixMessengerConfig
 {
+	private static final String IS_INITIATOR_PROP = "messenger.isInitiator";
 	private static final String PARSER_THREADS_PROP = "messenger.parser.threads";
 	private static final String LICENSE_PROP = "messenger.license";
+	private static final String ICON_APP_PROP = "messenger.icon.app";
 	private static final String ICON_SEND_PROP = "messenger.icon.send";
 	private static final String HOME_URL_PROP = "messenger.home.url";
+	private static final String HELP_URL_PROP = "messenger.help.url";
 
 	private static final String DICT_FIX40_PROP = "messenger.dict.fix40";
 	private static final String DICT_FIX41_PROP = "messenger.dict.fix41";
@@ -141,6 +144,18 @@ public class QFixMessengerConfig
 		return properties.getProperty(DICT_FIXT11_PROP, "resources/FIXT11.xml");
 	}
 
+	public boolean isInitiator()
+	{
+		return Boolean.valueOf(
+				properties.getProperty(IS_INITIATOR_PROP, "true"))
+				.booleanValue();
+	}
+
+	public String getAppIconLocation()
+	{
+		return properties.getProperty(ICON_APP_PROP, "icons/app.png");
+	}
+
 	public String getSendIconLocation()
 	{
 		return properties.getProperty(ICON_SEND_PROP, "icons/send.png");
@@ -155,6 +170,12 @@ public class QFixMessengerConfig
 	{
 		return properties.getProperty(HOME_URL_PROP,
 				"https://code.google.com/p/quickfix-messenger/");
+	}
+
+	public String getHelpURL()
+	{
+		return properties.getProperty(HELP_URL_PROP,
+				"http://code.google.com/p/quickfix-messenger/wiki/Index");
 	}
 
 	public int getNoOfParserThreads()

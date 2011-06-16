@@ -73,7 +73,7 @@ public final class Component extends AbstractMember
 		return Collections.unmodifiableMap(members);
 	}
 
-	public Field getFirstTag()
+	public Field getFirstField()
 	{
 		return firstTag;
 	}

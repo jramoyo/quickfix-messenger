@@ -45,26 +45,26 @@ import java.util.TreeMap;
 public final class Group extends AbstractMember
 {
 	private final Field field;
-	private final Field firstTag;
+	private final Member firstMember;
 	private final SortedMap<Member, Boolean> members;
 
-	public Group(Field field, Map<Member, Boolean> members, Field firstTag)
+	public Group(Field field, Map<Member, Boolean> members, Member firstMember)
 	{
 		this.field = field;
 		this.members = new TreeMap<Member, Boolean>(members);
-		this.firstTag = firstTag;
+		this.firstMember = firstMember;
 	}
 
 	public Group(Group group)
 	{
 		this.field = group.field;
 		this.members = new TreeMap<Member, Boolean>(group.members);
-		this.firstTag = group.firstTag;
+		this.firstMember = group.firstMember;
 	}
 
-	public Field getFirstTag()
+	public Member getFirstMember()
 	{
-		return firstTag;
+		return firstMember;
 	}
 
 	public Map<Member, Boolean> getMembers()
@@ -87,7 +87,7 @@ public final class Group extends AbstractMember
 	public String toString()
 	{
 		return new StringBuilder(field.getName()).append("(").append(
-				field.getNumber()).append(")").append("[Group]").toString();
+				field.getNumber()).append(")").append(" [GROUP]").toString();
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public final class Group extends AbstractMember
 		int result = 1;
 		result = prime * result + ((field == null) ? 0 : field.hashCode());
 		result = prime * result
-				+ ((firstTag == null) ? 0 : firstTag.hashCode());
+				+ ((firstMember == null) ? 0 : firstMember.hashCode());
 		result = prime * result + ((members == null) ? 0 : members.hashCode());
 		return result;
 	}
@@ -118,11 +118,11 @@ public final class Group extends AbstractMember
 				return false;
 		} else if (!field.equals(other.field))
 			return false;
-		if (firstTag == null)
+		if (firstMember == null)
 		{
-			if (other.firstTag != null)
+			if (other.firstMember != null)
 				return false;
-		} else if (!firstTag.equals(other.firstTag))
+		} else if (!firstMember.equals(other.firstMember))
 			return false;
 		if (members == null)
 		{

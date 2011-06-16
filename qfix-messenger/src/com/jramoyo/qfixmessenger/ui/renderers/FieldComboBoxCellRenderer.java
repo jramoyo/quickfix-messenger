@@ -39,6 +39,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 
 import com.jramoyo.fix.model.FieldValue;
+import com.jramoyo.qfixmessenger.util.StringUtil;
 
 /**
  * @author jamoyo
@@ -55,7 +56,17 @@ public class FieldComboBoxCellRenderer extends DefaultListCellRenderer
 				index, isSelected, cellHasFocus);
 
 		FieldValue fieldValue = (FieldValue) value;
-		label.setText(fieldValue.getDescription());
+
+		if (!StringUtil.isNullOrEmpty(fieldValue.getEnumValue())
+				&& !StringUtil.isNullOrEmpty(fieldValue.getDescription()))
+		{
+			label.setText("<html><font color='gray'>["
+					+ fieldValue.getEnumValue() + "]</font> "
+					+ fieldValue.getDescription() + "</html>");
+		} else
+		{
+			label.setText("");
+		}
 
 		return label;
 	}

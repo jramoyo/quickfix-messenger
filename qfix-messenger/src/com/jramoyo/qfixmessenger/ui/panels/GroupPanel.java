@@ -52,7 +52,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.border.EtchedBorder;
 
 import quickfix.StringField;
 
@@ -116,8 +115,20 @@ public class GroupPanel extends AbstractMemberPanel
 
 		for (List<MemberPanel> groupMembers : groups)
 		{
-			quickfix.Group qfixGroup = new quickfix.Group(group.getNumber(),
-					group.getFirstTag().getNumber());
+			quickfix.Group qfixGroup;
+			Member firstMember = group.getFirstMember();
+			if (firstMember instanceof Component)
+			{
+				Component firstComponent = (Component) firstMember;
+				Field firstField = firstComponent.getFirstField();
+				qfixGroup = new quickfix.Group(group.getNumber(), firstField
+						.getNumber());
+			} else
+			{
+				Field firstField = (Field) firstMember;
+				qfixGroup = new quickfix.Group(group.getNumber(), firstField
+						.getNumber());
+			}
 
 			for (MemberPanel memberPanel : groupMembers)
 			{
@@ -191,6 +202,7 @@ public class GroupPanel extends AbstractMemberPanel
 		groupLabel = new JLabel(group.toString());
 		groupLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		groupLabel.addMouseListener(new LinkMouseAdapter(this));
+		groupLabel.setToolTipText("Double-click to look-up in FIXwiki");
 		if (isRequired)
 		{
 			groupLabel.setForeground(Color.BLUE);
@@ -262,8 +274,6 @@ public class GroupPanel extends AbstractMemberPanel
 					c.weightx = 0.5;
 					c.weighty = 0.0;
 
-					groupPanel.setBorder(new EtchedBorder());
-
 					JLabel groupLabel = new JLabel("Group #" + (i + 1));
 					groupLabel.setFont(new Font(groupLabel.getFont().getName(),
 							Font.BOLD, groupLabel.getFont().getSize()));
@@ -273,20 +283,41 @@ public class GroupPanel extends AbstractMemberPanel
 					groupPanel.add(groupLabel, c);
 					rows++;
 
-					Field firstTag = group.getFirstTag();
-					if (firstTag != null)
+					Member firstMember = group.getFirstMember();
+					if (firstMember != null)
 					{
-						FieldPanel fieldPanel = new FieldPanel(firstTag, true);
+						if (firstMember instanceof Field)
+						{
+							FieldPanel fieldPanel = new FieldPanel(
+									(Field) firstMember, true);
 
-						fieldPanel.setMaximumSize(new Dimension(
-								getPreferredSize().width, fieldPanel
-										.getPreferredSize().height));
+							fieldPanel.setMaximumSize(new Dimension(
+									getPreferredSize().width, fieldPanel
+											.getPreferredSize().height));
 
-						c.gridx = 0;
-						c.gridy = rows;
-						groupPanel.add(fieldPanel, c);
-						groupMembers.add(fieldPanel);
-						rows++;
+							c.gridx = 0;
+							c.gridy = rows;
+							groupPanel.add(fieldPanel, c);
+							groupMembers.add(fieldPanel);
+							rows++;
+						}
+
+						else if (firstMember instanceof Component)
+						{
+							ComponentPanel componentPanel = new ComponentPanel(
+									(Component) firstMember, isRequiredOnly,
+									true);
+
+							componentPanel.setMaximumSize(new Dimension(
+									getPreferredSize().width, componentPanel
+											.getPreferredSize().height));
+
+							c.gridx = 0;
+							c.gridy = rows;
+							groupPanel.add(componentPanel, c);
+							groupMembers.add(componentPanel);
+							rows++;
+						}
 					}
 
 					for (Entry<Member, Boolean> entry : group.getMembers()
@@ -300,7 +331,7 @@ public class GroupPanel extends AbstractMemberPanel
 						if (entry.getKey() instanceof Field)
 						{
 							Field field = (Field) entry.getKey();
-							if (!field.equals(firstTag))
+							if (!field.equals(firstMember))
 							{
 								FieldPanel fieldPanel = new FieldPanel(field,
 										entry.getValue());
@@ -337,18 +368,24 @@ public class GroupPanel extends AbstractMemberPanel
 						if (entry.getKey() instanceof Component)
 						{
 							Component component = (Component) entry.getKey();
-							ComponentPanel componentPanel = new ComponentPanel(
-									component, isRequiredOnly, entry.getValue());
+							if (!component.equals(firstMember))
+							{
+								ComponentPanel componentPanel = new ComponentPanel(
+										component, isRequiredOnly, entry
+												.getValue());
 
-							componentPanel.setMaximumSize(new Dimension(
-									getPreferredSize().width, componentPanel
-											.getPreferredSize().height));
+								componentPanel
+										.setMaximumSize(new Dimension(
+												getPreferredSize().width,
+												componentPanel
+														.getPreferredSize().height));
 
-							c.gridx = 0;
-							c.gridy = rows;
-							groupPanel.add(componentPanel, c);
-							groupMembers.add(componentPanel);
-							rows++;
+								c.gridx = 0;
+								c.gridy = rows;
+								groupPanel.add(componentPanel, c);
+								groupMembers.add(componentPanel);
+								rows++;
+							}
 						}
 					}
 

@@ -108,7 +108,7 @@ public final class Field extends AbstractMember
 	public String toString()
 	{
 		return new StringBuilder(name).append(" (").append(number).append(")")
-				.toString();
+				.append(" [").append(type.name()).append("]").toString();
 	}
 
 	@Override

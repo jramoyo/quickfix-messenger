@@ -45,7 +45,7 @@ import java.util.Map.Entry;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
 
 import quickfix.StringField;
 
@@ -172,6 +172,7 @@ public class ComponentPanel extends AbstractMemberPanel
 		componentLabel
 				.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		componentLabel.addMouseListener(new LinkMouseAdapter(this));
+		componentLabel.setToolTipText("Double-click to look-up in FIXwiki");
 		if (isRequired)
 		{
 			componentLabel.setForeground(Color.BLUE);
@@ -181,7 +182,13 @@ public class ComponentPanel extends AbstractMemberPanel
 				Font.BOLD, 15));
 
 		membersPanel = new JPanel();
-		membersPanel.setBorder(new EtchedBorder());
+		if (isRequired)
+		{
+			membersPanel.setBorder(new LineBorder(Color.BLUE));
+		} else
+		{
+			membersPanel.setBorder(new LineBorder(Color.BLACK));
+		}
 		loadMembers();
 
 		add(componentLabel, BorderLayout.NORTH);
@@ -198,7 +205,7 @@ public class ComponentPanel extends AbstractMemberPanel
 		c.weightx = 0.5;
 		c.weighty = 0.0;
 
-		Field firstTag = component.getFirstTag();
+		Field firstTag = component.getFirstField();
 		if (firstTag != null)
 		{
 			FieldPanel fieldPanel = MemberPanelFactory.createFieldPanel(
@@ -207,7 +214,7 @@ public class ComponentPanel extends AbstractMemberPanel
 					fieldPanel.getPreferredSize().height));
 
 			c.gridx = 0;
-			c.gridy = index;
+			c.gridy = index++;
 			membersPanel.add(fieldPanel, c);
 			members.add(fieldPanel);
 		}
@@ -232,7 +239,7 @@ public class ComponentPanel extends AbstractMemberPanel
 									.getPreferredSize().height));
 
 					c.gridx = 0;
-					c.gridy = index;
+					c.gridy = index++;
 					membersPanel.add(fieldPanel, c);
 					members.add(fieldPanel);
 				}
@@ -249,7 +256,7 @@ public class ComponentPanel extends AbstractMemberPanel
 						groupPanel.getPreferredSize().height));
 
 				c.gridx = 0;
-				c.gridy = index;
+				c.gridy = index++;
 				membersPanel.add(groupPanel, c);
 				members.add(groupPanel);
 			}
@@ -267,7 +274,7 @@ public class ComponentPanel extends AbstractMemberPanel
 								.getPreferredSize().height));
 
 				c.gridx = 0;
-				c.gridy = index;
+				c.gridy = index++;
 				membersPanel.add(componentPanel, c);
 				members.add(componentPanel);
 			}

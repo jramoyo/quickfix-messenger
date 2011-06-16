@@ -33,6 +33,7 @@
 package com.jramoyo.qfixmessenger.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -79,6 +80,7 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -88,6 +90,7 @@ import org.slf4j.LoggerFactory;
 
 import quickfix.Session;
 import quickfix.SessionID;
+import quickfix.StringField;
 import quickfix.field.ApplVerID;
 
 import com.jramoyo.fix.model.Component;
@@ -96,12 +99,14 @@ import com.jramoyo.fix.model.FixDictionary;
 import com.jramoyo.fix.model.Group;
 import com.jramoyo.fix.model.Member;
 import com.jramoyo.fix.model.Message;
+import com.jramoyo.fix.model.parser.FixDictionaryParser;
 import com.jramoyo.fix.model.parser.FixParsingException;
 import com.jramoyo.qfixmessenger.QFixMessenger;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 import com.jramoyo.qfixmessenger.quickfix.QFixMessageListener;
 import com.jramoyo.qfixmessenger.quickfix.util.QFixUtil;
 import com.jramoyo.qfixmessenger.ui.listeners.AboutActionListener;
+import com.jramoyo.qfixmessenger.ui.listeners.HelpActionListener;
 import com.jramoyo.qfixmessenger.ui.listeners.LogonSessionItemListener;
 import com.jramoyo.qfixmessenger.ui.listeners.LogonSessionMenuItemSessionStateListener;
 import com.jramoyo.qfixmessenger.ui.listeners.ResetSessionActionListener;
@@ -130,6 +135,8 @@ public class QFixMessengerFrame extends JFrame
 	private static final Logger logger = LoggerFactory
 			.getLogger(QFixMessengerFrame.class);
 
+	private static final String VERSION = "1.0";
+
 	private static final int LEFT_PANEL_WIDTH = 170;
 
 	private static final int MIDDLE_PANEL_WIDTH = 600;
@@ -137,6 +144,9 @@ public class QFixMessengerFrame extends JFrame
 	private final JPanel blankPanel = new JPanel();
 
 	private final QFixMessenger messenger;
+
+	// This will no longer suffice once we have other FIXT versions
+	private final FixDictionary fixTDictionary;
 
 	private volatile FixDictionary activeDictionary;
 
@@ -147,6 +157,8 @@ public class QFixMessengerFrame extends JFrame
 	private volatile boolean isModifyHeader;
 
 	private volatile boolean isModifyTrailer;
+
+	private volatile boolean isFixTSession;
 
 	private JMenuBar menuBar;
 
@@ -203,17 +215,46 @@ public class QFixMessengerFrame extends JFrame
 
 		this.trailerMembers = new ArrayList<MemberPanel>();
 		this.prevTrailerMembers = new ArrayList<MemberPanel>();
+
+		FixDictionaryParser parser = messenger.getParser();
+		String fixTDictionaryFile = messenger.getConfig()
+				.getFixT11DictionaryLocation();
+
+		FixDictionary dictionary = null;
+		try
+		{
+			dictionary = parser.parse(fixTDictionaryFile);
+		} catch (FixParsingException ex)
+		{
+			logger.error("Unable to parse FIXT 1.1 Dictionary!", ex);
+		}
+
+		fixTDictionary = dictionary;
 	}
 
 	public void launch()
 	{
-		setTitle("QuickFIX Messenger");
+		setIconImage(new ImageIcon(messenger.getConfig().getAppIconLocation())
+				.getImage());
+
+		if (messenger.getConfig().isInitiator())
+		{
+			setTitle("QuickFIX Messenger " + VERSION + " (Initiator)");
+		} else
+		{
+			setTitle("QuickFIX Messenger " + VERSION + " (Acceptor)");
+		}
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new FrameWindowAdapter(this));
 
 		initComponents();
 
 		setVisible(true);
+	}
+
+	public QFixMessenger getMessenger()
+	{
+		return messenger;
 	}
 
 	private void exit()
@@ -280,6 +321,11 @@ public class QFixMessengerFrame extends JFrame
 		aboutMenuItem.setMnemonic('A');
 		aboutMenuItem.addActionListener(new AboutActionListener(this));
 
+		JMenuItem helpMenuItem = new JMenuItem("Help");
+		helpMenuItem.setMnemonic('H');
+		helpMenuItem.addActionListener(new HelpActionListener(this));
+
+		helpMenu.add(helpMenuItem);
 		helpMenu.add(aboutMenuItem);
 	}
 
@@ -457,6 +503,7 @@ public class QFixMessengerFrame extends JFrame
 		ImageIcon scaledImageIcon = new ImageIcon(scaledImg);
 		sendButton = new JButton(scaledImageIcon);
 		sendButton.addActionListener(new SendActionListener(this));
+		sendButton.setToolTipText("Click to send the FIX message");
 
 		sendPanel.add(sendButton);
 
@@ -474,7 +521,7 @@ public class QFixMessengerFrame extends JFrame
 		JCheckBoxMenuItem logonMenuItem;
 		JMenuItem resetMenuItem;
 		JMenuItem statusMenuItem;
-		for (SessionID sessionId : messenger.getInitiator().getSessions())
+		for (SessionID sessionId : messenger.getConnector().getSessions())
 		{
 			Session session = Session.lookupSession(sessionId);
 			currentSessionMenu = new JMenu(QFixUtil.getSessionName(sessionId));
@@ -521,7 +568,7 @@ public class QFixMessengerFrame extends JFrame
 	{
 		sessionsList = new JList();
 
-		List<SessionID> sessionIds = messenger.getInitiator().getSessions();
+		List<SessionID> sessionIds = messenger.getConnector().getSessions();
 		List<Session> sessions = new ArrayList<Session>(sessionIds.size());
 		for (SessionID sessionId : sessionIds)
 		{
@@ -579,25 +626,37 @@ public class QFixMessengerFrame extends JFrame
 							BoxLayout.Y_AXIS));
 
 					TitledBorder headerBorder = new TitledBorder(
-							"Message Header");
+							new LineBorder(Color.BLACK), "Message Header");
 					headerBorder.setTitleFont(new Font(headerBorder
 							.getTitleFont().getName(), Font.BOLD, 15));
 					headerPanel.setBorder(headerBorder);
 
-					for (Entry<Member, Boolean> entry : activeDictionary
-							.getHeader().getMembers().entrySet())
+					if (!isFixTSession)
 					{
-						loadMember(headerPanel, headerMembers, entry);
+						for (Entry<Member, Boolean> entry : activeDictionary
+								.getHeader().getMembers().entrySet())
+						{
+							loadMember(headerPanel, headerMembers, entry);
+						}
+					} else
+					{
+						for (Entry<Member, Boolean> entry : fixTDictionary
+								.getHeader().getMembers().entrySet())
+						{
+							loadMember(headerPanel, headerMembers, entry);
+						}
 					}
 
 					mainPanel.add(headerPanel);
+					mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 				}
 
 				// Load the body
 				JPanel bodyPanel = new JPanel();
 				bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.Y_AXIS));
 
-				TitledBorder bodyBorder = new TitledBorder("Message Body");
+				TitledBorder bodyBorder = new TitledBorder(new LineBorder(
+						Color.BLACK), "Message Body");
 				bodyBorder.setTitleFont(new Font(bodyBorder.getTitleFont()
 						.getName(), Font.BOLD, 15));
 				bodyPanel.setBorder(bodyBorder);
@@ -618,17 +677,28 @@ public class QFixMessengerFrame extends JFrame
 							BoxLayout.Y_AXIS));
 
 					TitledBorder trailerBorder = new TitledBorder(
-							"Message Trailer");
+							new LineBorder(Color.BLACK), "Message Trailer");
 					trailerBorder.setTitleFont(new Font(trailerBorder
 							.getTitleFont().getName(), Font.BOLD, 15));
 					trailerPanel.setBorder(trailerBorder);
 
-					for (Entry<Member, Boolean> entry : activeDictionary
-							.getTrailer().getMembers().entrySet())
+					if (!isFixTSession)
 					{
-						loadMember(trailerPanel, headerMembers, entry);
+						for (Entry<Member, Boolean> entry : activeDictionary
+								.getTrailer().getMembers().entrySet())
+						{
+							loadMember(trailerPanel, headerMembers, entry);
+						}
+					} else
+					{
+						for (Entry<Member, Boolean> entry : fixTDictionary
+								.getTrailer().getMembers().entrySet())
+						{
+							loadMember(trailerPanel, headerMembers, entry);
+						}
 					}
 
+					mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 					mainPanel.add(trailerPanel);
 				}
 
@@ -690,11 +760,6 @@ public class QFixMessengerFrame extends JFrame
 			mainPanel.add(componentPanel);
 			memberList.add(componentPanel);
 		}
-	}
-
-	public QFixMessenger getMessenger()
-	{
-		return messenger;
 	}
 
 	private void loadMessagesList()
@@ -958,93 +1023,42 @@ public class QFixMessengerFrame extends JFrame
 			Session session = (Session) frame.sessionsList.getSelectedValue();
 			if (session.isLoggedOn())
 			{
-				quickfix.Message message = session.getMessageFactory().create(
-						session.getSessionID().getBeginString(),
-						frame.activeMessage.getMsgType());
-
-				if (session.getSessionID().getBeginString().equals(
-						QFixMessengerConstants.BEGIN_STRING_FIXT11))
+				if (frame.activeMessage != null)
 				{
-					String appVersion = (String) frame.appVersionsComboBox
-							.getSelectedItem();
+					/*
+					 * Note: As mentioned in the QuickFIX/J documentation, the
+					 * below method is not the ideal way of constructing
+					 * messages in QuickFIX. However, this method is necessary
+					 * given the use case.
+					 */
+					quickfix.Message message = session.getMessageFactory()
+							.create(session.getSessionID().getBeginString(),
+									frame.activeMessage.getMsgType());
 
-					ApplVerID applVerID = new ApplVerID(
-							QFixMessengerConstants.APPVER_ID_MAP
-									.get(appVersion));
-					message.getHeader().setField(applVerID);
-				}
-
-				if (frame.isModifyHeader)
-				{
-					synchronized (frame.headerMembers)
+					// For FIXT 1.1 sessions, add the ApplVerID field (1128)
+					if (frame.isFixTSession)
 					{
-						for (MemberPanel memberPanel : frame.headerMembers)
-						{
-							if (memberPanel instanceof FieldPanel)
-							{
-								FieldPanel fieldPanel = (FieldPanel) memberPanel;
-								if (fieldPanel.getQuickFixField() != null)
-								{
-									message.getHeader().setField(
-											fieldPanel.getQuickFixField());
-								}
-							}
-						}
-					}
-				}
+						String appVersion = (String) frame.appVersionsComboBox
+								.getSelectedItem();
 
-				synchronized (frame.bodyMembers)
-				{
-					for (MemberPanel memberPanel : frame.bodyMembers)
-					{
-						if (memberPanel instanceof FieldPanel)
-						{
-							FieldPanel fieldPanel = (FieldPanel) memberPanel;
-							if (fieldPanel.getQuickFixField() != null)
-							{
-								message.setField(fieldPanel.getQuickFixField());
-							}
-						}
-
-						if (memberPanel instanceof GroupPanel)
-						{
-							GroupPanel groupPanel = (GroupPanel) memberPanel;
-							for (quickfix.Group group : groupPanel
-									.getQuickFixGroups())
-							{
-								message.addGroup(group);
-							}
-						}
-
-						if (memberPanel instanceof ComponentPanel)
-						{
-							ComponentPanel componentPanel = (ComponentPanel) memberPanel;
-							for (quickfix.StringField field : componentPanel
-									.getQuickFixFields())
-							{
-								message.setField(field);
-							}
-
-							for (quickfix.Group group : componentPanel
-									.getQuickFixGroups())
-							{
-								message.addGroup(group);
-							}
-						}
+						ApplVerID applVerID = new ApplVerID(
+								QFixMessengerConstants.APPVER_ID_MAP
+										.get(appVersion));
+						message.getHeader().setField(applVerID);
 					}
 
-					if (frame.isModifyTrailer)
+					if (frame.isModifyHeader)
 					{
-						synchronized (frame.trailerMembers)
+						synchronized (frame.headerMembers)
 						{
-							for (MemberPanel memberPanel : frame.trailerMembers)
+							for (MemberPanel memberPanel : frame.headerMembers)
 							{
 								if (memberPanel instanceof FieldPanel)
 								{
 									FieldPanel fieldPanel = (FieldPanel) memberPanel;
 									if (fieldPanel.getQuickFixField() != null)
 									{
-										message.getTrailer().setField(
+										message.getHeader().setField(
 												fieldPanel.getQuickFixField());
 									}
 								}
@@ -1052,13 +1066,81 @@ public class QFixMessengerFrame extends JFrame
 						}
 					}
 
-					logger.info("Sending message " + message.toString());
-					session.send(message);
+					synchronized (frame.bodyMembers)
+					{
+						for (MemberPanel memberPanel : frame.bodyMembers)
+						{
+							if (memberPanel instanceof FieldPanel)
+							{
+								FieldPanel fieldPanel = (FieldPanel) memberPanel;
+								if (fieldPanel.getQuickFixField() != null)
+								{
+									message.setField(fieldPanel
+											.getQuickFixField());
+								}
+							}
+
+							if (memberPanel instanceof GroupPanel)
+							{
+								GroupPanel groupPanel = (GroupPanel) memberPanel;
+								for (quickfix.Group group : groupPanel
+										.getQuickFixGroups())
+								{
+									message.addGroup(group);
+								}
+							}
+
+							if (memberPanel instanceof ComponentPanel)
+							{
+								ComponentPanel componentPanel = (ComponentPanel) memberPanel;
+								for (quickfix.StringField field : componentPanel
+										.getQuickFixFields())
+								{
+									message.setField(field);
+								}
+
+								for (quickfix.Group group : componentPanel
+										.getQuickFixGroups())
+								{
+									message.addGroup(group);
+								}
+							}
+						}
+
+						if (frame.isModifyTrailer)
+						{
+							synchronized (frame.trailerMembers)
+							{
+								for (MemberPanel memberPanel : frame.trailerMembers)
+								{
+									if (memberPanel instanceof FieldPanel)
+									{
+										FieldPanel fieldPanel = (FieldPanel) memberPanel;
+										if (fieldPanel.getQuickFixField() != null)
+										{
+											StringField field = fieldPanel
+													.getQuickFixField();
+											message.getTrailer()
+													.setField(field);
+										}
+									}
+								}
+							}
+						}
+
+						logger.info("Sending message " + message.toString());
+						session.send(message);
+					}
+				} else
+				{
+					JOptionPane.showMessageDialog(frame,
+							"Please select a message!", "Error",
+							JOptionPane.WARNING_MESSAGE);
 				}
 			} else
 			{
-				JOptionPane.showMessageDialog(frame, session.getSessionID()
-						.getBeginString()
+				JOptionPane.showMessageDialog(frame, QFixUtil
+						.getSessionName(session.getSessionID())
 						+ " is not logged on!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
@@ -1153,9 +1235,11 @@ public class QFixMessengerFrame extends JFrame
 				{
 					frame.appVersionsComboBox.setEnabled(true);
 					frame.activeDictionary = null;
+					frame.isFixTSession = true;
 				} else
 				{
 					frame.appVersionsComboBox.setEnabled(false);
+					frame.isFixTSession = false;
 
 					try
 					{

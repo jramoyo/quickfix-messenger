@@ -68,6 +68,7 @@ public class MessagesListCellRenderer extends DefaultListCellRenderer
 		if (isSelected)
 		{
 			label.setBackground(Color.LIGHT_GRAY);
+			label.setToolTipText("Double-click to look-up in FIXwiki");
 		}
 
 		return label;

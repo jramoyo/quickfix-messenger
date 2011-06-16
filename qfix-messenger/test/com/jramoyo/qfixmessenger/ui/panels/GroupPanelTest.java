@@ -127,4 +127,54 @@ public class GroupPanelTest extends MemberPanelTestCase
 			Thread.currentThread().interrupt();
 		}
 	}
+
+	public void testGroupWithComponentFirst()
+	{
+		CountDownLatch latch = new CountDownLatch(1);
+
+		Map<Member, Boolean> members = new HashMap<Member, Boolean>();
+		Field field1 = new Field(101, "VanillaField1", FieldType.STRING, null);
+		Field field2 = new Field(102, "VanillaField2", FieldType.STRING, null);
+		Field field3 = new Field(103, "VanillaField3", FieldType.STRING, null);
+		Field field4 = new Field(104, "VanillaField4", FieldType.STRING, null);
+
+		Map<Member, Boolean> componentMembers = new HashMap<Member, Boolean>();
+		Field compField1 = new Field(101, "ComponentField1", FieldType.STRING,
+				null);
+		Field compField2 = new Field(102, "ComponentField2", FieldType.STRING,
+				null);
+		Field compField3 = new Field(103, "ComponentField3", FieldType.STRING,
+				null);
+		Field compField4 = new Field(104, "ComponentField4", FieldType.STRING,
+				null);
+
+		componentMembers.put(compField1, Boolean.TRUE);
+		componentMembers.put(compField2, Boolean.TRUE);
+		componentMembers.put(compField3, Boolean.FALSE);
+		componentMembers.put(compField4, Boolean.FALSE);
+
+		Component component = new Component("Component1", componentMembers,
+				compField1);
+
+		members.put(component, Boolean.TRUE);
+		members.put(field1, Boolean.TRUE);
+		members.put(field2, Boolean.TRUE);
+		members.put(field3, Boolean.FALSE);
+		members.put(field4, Boolean.FALSE);
+
+		Field groupField = new Field(100, "GroupField", FieldType.STRING, null);
+
+		Group group = new Group(groupField, members, component);
+
+		GroupPanel groupPanel = new GroupPanel(group, false, false);
+		showInFrame(groupPanel, latch);
+
+		try
+		{
+			latch.await();
+		} catch (InterruptedException ex)
+		{
+			Thread.currentThread().interrupt();
+		}
+	}
 }

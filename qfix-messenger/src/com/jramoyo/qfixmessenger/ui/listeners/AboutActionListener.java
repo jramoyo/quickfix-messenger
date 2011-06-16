@@ -94,7 +94,7 @@ public class AboutActionListener implements ActionListener
 				.getMessenger().getConfig().getHomeURL()));
 		webpageLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-		JLabel licenseLabel = new JLabel("<html>License</html>");
+		JLabel licenseLabel = new JLabel("<html><b>License</b></html>");
 
 		JTextArea licenseText = new JTextArea(readLicenseFile(), 15, 60);
 		licenseText.setWrapStyleWord(true);

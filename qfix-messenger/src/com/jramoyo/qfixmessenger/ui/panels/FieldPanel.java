@@ -167,6 +167,7 @@ public class FieldPanel extends AbstractMemberPanel
 		fieldLabel = new JLabel(field.toString());
 		fieldLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		fieldLabel.addMouseListener(new LinkMouseAdapter(this));
+		fieldLabel.setToolTipText("Double-click to look-up in FIXwiki");
 		if (isRequired)
 		{
 			fieldLabel.setForeground(Color.BLUE);
