@@ -56,7 +56,7 @@
 			<fileset dir="${resources.dir}" includes="*.*" />
 		</copy>
 		<copy todir="${deploy.dir}/cfg">
-			<fileset dir="${cfg.dir}" includes="*.*" />
+			<fileset dir="${cfg.dir}" includes="**/*" />
 		</copy>
 		<copy todir="${deploy.dir}/icons">
 			<fileset dir="${icons.dir}" includes="*.*" />
