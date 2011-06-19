@@ -25,10 +25,10 @@
  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF 
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
- * DAMAGE. 
- * 
- * ResetSessionMIActionListener.java
- * 6 Jun 2011
+ * DAMAGE.
+ *
+ * ResetAllSessionsActionListener.java
+ * 17 Jun 2011
  */
 package com.jramoyo.qfixmessenger.ui.listeners;
 
@@ -42,44 +42,49 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import quickfix.Session;
+import quickfix.SessionID;
 
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 
 /**
+ * 
  * @author jamoyo
  */
-public class ResetSessionActionListener implements ActionListener
+public class ResetAllSessionsActionListener implements ActionListener
 {
 	private static final Logger logger = LoggerFactory
-			.getLogger(ResetSessionActionListener.class);
+			.getLogger(ResetAllSessionsActionListener.class);
 
 	private QFixMessengerFrame frame;
 
-	private Session session;
-
-	public ResetSessionActionListener(QFixMessengerFrame frame, Session session)
+	public ResetAllSessionsActionListener(QFixMessengerFrame frame)
 	{
 		this.frame = frame;
-		this.session = session;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		try
+		int choice = JOptionPane.showConfirmDialog(frame,
+				"Are you sure you want to reset all sessions?", "Confirm",
+				JOptionPane.YES_NO_OPTION);
+		if (choice == JOptionPane.YES_OPTION)
 		{
-			int choice = JOptionPane.showConfirmDialog(frame,
-					"Are you sure you want to reset the sequence numbers?",
-					"Confirm", JOptionPane.YES_NO_OPTION);
-			if (choice == JOptionPane.YES_OPTION)
+			for (SessionID sessionId : frame.getMessenger().getConnector()
+					.getSessions())
 			{
-				session.reset();
+				try
+				{
+					Session session = Session.lookupSession(sessionId);
+					session.reset();
+				} catch (IOException ex)
+				{
+					logger.error("An IOException occurred!", ex);
+					JOptionPane.showMessageDialog(frame,
+							"An exception occured: " + ex, "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
-		} catch (IOException ex)
-		{
-			logger.error("An IOException occurred!", ex);
-			JOptionPane.showMessageDialog(frame, "An exception occured: " + ex,
-					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

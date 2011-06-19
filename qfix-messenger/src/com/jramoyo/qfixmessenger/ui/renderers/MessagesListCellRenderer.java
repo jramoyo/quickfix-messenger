@@ -57,12 +57,19 @@ public class MessagesListCellRenderer extends DefaultListCellRenderer
 				index, isSelected, cellHasFocus);
 
 		Message message = (Message) value;
-		if (message.getCategory().equals(MessageCategory.admin))
+		if (message.getCategory() != null)
 		{
-			label.setForeground(Color.GRAY);
+			if (message.getCategory().equals(MessageCategory.admin))
+			{
+				label.setForeground(Color.GRAY);
+			} else
+			{
+				label.setForeground(Color.BLUE);
+			}
 		} else
 		{
-			label.setForeground(Color.BLUE);
+			label.setText("<html><b><font color = '#669900'>" + label.getText()
+					+ "</font><b></html>");
 		}
 
 		if (isSelected)

@@ -25,61 +25,52 @@
  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF 
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
- * DAMAGE. 
- * 
- * ResetSessionMIActionListener.java
- * 6 Jun 2011
+ * DAMAGE.
+ *
+ * LogoffAllSessionsActionListener.java
+ * 17 Jun 2011
  */
 package com.jramoyo.qfixmessenger.ui.listeners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import quickfix.Session;
+import quickfix.SessionID;
 
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 
 /**
  * @author jamoyo
  */
-public class ResetSessionActionListener implements ActionListener
+public class LogoffAllSessionsActionListener implements ActionListener
 {
-	private static final Logger logger = LoggerFactory
-			.getLogger(ResetSessionActionListener.class);
-
 	private QFixMessengerFrame frame;
 
-	private Session session;
-
-	public ResetSessionActionListener(QFixMessengerFrame frame, Session session)
+	public LogoffAllSessionsActionListener(QFixMessengerFrame frame)
 	{
 		this.frame = frame;
-		this.session = session;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		try
+		int choice = JOptionPane.showConfirmDialog(frame,
+				"Are you sure you want to logoff all sessions?", "Confirm",
+				JOptionPane.YES_NO_OPTION);
+		if (choice == JOptionPane.YES_OPTION)
 		{
-			int choice = JOptionPane.showConfirmDialog(frame,
-					"Are you sure you want to reset the sequence numbers?",
-					"Confirm", JOptionPane.YES_NO_OPTION);
-			if (choice == JOptionPane.YES_OPTION)
+			for (SessionID sessionId : frame.getMessenger().getConnector()
+					.getSessions())
 			{
-				session.reset();
+				Session session = Session.lookupSession(sessionId);
+				if (session.isLoggedOn())
+				{
+					session.logout();
+				}
 			}
-		} catch (IOException ex)
-		{
-			logger.error("An IOException occurred!", ex);
-			JOptionPane.showMessageDialog(frame, "An exception occured: " + ex,
-					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

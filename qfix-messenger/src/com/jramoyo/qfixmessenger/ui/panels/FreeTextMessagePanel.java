@@ -25,61 +25,60 @@
  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF 
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
- * DAMAGE. 
- * 
- * ResetSessionMIActionListener.java
- * 6 Jun 2011
+ * DAMAGE.
+ *
+ * FreeTextMessagePanel.java
+ * 17 Jun 2011
  */
-package com.jramoyo.qfixmessenger.ui.listeners;
+package com.jramoyo.qfixmessenger.ui.panels;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 
-import javax.swing.JOptionPane;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import quickfix.Session;
-
-import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
 /**
  * @author jamoyo
  */
-public class ResetSessionActionListener implements ActionListener
+public class FreeTextMessagePanel extends JPanel
 {
-	private static final Logger logger = LoggerFactory
-			.getLogger(ResetSessionActionListener.class);
+	private static final long serialVersionUID = -7614167852761624847L;
 
-	private QFixMessengerFrame frame;
+	private JTextArea messageTextArea;
 
-	private Session session;
-
-	public ResetSessionActionListener(QFixMessengerFrame frame, Session session)
+	public FreeTextMessagePanel()
 	{
-		this.frame = frame;
-		this.session = session;
+		initComponents();
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e)
+	public String getFixString()
 	{
-		try
-		{
-			int choice = JOptionPane.showConfirmDialog(frame,
-					"Are you sure you want to reset the sequence numbers?",
-					"Confirm", JOptionPane.YES_NO_OPTION);
-			if (choice == JOptionPane.YES_OPTION)
-			{
-				session.reset();
-			}
-		} catch (IOException ex)
-		{
-			logger.error("An IOException occurred!", ex);
-			JOptionPane.showMessageDialog(frame, "An exception occured: " + ex,
-					"Error", JOptionPane.ERROR_MESSAGE);
-		}
+		return messageTextArea.getText();
 	}
+
+	private void initComponents()
+	{
+		setLayout(new BorderLayout());
+
+		TitledBorder trailerBorder = new TitledBorder(new LineBorder(
+				Color.BLACK), "Free Text");
+		trailerBorder.setTitleFont(new Font(trailerBorder.getTitleFont()
+				.getName(), Font.BOLD, 15));
+		setBorder(trailerBorder);
+
+		messageTextArea = new JTextArea(5, 60);
+		messageTextArea.setLineWrap(true);
+
+		JScrollPane messageTextScrollPane = new JScrollPane(messageTextArea);
+		messageTextScrollPane.setBorder(new EtchedBorder());
+
+		add(messageTextScrollPane, BorderLayout.NORTH);
+	}
+
 }

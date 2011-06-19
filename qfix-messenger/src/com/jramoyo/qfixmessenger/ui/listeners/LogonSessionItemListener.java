@@ -54,7 +54,7 @@ public class LogonSessionItemListener implements ItemListener
 	{
 		if (event.getStateChange() == ItemEvent.SELECTED)
 		{
-			if (!session.isLoggedOn())
+			if (!session.isLoggedOn() && !session.isLogonAlreadySent())
 			{
 				session.logon();
 			}
