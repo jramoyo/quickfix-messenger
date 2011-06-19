@@ -70,9 +70,9 @@ public class QFixMessengerConstants
 		APPVER_ID_MAP = Collections.unmodifiableMap(appVerIDMap);
 	}
 
-	// TODO Currently, QuickFIX only supports FIX 5.0 on FIXT.1.1 sessions
-	public static final String[] FIXT_APP_VERSIONS =
-	{ BEGIN_STRING_FIX50 };
+	public static final String[] FIXT_APP_VERSIONS = { BEGIN_STRING_FIX40,
+			BEGIN_STRING_FIX41, BEGIN_STRING_FIX42, BEGIN_STRING_FIX43,
+			BEGIN_STRING_FIX44, BEGIN_STRING_FIX50 };
 
 	// TODO Find a way to be configurable
 	public static final String FIX_WIKI_URL = "http://fixwiki.org/fixwiki/";
