@@ -7,6 +7,7 @@ echo ************************************
 set CLASSPATH=cfg\acceptor
 set CLASSPATH=%CLASSPATH%;lib\qfix-messenger.jar
 set CLASSPATH=%CLASSPATH%;lib\jdom.jar
+set CLASSPATH=%CLASSPATH%;lib\lipstikLF-1.1.jar
 set CLASSPATH=%CLASSPATH%;lib\log4j-1.2.16.jar
 set CLASSPATH=%CLASSPATH%;lib\mina-core-1.1.7.jar
 set CLASSPATH=%CLASSPATH%;lib\quickfixj-core-SNAPSHOT.jar

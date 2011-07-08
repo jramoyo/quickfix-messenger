@@ -87,7 +87,8 @@ public class QFixDictionaryParser implements FixDictionaryParser
 	/**
 	 * Creates a new QFixDictionaryParser
 	 * 
-	 * @param noOfThreads the number of parser threads to use
+	 * @param noOfThreads
+	 *            the number of parser threads to use
 	 */
 	public QFixDictionaryParser(int noOfThreads)
 	{
@@ -118,20 +119,16 @@ public class QFixDictionaryParser implements FixDictionaryParser
 			dictionary = new FixDictionary(type, majorVersion, minorVersion);
 
 			// Parse the field definitions
-			if (logger.isDebugEnabled())
-			{
-				logger.debug("Parsing field definitions...");
-			}
+			logger.debug("Parsing field definitions...");
+
 			Element fieldsElement = root.getChild("fields");
 			@SuppressWarnings("unchecked")
 			List<Element> fieldElements = fieldsElement.getChildren("field");
 			parseFields(dictionary, fieldElements);
 
 			// Parse the component definitions
-			if (logger.isDebugEnabled())
-			{
-				logger.debug("Parsing component definitions...");
-			}
+			logger.debug("Parsing component definitions...");
+
 			Element componentsElement = root.getChild("components");
 			if (componentsElement != null)
 			{
@@ -142,10 +139,8 @@ public class QFixDictionaryParser implements FixDictionaryParser
 			}
 
 			// Parse the message definitions
-			if (logger.isDebugEnabled())
-			{
-				logger.debug("Parsing message definitions...");
-			}
+			logger.debug("Parsing message definitions...");
+
 			Element messagesElement = root.getChild("messages");
 			@SuppressWarnings("unchecked")
 			List<Element> messageElements = messagesElement
@@ -153,18 +148,14 @@ public class QFixDictionaryParser implements FixDictionaryParser
 			parseMessages(dictionary, messageElements);
 
 			// Parse the header definition
-			if (logger.isDebugEnabled())
-			{
-				logger.debug("Parsing header definition...");
-			}
+			logger.debug("Parsing header definition...");
+
 			Element headerElement = root.getChild("header");
 			parseHeader(dictionary, headerElement);
 
 			// Parse the trailer definition
-			if (logger.isDebugEnabled())
-			{
-				logger.debug("Parsing trailer definition...");
-			}
+			logger.debug("Parsing trailer definition...");
+
 			Element trailerElement = root.getChild("trailer");
 			parseTrailer(dictionary, trailerElement);
 		} catch (FileNotFoundException ex)
@@ -191,10 +182,7 @@ public class QFixDictionaryParser implements FixDictionaryParser
 			Element componentElement) throws FixParsingException
 	{
 		String name = componentElement.getAttributeValue("name");
-		if (logger.isTraceEnabled())
-		{
-			logger.trace("Parsing component " + name);
-		}
+		logger.trace("Parsing component " + name);
 
 		Element firstTagElement = componentElement.getChild("field");
 		String firstTagName = null;
@@ -246,10 +234,7 @@ public class QFixDictionaryParser implements FixDictionaryParser
 		int number = Integer.parseInt(fieldElement.getAttributeValue("number"));
 		String name = fieldElement.getAttributeValue("name");
 
-		if (logger.isTraceEnabled())
-		{
-			logger.trace("Parsing field " + name);
-		}
+		logger.trace("Parsing field " + name);
 
 		FieldType type;
 		try
@@ -302,22 +287,15 @@ public class QFixDictionaryParser implements FixDictionaryParser
 					Field field = parseField(fieldElement);
 					dictionary.getFields().put(field.getName(), field);
 					latch.countDown();
-					if (logger.isTraceEnabled())
-					{
-						logger.trace("Completed parsing " + field
-								+ ". Remaining field tasks: "
-								+ latch.getCount());
-					}
+					logger.trace("Completed parsing " + field
+							+ ". Remaining field tasks: " + latch.getCount());
 				}
 			});
 		}
 
 		try
 		{
-			if (logger.isDebugEnabled())
-			{
-				logger.debug("Awaiting field parsing tasks to complete...");
-			}
+			logger.debug("Awaiting field parsing tasks to complete...");
 			latch.await();
 		} catch (InterruptedException ex)
 		{
@@ -441,10 +419,7 @@ public class QFixDictionaryParser implements FixDictionaryParser
 			Element messageElement) throws FixParsingException
 	{
 		String name = messageElement.getAttributeValue("name");
-		if (logger.isTraceEnabled())
-		{
-			logger.trace("Parsing message " + name);
-		}
+		logger.trace("Parsing message " + name);
 
 		String msgType = messageElement.getAttributeValue("msgtype");
 		MessageCategory category = MessageCategory.valueOf(messageElement
@@ -475,12 +450,9 @@ public class QFixDictionaryParser implements FixDictionaryParser
 					Message message = parseMessage(dictionary, messageElement);
 					dictionary.getMessages().put(message.getName(), message);
 					latch.countDown();
-					if (logger.isTraceEnabled())
-					{
-						logger.trace("Completed parsing " + message
-								+ ". Remaining message tasks: "
-								+ latch.getCount());
-					}
+
+					logger.trace("Completed parsing " + message
+							+ ". Remaining message tasks: " + latch.getCount());
 
 					return null;
 				}
@@ -490,10 +462,8 @@ public class QFixDictionaryParser implements FixDictionaryParser
 
 		try
 		{
-			if (logger.isDebugEnabled())
-			{
-				logger.debug("Awaiting messages parsing tasks to complete...");
-			}
+			logger.debug("Awaiting messages parsing tasks to complete...");
+
 			latch.await();
 			for (Future<Void> result : results)
 			{

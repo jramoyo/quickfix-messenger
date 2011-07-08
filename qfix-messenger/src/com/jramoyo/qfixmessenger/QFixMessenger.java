@@ -49,11 +49,11 @@ import org.slf4j.LoggerFactory;
 import quickfix.ConfigError;
 import quickfix.Connector;
 import quickfix.DefaultMessageFactory;
+import quickfix.FileLogFactory;
 import quickfix.FileStoreFactory;
 import quickfix.LogFactory;
 import quickfix.MessageFactory;
 import quickfix.MessageStoreFactory;
-import quickfix.ScreenLogFactory;
 import quickfix.Session;
 import quickfix.SessionID;
 import quickfix.SessionSettings;
@@ -98,7 +98,7 @@ public class QFixMessenger
 
 		// Initialise the factories
 		MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
-		LogFactory logFactory = new ScreenLogFactory(true, true, true, true);
+		LogFactory logFactory = new FileLogFactory(settings);
 		MessageFactory messageFactory = new DefaultMessageFactory();
 
 		if (config.isInitiator())
@@ -116,9 +116,19 @@ public class QFixMessenger
 
 	public static void main(String[] args) throws Exception
 	{
+		// Set the UI look and feel
 		try
 		{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			String useSystemLookAndFeelProperty = System
+					.getProperty("useSystemLAF");
+			if (Boolean.valueOf(useSystemLookAndFeelProperty))
+			{
+				UIManager.setLookAndFeel(UIManager
+						.getSystemLookAndFeelClassName());
+			} else
+			{
+				UIManager.setLookAndFeel("com.lipstikLF.LipstikLookAndFeel");
+			}
 		} catch (Exception ex)
 		{
 			logger.warn(ex.getMessage(), ex);

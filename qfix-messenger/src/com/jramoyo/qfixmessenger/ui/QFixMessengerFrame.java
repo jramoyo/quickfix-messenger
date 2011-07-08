@@ -58,6 +58,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -143,7 +145,7 @@ public class QFixMessengerFrame extends JFrame
 	private static final Logger logger = LoggerFactory
 			.getLogger(QFixMessengerFrame.class);
 
-	private static final String VERSION = "1.1";
+	private static final String VERSION = "1.2";
 
 	private static final int LEFT_PANEL_WIDTH = 170;
 
@@ -158,6 +160,8 @@ public class QFixMessengerFrame extends JFrame
 
 	// This will no longer suffice once we have other FIXT versions
 	private final FixDictionary fixTDictionary;
+
+	private final ReadWriteLock contentLock;
 
 	private volatile FixDictionary activeDictionary;
 
@@ -243,6 +247,8 @@ public class QFixMessengerFrame extends JFrame
 		}
 
 		fixTDictionary = dictionary;
+
+		contentLock = new ReentrantReadWriteLock();
 	}
 
 	public void launch()
@@ -633,8 +639,10 @@ public class QFixMessengerFrame extends JFrame
 
 	private void loadMainPanel()
 	{
-		synchronized (bodyMembers)
+		try
 		{
+			contentLock.writeLock().lock();
+
 			prevHeaderMembers.clear();
 			prevHeaderMembers.addAll(bodyMembers);
 
@@ -769,6 +777,9 @@ public class QFixMessengerFrame extends JFrame
 
 				mainPanelScrollPane.getViewport().add(blankPanel);
 			}
+		} finally
+		{
+			contentLock.writeLock().unlock();
 		}
 	}
 
@@ -1159,8 +1170,10 @@ public class QFixMessengerFrame extends JFrame
 				}
 			}
 
-			synchronized (frame.bodyMembers)
+			try
 			{
+				frame.contentLock.readLock().lock();
+
 				for (MemberPanel memberPanel : frame.bodyMembers)
 				{
 					if (memberPanel instanceof FieldPanel)
@@ -1218,6 +1231,9 @@ public class QFixMessengerFrame extends JFrame
 						}
 					}
 				}
+			} finally
+			{
+				frame.contentLock.readLock().unlock();
 			}
 
 			return message;

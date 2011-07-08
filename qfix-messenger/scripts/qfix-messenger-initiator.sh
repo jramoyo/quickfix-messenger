@@ -3,6 +3,7 @@
 CLASSPATH=cfg/initiator
 CLASSPATH=$CLASSPATH:lib/qfix-messenger.jar
 CLASSPATH=$CLASSPATH:lib/jdom.jar
+CLASSPATH=$CLASSPATH:lib/lipstikLF-1.1.jar
 CLASSPATH=$CLASSPATH:lib/log4j-1.2.16.jar
 CLASSPATH=$CLASSPATH:lib/mina-core-1.1.7.jar
 CLASSPATH=$CLASSPATH:lib/quickfixj-core-SNAPSHOT.jar
