@@ -145,7 +145,7 @@ public class QFixMessengerFrame extends JFrame
 	private static final Logger logger = LoggerFactory
 			.getLogger(QFixMessengerFrame.class);
 
-	private static final String VERSION = "1.2";
+	private static final String VERSION = "1.3";
 
 	private static final int LEFT_PANEL_WIDTH = 170;
 
@@ -175,6 +175,8 @@ public class QFixMessengerFrame extends JFrame
 
 	private volatile boolean isFixTSession;
 
+	private volatile boolean isPreviewBeforeSend;
+
 	private JMenuBar menuBar;
 
 	private JMenu sessionMenu;
@@ -200,6 +202,8 @@ public class QFixMessengerFrame extends JFrame
 	private JCheckBox modifyHeaderCheckBox;
 
 	private JCheckBox modifyTrailerCheckBox;
+
+	private JCheckBox previewBeforeSendCheckBox;
 
 	private JButton sendButton;
 
@@ -511,8 +515,36 @@ public class QFixMessengerFrame extends JFrame
 		optionsPanel.add(modifyTrailerCheckBox);
 
 		JPanel sendPanel = new JPanel();
-		sendPanel.setBorder(new EtchedBorder());
-		sendPanel.setLayout(new BorderLayout());
+		sendPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 0.5;
+		c.weighty = 0.0;
+		c.ipadx = 2;
+		c.ipady = 2;
+
+		previewBeforeSendCheckBox = new JCheckBox("Preview Before Sending",
+				false);
+		previewBeforeSendCheckBox.addItemListener(new ItemListener()
+		{
+			@Override
+			public void itemStateChanged(ItemEvent e)
+			{
+				if (e.getStateChange() == ItemEvent.SELECTED)
+				{
+					isPreviewBeforeSend = true;
+				} else
+				{
+					isPreviewBeforeSend = false;
+				}
+
+				if (logger.isDebugEnabled())
+				{
+					logger.debug("Selected isPreviewBeforeSend = "
+							+ isPreviewBeforeSend);
+				}
+			}
+		});
 
 		ImageIcon imageIcon = new ImageIcon(messenger.getConfig()
 				.getSendIconLocation());
@@ -524,7 +556,13 @@ public class QFixMessengerFrame extends JFrame
 		sendButton.addActionListener(new SendActionListener(this));
 		sendButton.setToolTipText("Click to send the FIX message");
 
-		sendPanel.add(sendButton);
+		c.gridx = 0;
+		c.gridy = 0;
+		sendPanel.add(previewBeforeSendCheckBox, c);
+
+		c.gridx = 0;
+		c.gridy = 1;
+		sendPanel.add(sendButton, c);
 
 		rightPanel.add(optionsPanel, BorderLayout.NORTH);
 		rightPanel.add(sendPanel, BorderLayout.SOUTH);
@@ -1111,8 +1149,25 @@ public class QFixMessengerFrame extends JFrame
 
 					if (message != null)
 					{
-						logger.info("Sending message " + message.toString());
-						session.send(message);
+						if (frame.isPreviewBeforeSend)
+						{
+							int choice = JOptionPane.showConfirmDialog(frame,
+									message.toString(), "Send FIX Message?",
+									JOptionPane.YES_NO_OPTION,
+									JOptionPane.QUESTION_MESSAGE);
+							if (choice == JOptionPane.YES_OPTION)
+							{
+								logger.info("Sending message "
+										+ message.toString());
+								session.send(message);
+							}
+						} else
+						{
+							logger
+									.info("Sending message "
+											+ message.toString());
+							session.send(message);
+						}
 					}
 				} else
 				{
