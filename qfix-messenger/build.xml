@@ -2,6 +2,8 @@
 <project name="qfix-messenger" default="clean.deploy" basedir=".">
 
 	<property file="./build.properties" />
+	<property environment="env" />
+	<property name="java6.bootclasspath" value="${env.JAVA6_BOOTCLASSPATH}" />
 
 	<path id="lib.classpath">
 		<fileset id="lib.fileset" dir="${lib.dir}">
@@ -36,7 +38,7 @@
 	</target>
 
 	<target name="build" depends="build.message">
-		<javac source="${java.source.version}" srcdir="${src.dir}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
+		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" bootclasspath="${env.JAVA6_BOOTCLASSPATH}" srcdir="${src.dir}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
 			<classpath refid="lib.classpath" />
 		</javac>
 	</target>
