@@ -82,6 +82,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -593,9 +594,8 @@ public class QFixMessengerFrame extends JFrame
 			{
 				logonMenuItem.setSelected(false);
 			}
-			session
-					.addStateListener(new LogonSessionMenuItemSessionStateListener(
-							logonMenuItem));
+			session.addStateListener(new LogonSessionMenuItemSessionStateListener(
+					logonMenuItem));
 
 			resetMenuItem = new JMenuItem("Reset");
 			resetMenuItem.addActionListener(new ResetSessionActionListener(
@@ -662,8 +662,8 @@ public class QFixMessengerFrame extends JFrame
 			@Override
 			public int compare(Session o1, Session o2)
 			{
-				return o1.getSessionID().getBeginString().compareTo(
-						o2.getSessionID().getBeginString());
+				return o1.getSessionID().getBeginString()
+						.compareTo(o2.getSessionID().getBeginString());
 			}
 		});
 
@@ -744,8 +744,14 @@ public class QFixMessengerFrame extends JFrame
 
 					TitledBorder bodyBorder = new TitledBorder(new LineBorder(
 							Color.BLACK), "Message Body");
-					bodyBorder.setTitleFont(new Font(bodyBorder.getTitleFont()
-							.getName(), Font.BOLD, 15));
+					// Workaround for Java Bug ID: 7022041
+					Font titleBorderFont = UIManager.getDefaults().getFont(
+							"TitledBorder.font");
+					if (titleBorderFont != null)
+					{
+						bodyBorder.setTitleFont(new Font(titleBorderFont
+								.getName(), Font.BOLD, 15));
+					}
 					bodyPanel.setBorder(bodyBorder);
 
 					for (Entry<Member, Boolean> entry : activeMessage
@@ -986,7 +992,8 @@ public class QFixMessengerFrame extends JFrame
 								java.net.URI.create(url));
 					} catch (IOException ex)
 					{
-						JOptionPane.showMessageDialog(frame,
+						JOptionPane.showMessageDialog(
+								frame,
 								"An exception occured:\n"
 										+ Arrays.toString(ex.getStackTrace()),
 								"Error", JOptionPane.ERROR_MESSAGE);
@@ -1163,9 +1170,7 @@ public class QFixMessengerFrame extends JFrame
 							}
 						} else
 						{
-							logger
-									.info("Sending message "
-											+ message.toString());
+							logger.info("Sending message " + message.toString());
 							session.send(message);
 						}
 					}
@@ -1177,9 +1182,9 @@ public class QFixMessengerFrame extends JFrame
 				}
 			} else
 			{
-				JOptionPane.showMessageDialog(frame, QFixUtil
-						.getSessionName(session.getSessionID())
-						+ " is not logged on!", "Error",
+				JOptionPane.showMessageDialog(frame,
+						QFixUtil.getSessionName(session.getSessionID())
+								+ " is not logged on!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -1303,10 +1308,9 @@ public class QFixMessengerFrame extends JFrame
 
 				if (!frame.isFixTSession)
 				{
-					message
-							.fromString(frame.freeTextMessagePanel
-									.getFixString(), session
-									.getDataDictionary(), false);
+					message.fromString(
+							frame.freeTextMessagePanel.getFixString(),
+							session.getDataDictionary(), false);
 				} else
 				{
 					/*
@@ -1323,11 +1327,11 @@ public class QFixMessengerFrame extends JFrame
 								.getMessenger().getConfig()
 								.getFixT11DictionaryLocation());
 						appDictionary = new DataDictionary(frame.getMessenger()
-								.getConfig().getFixDictionaryLocation(
-										appVersion));
-						message.fromString(frame.freeTextMessagePanel
-								.getFixString(), sessionDictionary,
-								appDictionary, false);
+								.getConfig()
+								.getFixDictionaryLocation(appVersion));
+						message.fromString(
+								frame.freeTextMessagePanel.getFixString(),
+								sessionDictionary, appDictionary, false);
 					} catch (ConfigError ex)
 					{
 						message = null;
@@ -1390,9 +1394,8 @@ public class QFixMessengerFrame extends JFrame
 					{
 						logonMenuItem.setSelected(false);
 					}
-					session
-							.addStateListener(new LogonSessionMenuItemSessionStateListener(
-									logonMenuItem));
+					session.addStateListener(new LogonSessionMenuItemSessionStateListener(
+							logonMenuItem));
 
 					resetMenuItem = new JMenuItem("Reset");
 					resetMenuItem
@@ -1408,8 +1411,8 @@ public class QFixMessengerFrame extends JFrame
 					sessionMenuPopup.add(resetMenuItem);
 					sessionMenuPopup.add(statusMenuItem);
 
-					sessionMenuPopup.show(frame.sessionsList, e.getX(), e
-							.getY());
+					sessionMenuPopup.show(frame.sessionsList, e.getX(),
+							e.getY());
 				}
 			}
 		}
