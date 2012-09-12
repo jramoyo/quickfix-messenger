@@ -121,13 +121,13 @@ public class GroupPanel extends AbstractMemberPanel
 			{
 				Component firstComponent = (Component) firstMember;
 				Field firstField = firstComponent.getFirstField();
-				qfixGroup = new quickfix.Group(group.getNumber(), firstField
-						.getNumber());
+				qfixGroup = new quickfix.Group(group.getNumber(),
+						firstField.getNumber());
 			} else
 			{
 				Field firstField = (Field) firstMember;
-				qfixGroup = new quickfix.Group(group.getNumber(), firstField
-						.getNumber());
+				qfixGroup = new quickfix.Group(group.getNumber(),
+						firstField.getNumber());
 			}
 
 			for (MemberPanel memberPanel : groupMembers)
@@ -156,6 +156,12 @@ public class GroupPanel extends AbstractMemberPanel
 						qfixGroup.addGroup(group);
 					}
 				}
+
+				if (memberPanel instanceof GroupPanel)
+				{
+					GroupPanel groupPanel = (GroupPanel) memberPanel;
+					qfixGroups.addAll(groupPanel.getQuickFixGroups());
+				}
 			}
 
 			qfixGroups.add(qfixGroup);
@@ -168,8 +174,8 @@ public class GroupPanel extends AbstractMemberPanel
 	public String getFixString()
 	{
 		StringBuilder sb = new StringBuilder("" + group.getNumber())
-				.append('=').append(groupTextField.getText().trim()).append(
-						QFixMessengerConstants.SOH);
+				.append('=').append(groupTextField.getText().trim())
+				.append(QFixMessengerConstants.SOH);
 
 		for (List<MemberPanel> groupMembers : groups)
 		{
@@ -371,8 +377,8 @@ public class GroupPanel extends AbstractMemberPanel
 							if (!component.equals(firstMember))
 							{
 								ComponentPanel componentPanel = new ComponentPanel(
-										component, isRequiredOnly, entry
-												.getValue());
+										component, isRequiredOnly,
+										entry.getValue());
 
 								componentPanel
 										.setMaximumSize(new Dimension(
