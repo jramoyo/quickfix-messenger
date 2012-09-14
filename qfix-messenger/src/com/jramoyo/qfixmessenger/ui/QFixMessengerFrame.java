@@ -710,8 +710,15 @@ public class QFixMessengerFrame extends JFrame
 
 						TitledBorder headerBorder = new TitledBorder(
 								new LineBorder(Color.BLACK), "Message Header");
-						headerBorder.setTitleFont(new Font(headerBorder
-								.getTitleFont().getName(), Font.BOLD, 15));
+						// TODO Workaround for Java Bug ID: 7022041
+						Font headerTitleBorderFont = UIManager.getDefaults()
+								.getFont("TitledBorder.font");
+						if (headerTitleBorderFont != null)
+						{
+							headerBorder.setTitleFont(new Font(
+									headerTitleBorderFont.getName(), Font.BOLD,
+									15));
+						}
 						headerPanel.setBorder(headerBorder);
 
 						if (!isFixTSession)
@@ -744,12 +751,12 @@ public class QFixMessengerFrame extends JFrame
 
 					TitledBorder bodyBorder = new TitledBorder(new LineBorder(
 							Color.BLACK), "Message Body");
-					// Workaround for Java Bug ID: 7022041
-					Font titleBorderFont = UIManager.getDefaults().getFont(
+					// TODO Workaround for Java Bug ID: 7022041
+					Font bodyTitleBorderFont = UIManager.getDefaults().getFont(
 							"TitledBorder.font");
-					if (titleBorderFont != null)
+					if (bodyTitleBorderFont != null)
 					{
-						bodyBorder.setTitleFont(new Font(titleBorderFont
+						bodyBorder.setTitleFont(new Font(bodyTitleBorderFont
 								.getName(), Font.BOLD, 15));
 					}
 					bodyPanel.setBorder(bodyBorder);
@@ -772,8 +779,15 @@ public class QFixMessengerFrame extends JFrame
 
 						TitledBorder trailerBorder = new TitledBorder(
 								new LineBorder(Color.BLACK), "Message Trailer");
-						trailerBorder.setTitleFont(new Font(trailerBorder
-								.getTitleFont().getName(), Font.BOLD, 15));
+						// TODO Workaround for Java Bug ID: 7022041
+						Font trailerTitleBorderFont = UIManager.getDefaults()
+								.getFont("TitledBorder.font");
+						if (trailerTitleBorderFont != null)
+						{
+							trailerBorder.setTitleFont(new Font(
+									trailerTitleBorderFont.getName(),
+									Font.BOLD, 15));
+						}
 						trailerPanel.setBorder(trailerBorder);
 
 						if (!isFixTSession)

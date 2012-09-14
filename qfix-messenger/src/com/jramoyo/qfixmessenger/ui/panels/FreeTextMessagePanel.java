@@ -39,6 +39,7 @@ import java.awt.Font;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -66,11 +67,17 @@ public class FreeTextMessagePanel extends JPanel
 	{
 		setLayout(new BorderLayout());
 
-		TitledBorder trailerBorder = new TitledBorder(new LineBorder(
-				Color.BLACK), "Free Text");
-		trailerBorder.setTitleFont(new Font(trailerBorder.getTitleFont()
-				.getName(), Font.BOLD, 15));
-		setBorder(trailerBorder);
+		TitledBorder titledBorder = new TitledBorder(
+				new LineBorder(Color.BLACK), "Free Text");
+		// TODO Workaround for Java Bug ID: 7022041
+		Font trailerTitleBorderFont = UIManager.getDefaults().getFont(
+				"TitledBorder.font");
+		if (trailerTitleBorderFont != null)
+		{
+			titledBorder.setTitleFont(new Font(
+					trailerTitleBorderFont.getName(), Font.BOLD, 15));
+		}
+		setBorder(titledBorder);
 
 		messageTextArea = new JTextArea(5, 60);
 		messageTextArea.setLineWrap(true);
