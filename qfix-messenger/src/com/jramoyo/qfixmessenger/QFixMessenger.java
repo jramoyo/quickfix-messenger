@@ -36,6 +36,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
@@ -116,6 +117,16 @@ public class QFixMessenger
 
 	public static void main(String[] args) throws Exception
 	{
+		// Set handler for all uncaught exceptions
+		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()
+		{
+			@Override
+			public void uncaughtException(Thread t, Throwable ex)
+			{
+				logger.error("An unexpected exception occured!", ex);
+			}
+		});
+
 		// Set the UI look and feel
 		try
 		{
