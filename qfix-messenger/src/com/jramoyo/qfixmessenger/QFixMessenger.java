@@ -124,6 +124,7 @@ public class QFixMessenger
 			public void uncaughtException(Thread t, Throwable ex)
 			{
 				logger.error("An unexpected exception occured!", ex);
+				ex.printStackTrace();
 			}
 		});
 
