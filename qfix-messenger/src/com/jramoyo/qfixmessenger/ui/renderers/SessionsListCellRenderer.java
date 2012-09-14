@@ -51,7 +51,7 @@ public class SessionsListCellRenderer extends DefaultListCellRenderer
 	private static final long serialVersionUID = 3103171726329501169L;
 
 	@Override
-	public Component getListCellRendererComponent(JList list, Object value,
+	public Component getListCellRendererComponent(JList<?> list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus)
 	{
 		JLabel label = (JLabel) super.getListCellRendererComponent(list, value,

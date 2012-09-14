@@ -50,7 +50,7 @@ public class MessagesListCellRenderer extends DefaultListCellRenderer
 	private static final long serialVersionUID = -8761695467958549991L;
 
 	@Override
-	public Component getListCellRendererComponent(JList list, Object value,
+	public Component getListCellRendererComponent(JList<?> list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus)
 	{
 		JLabel label = (JLabel) super.getListCellRendererComponent(list, value,

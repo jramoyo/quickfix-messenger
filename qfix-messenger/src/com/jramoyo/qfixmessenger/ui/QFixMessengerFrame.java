@@ -146,7 +146,7 @@ public class QFixMessengerFrame extends JFrame
 	private static final Logger logger = LoggerFactory
 			.getLogger(QFixMessengerFrame.class);
 
-	private static final String VERSION = "1.3";
+	private static final String VERSION = "2.0b";
 
 	private static final int LEFT_PANEL_WIDTH = 170;
 
@@ -192,11 +192,11 @@ public class QFixMessengerFrame extends JFrame
 
 	private JPanel rightPanel;
 
-	private JList sessionsList;
+	private JList<Session> sessionsList;
 
-	private JList messagesList;
+	private JList<Message> messagesList;
 
-	private JComboBox appVersionsComboBox;
+	private JComboBox<String> appVersionsComboBox;
 
 	private JCheckBox requiredCheckBox;
 
@@ -359,8 +359,8 @@ public class QFixMessengerFrame extends JFrame
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
 		// Sessions Panel
-		sessionsList = new JList();
-		appVersionsComboBox = new JComboBox(
+		sessionsList = new JList<Session>();
+		appVersionsComboBox = new JComboBox<String>(
 				QFixMessengerConstants.FIXT_APP_VERSIONS);
 		JPanel sessionsPanel = new JPanel();
 		sessionsPanel.setBorder(new TitledBorder("Current Sessions"));
@@ -387,7 +387,7 @@ public class QFixMessengerFrame extends JFrame
 		sessionsPanel.setMaximumSize(sessionsPanel.getPreferredSize());
 
 		// Messages Panel
-		messagesList = new JList();
+		messagesList = new JList<Message>();
 		JPanel messagesPanel = new JPanel();
 		messagesPanel.setBorder(new TitledBorder("Available Messages"));
 		messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
@@ -645,7 +645,7 @@ public class QFixMessengerFrame extends JFrame
 
 	private void initSessionsList()
 	{
-		sessionsList = new JList();
+		sessionsList = new JList<Session>();
 
 		List<SessionID> sessionIds = messenger.getConnector().getSessions();
 		List<Session> sessions = new ArrayList<Session>(sessionIds.size());
@@ -667,7 +667,7 @@ public class QFixMessengerFrame extends JFrame
 			}
 		});
 
-		sessionsList.setListData(sessions.toArray());
+		sessionsList.setListData(sessions.toArray(new Session[] {}));
 		sessionsList.setCellRenderer(new SessionsListCellRenderer());
 		sessionsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		sessionsList.getSelectionModel().addListSelectionListener(
@@ -905,7 +905,7 @@ public class QFixMessengerFrame extends JFrame
 			messagesList.setListData(messages.toArray(new Message[] {}));
 		} else
 		{
-			messagesList.setListData(new String[] {});
+			messagesList.setListData(new Message[] {});
 		}
 	}
 

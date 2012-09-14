@@ -34,6 +34,7 @@ package com.jramoyo.qfixmessenger.ui.listeners;
 
 import javax.swing.JList;
 
+import quickfix.Session;
 import quickfix.SessionStateListener;
 
 /**
@@ -41,9 +42,9 @@ import quickfix.SessionStateListener;
  */
 public class SessionsListSessionStateListener implements SessionStateListener
 {
-	private JList sessionsList;
+	private JList<Session> sessionsList;
 
-	public SessionsListSessionStateListener(JList sessionsList)
+	public SessionsListSessionStateListener(JList<Session> sessionsList)
 	{
 		this.sessionsList = sessionsList;
 	}
