@@ -9,15 +9,8 @@
 	<classpathentry kind="lib" path="lib/lipstikLF-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="lib/mina-core-1.1.7.jar"/>
-	<classpathentry kind="lib" path="lib/quickfixj-core-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/quickfixj-msg-fix40-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/quickfixj-msg-fix41-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/quickfixj-msg-fix42-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/quickfixj-msg-fix43-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/quickfixj-msg-fix44-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/quickfixj-msg-fix50-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/quickfixj-msg-fixt11-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/quickfixj-all-1.5.2.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
