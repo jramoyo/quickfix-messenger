@@ -25,6 +25,10 @@
 		<echo message="Deploying qfix-messenger..." />
 	</target>
 
+	<target name="release.message">
+		<echo message="Packaging qfix-messenger for release..." />
+	</target>
+
 	<target name="clean" depends="clean.message">
 		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="${classes.dir}" includes="**/*" />
@@ -66,10 +70,19 @@
 		</copy>
 	</target>
 
+	<target name="release" depends="deploy,release.message">
+		<copy todir="${deploy.dir}/qfix-messenger">
+			<fileset dir="${deploy.dir}" includes="**/*" />
+		</copy>
+		<zip basedir="${deploy.dir}" destfile="${package.dir}/qfix-messenger-${app.version}-bin.zip" includes="qfix-messenger/**/*" />
+	</target>
+
 	<target name="clean.build" depends="clean,build" />
 
 	<target name="clean.package" depends="clean,package" />
 
 	<target name="clean.deploy" depends="clean,deploy" />
+
+	<target name="clean.release" depends="clean,release" />
 
 </project>

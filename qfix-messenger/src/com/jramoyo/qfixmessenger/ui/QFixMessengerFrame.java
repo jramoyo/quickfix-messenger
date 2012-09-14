@@ -146,7 +146,7 @@ public class QFixMessengerFrame extends JFrame
 	private static final Logger logger = LoggerFactory
 			.getLogger(QFixMessengerFrame.class);
 
-	private static final String VERSION = "2.0b";
+	private static final String VERSION = "2.0";
 
 	private static final int LEFT_PANEL_WIDTH = 170;
 
