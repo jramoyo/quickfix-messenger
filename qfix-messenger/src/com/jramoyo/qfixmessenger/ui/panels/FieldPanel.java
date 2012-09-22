@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -55,6 +56,7 @@ import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.FieldType;
 import com.jramoyo.fix.model.FieldValue;
 import com.jramoyo.fix.model.Member;
+import com.jramoyo.fix.xml.ObjectFactory;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 import com.jramoyo.qfixmessenger.ui.renderers.FieldComboBoxCellRenderer;
 import com.jramoyo.qfixmessenger.util.StringUtil;
@@ -88,23 +90,31 @@ public class FieldPanel extends AbstractMemberPanel
 		initComponents();
 	}
 
-	public FieldPanel(FieldPanel fieldPanel)
+	public com.jramoyo.fix.xml.FieldType getXmlField()
 	{
-		this.field = fieldPanel.field;
-		this.isRequired = fieldPanel.isRequired;
+		if (!StringUtil.isNullOrEmpty(getValue()))
+		{
+			com.jramoyo.fix.xml.FieldType xmlFieldType = new ObjectFactory()
+					.createFieldType();
+			xmlFieldType.setId(field.getNumber());
+			xmlFieldType.setName(field.getName());
+			xmlFieldType.setValue(getValue());
 
-		initComponents();
-		copyValue(fieldPanel);
+			return xmlFieldType;
+		} else
+		{
+			return null;
+		}
 	}
 
-	/*
-	 * Since all values are entered as text, all fields are represented as an
-	 * instance of StringField.
-	 */
 	public StringField getQuickFixField()
 	{
 		if (!StringUtil.isNullOrEmpty(getValue()))
 		{
+			/*
+			 * Since all values are entered as text, all fields are represented
+			 * as an instance of StringField.
+			 */
 			return new StringField(field.getNumber(), getValue());
 		} else
 		{
@@ -117,8 +127,7 @@ public class FieldPanel extends AbstractMemberPanel
 	{
 		if (!StringUtil.isNullOrEmpty(getValue()))
 		{
-			return new StringBuilder("" + field.getNumber()).append('=')
-					.append(getValue()).toString();
+			return "" + field.getNumber() + "=" + getValue();
 		} else
 		{
 			return "";
@@ -131,17 +140,24 @@ public class FieldPanel extends AbstractMemberPanel
 		return field;
 	}
 
-	private void copyValue(FieldPanel fieldPanel)
+	public void populate(com.jramoyo.fix.xml.FieldType xmlFieldType)
 	{
-		if (fieldComboBox != null && fieldPanel.fieldComboBox != null)
+		if (fieldComboBox != null)
 		{
-			fieldComboBox.setSelectedItem(fieldPanel.fieldComboBox
-					.getSelectedItem());
+			ComboBoxModel<FieldValue> comboBoxModel = fieldComboBox.getModel();
+			for (int i = 0; i < comboBoxModel.getSize(); i++)
+			{
+				FieldValue fieldValue = comboBoxModel.getElementAt(i);
+				if (fieldValue.getEnumValue().equals(xmlFieldType.getName()))
+				{
+					fieldComboBox.setSelectedIndex(i);
+				}
+			}
 		}
 
 		else
 		{
-			fieldTextField.setText(fieldPanel.fieldTextField.getText().trim());
+			fieldTextField.setText(xmlFieldType.getValue());
 		}
 	}
 

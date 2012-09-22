@@ -9,6 +9,10 @@
 		</fileset>
 	</path>
 
+	<target name="xjc.message">
+		<echo message="Generating JAXB code..." />
+	</target>
+
 	<target name="build.message">
 		<echo message="Building qfix-messenger..." />
 	</target>
@@ -32,6 +36,7 @@
 	<target name="clean" depends="clean.message">
 		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="${classes.dir}" includes="**/*" />
+			<fileset dir="${gen.dir}" includes="**/*" />
 			<fileset dir="${package.dir}" includes="**/*" />
 			<fileset dir="${log.dir}" includes="**/*" />
 			<fileset dir="${deploy.dir}" includes="**/*" />
@@ -39,7 +44,19 @@
 		</delete>
 	</target>
 
-	<target name="build" depends="build.message">
+	<target name="xjc" depends="xjc.message">
+		<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+			<classpath refid="lib.classpath" />
+		</taskdef>
+		<xjc destdir="${gen.dir}" extension="true" readonly="true">
+			<schema dir="${resources.dir}/xsd" includes="*.xsd" />
+		</xjc>
+	</target>
+
+	<target name="build" depends="xjc,build.message">
+		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${gen.dir}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
+			<classpath refid="lib.classpath" />
+		</javac>
 		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${src.dir}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
 			<classpath refid="lib.classpath" />
 		</javac>
@@ -57,13 +74,10 @@
 			<fileset dir="${package.dir}" includes="*.jar" />
 		</copy>
 		<copy todir="${deploy.dir}/resources">
-			<fileset dir="${resources.dir}" includes="*.*" />
+			<fileset dir="${resources.dir}" includes="**/*" />
 		</copy>
 		<copy todir="${deploy.dir}/cfg">
 			<fileset dir="${cfg.dir}" includes="**/*" />
-		</copy>
-		<copy todir="${deploy.dir}/icons">
-			<fileset dir="${icons.dir}" includes="*.*" />
 		</copy>
 		<copy todir="${deploy.dir}/">
 			<fileset dir="${scripts.dir}" includes="*.*" />

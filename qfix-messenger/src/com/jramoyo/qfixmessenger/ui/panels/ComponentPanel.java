@@ -53,6 +53,10 @@ import com.jramoyo.fix.model.Component;
 import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.Group;
 import com.jramoyo.fix.model.Member;
+import com.jramoyo.fix.xml.ComponentType;
+import com.jramoyo.fix.xml.FieldType;
+import com.jramoyo.fix.xml.GroupsType;
+import com.jramoyo.fix.xml.ObjectFactory;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 
 /**
@@ -89,21 +93,39 @@ public class ComponentPanel extends AbstractMemberPanel
 		initComponents();
 	}
 
-	public ComponentPanel(ComponentPanel componentPanel)
+	public ComponentType getXmlComponent()
 	{
-		this.component = componentPanel.component;
-		this.isRequiredOnly = componentPanel.isRequiredOnly;
-		this.isRequired = componentPanel.isRequired;
+		ObjectFactory xmlObjectFactory = new ObjectFactory();
+		ComponentType xmlComponentType = xmlObjectFactory.createComponentType();
 
-		this.members = new ArrayList<MemberPanel>();
-		this.prevMembers = new ArrayList<MemberPanel>(componentPanel.members);
+		for (MemberPanel memberPanel : members)
+		{
+			if (memberPanel instanceof FieldPanel)
+			{
+				FieldType xmlFieldType = ((FieldPanel) memberPanel)
+						.getXmlField();
+				if (xmlFieldType != null)
+				{
+					xmlComponentType.getFieldOrGroupsOrComponent().add(
+							xmlFieldType);
+				}
+			}
 
-		initComponents();
+			if (memberPanel instanceof GroupPanel)
+			{
+				GroupsType xmlGroupsTypeMember = ((GroupPanel) memberPanel)
+						.getXmlGroups();
+				xmlComponentType.getFieldOrGroupsOrComponent().add(
+						xmlGroupsTypeMember);
+			}
+		}
+
+		return xmlComponentType;
 	}
 
 	/*
 	 * This is a work-around because QuickFIX does not provide a non type-safe
-	 * of representing message components.
+	 * representation message components.
 	 */
 	public List<StringField> getQuickFixFields()
 	{
@@ -126,7 +148,7 @@ public class ComponentPanel extends AbstractMemberPanel
 
 	/*
 	 * This is a work-around because QuickFIX does not provide a non type-safe
-	 * of representing message components.
+	 * representation message components.
 	 */
 	public List<quickfix.Group> getQuickFixGroups()
 	{
@@ -162,6 +184,37 @@ public class ComponentPanel extends AbstractMemberPanel
 	public Member getMember()
 	{
 		return component;
+	}
+
+	public void populate(ComponentType xmlComponentType)
+	{
+		for (Object xmlMember : xmlComponentType.getFieldOrGroupsOrComponent())
+		{
+			if (xmlMember instanceof FieldType)
+			{
+				FieldType xmlFieldType = (FieldType) xmlMember;
+				FieldPanel fieldPanel = (FieldPanel) MemberPanelUtil
+						.findMemberPanelByName(xmlFieldType.getName(), members);
+				fieldPanel.populate(xmlFieldType);
+			}
+
+			if (xmlMember instanceof GroupsType)
+			{
+				GroupsType xmlGroupsType = (GroupsType) xmlMember;
+				GroupPanel groupPanel = (GroupPanel) MemberPanelUtil
+						.findMemberPanelByName(xmlGroupsType.getName(), members);
+				groupPanel.populate(xmlGroupsType);
+			}
+
+			if (xmlMember instanceof ComponentType)
+			{
+				ComponentType xmlComponentTypeMember = (ComponentType) xmlMember;
+				ComponentPanel componentPanel = (ComponentPanel) MemberPanelUtil
+						.findMemberPanelByName(
+								xmlComponentTypeMember.getName(), members);
+				componentPanel.populate(xmlComponentTypeMember);
+			}
+		}
 	}
 
 	private void initComponents()
@@ -232,8 +285,8 @@ public class ComponentPanel extends AbstractMemberPanel
 				if (!field.equals(firstTag))
 				{
 					FieldPanel fieldPanel = MemberPanelFactory
-							.createFieldPanel(prevMembers, field, entry
-									.getValue());
+							.createFieldPanel(prevMembers, field,
+									entry.getValue());
 					fieldPanel.setMaximumSize(new Dimension(
 							getPreferredSize().width, fieldPanel
 									.getPreferredSize().height));

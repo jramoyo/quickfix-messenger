@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://xml.fix.jramoyo.com" xmlns="http://xml.fix.jramoyo.com">
+
+	<xs:simpleType name="fieldValueType">
+		<xs:restriction base="xs:string" />
+	</xs:simpleType>
+
+	<xs:complexType name="fieldType">
+		<xs:simpleContent>
+			<xs:extension base="fieldValueType">
+				<xs:attribute name="name" type="xs:string" use="required" />
+				<xs:attribute name="id" type="xs:int" use="required" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:complexType name="groupsType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="group" type="groupType" />
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="id" type="xs:int" use="required" />
+		<xs:attribute name="count" type="xs:int" use="required" />
+	</xs:complexType>
+
+	<xs:complexType name="groupType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="field" type="fieldType" />
+			<xs:element name="groups" type="groupsType" />
+			<xs:element name="component" type="componentType" />
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:complexType name="componentType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="field" type="fieldType" />
+			<xs:element name="groups" type="groupsType" />
+			<xs:element name="component" type="componentType" />
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required" />
+	</xs:complexType>
+
+	<xs:complexType name="headerType">
+		<xs:sequence>
+			<xs:element name="field" type="fieldType" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="trailerType">
+		<xs:sequence>
+			<xs:element name="field" type="fieldType" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="bodyType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="field" type="fieldType" />
+			<xs:element name="groups" type="groupsType" />
+			<xs:element name="component" type="componentType" />
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:complexType name="sessionType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="appVersionId" type="xs:string"
+				minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="messageType">
+		<xs:sequence>
+			<xs:element name="session" type="sessionType" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="header" type="headerType" minOccurs="0"
+				maxOccurs="1" />
+			<xs:element name="body" type="bodyType" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="trailer" type="trailerType" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="msgType" type="xs:string" use="required" />
+	</xs:complexType>
+
+	<xs:element name="message" type="messageType" />
+
+</xs:schema>

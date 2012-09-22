@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://xml.fix.jramoyo.com" xmlns="http://xml.fix.jramoyo.com">
+
+	<xs:include schemaLocation="message.xsd" />
+
+	<xs:complexType name="messagesType">
+		<xs:sequence>
+			<xs:element name="message" type="messageType" minOccurs="1"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="projectType">
+		<xs:sequence>
+			<xs:element name="messages" type="messagesType" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attribute name="name" />
+	</xs:complexType>
+
+	<xs:element name="project" type="projectType" />
+</xs:schema>

@@ -52,7 +52,7 @@ public class MemberPanelFactory
 		FieldPanel fieldPanel;
 		if (prevMemberPanel != null)
 		{
-			fieldPanel = new FieldPanel((FieldPanel) prevMemberPanel);
+			fieldPanel = (FieldPanel) prevMemberPanel;
 		} else
 		{
 			fieldPanel = new FieldPanel(field, isRequired);
@@ -69,7 +69,7 @@ public class MemberPanelFactory
 		GroupPanel groupPanel;
 		if (prevMemberPanel != null)
 		{
-			groupPanel = new GroupPanel((GroupPanel) prevMemberPanel);
+			groupPanel = (GroupPanel) prevMemberPanel;
 		} else
 		{
 			groupPanel = new GroupPanel(group, isRequiredOnly, isRequired);
@@ -87,8 +87,7 @@ public class MemberPanelFactory
 		ComponentPanel componentPanel;
 		if (prevMemberPanel != null)
 		{
-			componentPanel = new ComponentPanel(
-					(ComponentPanel) prevMemberPanel);
+			componentPanel = (ComponentPanel) prevMemberPanel;
 		} else
 		{
 			componentPanel = new ComponentPanel(component, isRequiredOnly,

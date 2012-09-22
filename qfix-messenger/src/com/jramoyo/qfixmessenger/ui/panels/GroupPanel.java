@@ -59,6 +59,11 @@ import com.jramoyo.fix.model.Component;
 import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.Group;
 import com.jramoyo.fix.model.Member;
+import com.jramoyo.fix.xml.ComponentType;
+import com.jramoyo.fix.xml.FieldType;
+import com.jramoyo.fix.xml.GroupType;
+import com.jramoyo.fix.xml.GroupsType;
+import com.jramoyo.fix.xml.ObjectFactory;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 
 /**
@@ -97,16 +102,52 @@ public class GroupPanel extends AbstractMemberPanel
 		initComponents();
 	}
 
-	public GroupPanel(GroupPanel groupPanel)
+	public GroupsType getXmlGroups()
 	{
-		this.group = groupPanel.group;
-		this.isRequired = groupPanel.isRequired;
-		this.isRequiredOnly = groupPanel.isRequiredOnly;
+		ObjectFactory xmlObjectFactory = new ObjectFactory();
+		GroupsType xmlGroupsType = xmlObjectFactory.createGroupsType();
+		xmlGroupsType.setId(group.getNumber());
+		xmlGroupsType.setName(group.getName());
+		xmlGroupsType.setCount(groups.size());
 
-		this.groups = new ArrayList<List<MemberPanel>>();
+		for (List<MemberPanel> groupMembers : groups)
+		{
+			GroupType xmlGroupType = xmlObjectFactory.createGroupType();
 
-		initComponents();
-		copyValue(groupPanel);
+			for (MemberPanel memberPanel : groupMembers)
+			{
+				if (memberPanel instanceof FieldPanel)
+				{
+					FieldType xmlFieldType = ((FieldPanel) memberPanel)
+							.getXmlField();
+					if (xmlFieldType != null)
+					{
+						xmlGroupType.getFieldOrGroupsOrComponent().add(
+								xmlFieldType);
+					}
+				}
+
+				if (memberPanel instanceof ComponentPanel)
+				{
+					ComponentType xmlComponentType = ((ComponentPanel) memberPanel)
+							.getXmlComponent();
+					xmlGroupType.getFieldOrGroupsOrComponent().add(
+							xmlComponentType);
+				}
+
+				if (memberPanel instanceof GroupPanel)
+				{
+					GroupsType xmlGroupsTypeMember = ((GroupPanel) memberPanel)
+							.getXmlGroups();
+					xmlGroupType.getFieldOrGroupsOrComponent().add(
+							xmlGroupsTypeMember);
+				}
+			}
+
+			xmlGroupsType.getGroup().add(xmlGroupType);
+		}
+
+		return xmlGroupsType;
 	}
 
 	public List<quickfix.Group> getQuickFixGroups()
@@ -195,9 +236,46 @@ public class GroupPanel extends AbstractMemberPanel
 		return group;
 	}
 
-	private void copyValue(GroupPanel groupPanel)
+	public void populate(GroupsType xmlGroupsType)
 	{
-		groupTextField.setText(groupPanel.groupTextField.getText().trim());
+		groupTextField.setText(String.valueOf(xmlGroupsType.getCount()));
+		loadMembers();
+
+		for (int i = 0; i < xmlGroupsType.getGroup().size(); i++)
+		{
+			GroupType xmlGroupType = xmlGroupsType.getGroup().get(i);
+			List<MemberPanel> groupMembers = groups.get(i);
+
+			for (Object xmlMember : xmlGroupType.getFieldOrGroupsOrComponent())
+			{
+				if (xmlMember instanceof FieldType)
+				{
+					FieldType xmlFieldType = (FieldType) xmlMember;
+					FieldPanel fieldPanel = (FieldPanel) MemberPanelUtil
+							.findMemberPanelByName(xmlFieldType.getName(),
+									groupMembers);
+					fieldPanel.populate(xmlFieldType);
+				}
+
+				if (xmlMember instanceof GroupsType)
+				{
+					GroupsType xmlGroupsTypeMember = (GroupsType) xmlMember;
+					GroupPanel groupPanel = (GroupPanel) MemberPanelUtil
+							.findMemberPanelByName(
+									xmlGroupsTypeMember.getName(), groupMembers);
+					groupPanel.populate(xmlGroupsTypeMember);
+				}
+
+				if (xmlMember instanceof ComponentType)
+				{
+					ComponentType xmlComponentType = (ComponentType) xmlMember;
+					ComponentPanel componentPanel = (ComponentPanel) MemberPanelUtil
+							.findMemberPanelByName(xmlComponentType.getName(),
+									groupMembers);
+					componentPanel.populate(xmlComponentType);
+				}
+			}
+		}
 	}
 
 	private void initComponents()
