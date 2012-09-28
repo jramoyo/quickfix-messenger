@@ -148,7 +148,7 @@ public class FieldPanel extends AbstractMemberPanel
 			for (int i = 0; i < comboBoxModel.getSize(); i++)
 			{
 				FieldValue fieldValue = comboBoxModel.getElementAt(i);
-				if (fieldValue.getEnumValue().equals(xmlFieldType.getName()))
+				if (fieldValue.getEnumValue().equals(xmlFieldType.getValue()))
 				{
 					fieldComboBox.setSelectedIndex(i);
 				}

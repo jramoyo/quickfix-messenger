@@ -30,7 +30,7 @@
  * MessagesTableModel.java
  * 14 Jun 2011
  */
-package com.jramoyo.qfixmessenger.ui.model;
+package com.jramoyo.qfixmessenger.ui.models;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,8 +43,11 @@ import quickfix.SessionID;
 
 import com.jramoyo.qfixmessenger.quickfix.QFixMessageListener;
 import com.jramoyo.qfixmessenger.quickfix.util.QFixUtil;
+import com.jramoyo.qfixmessenger.ui.models.data.MessagesTableModelData;
 
 /**
+ * Represents a table for model for messages
+ * 
  * @author jamoyo
  */
 public class MessagesTableModel extends AbstractTableModel implements
@@ -59,11 +62,6 @@ public class MessagesTableModel extends AbstractTableModel implements
 		int row = tableData.size();
 		tableData.add(rowData);
 		fireTableRowsInserted(row, row);
-	}
-
-	public MessagesTableModelData getData(int row)
-	{
-		return tableData.get(row);
 	}
 
 	@Override
@@ -82,6 +80,11 @@ public class MessagesTableModel extends AbstractTableModel implements
 	public String getColumnName(int col)
 	{
 		return MessagesTableModelData.COLUMN_NAMES[col];
+	}
+
+	public MessagesTableModelData getData(int row)
+	{
+		return tableData.get(row);
 	}
 
 	@Override
@@ -109,8 +112,8 @@ public class MessagesTableModel extends AbstractTableModel implements
 	public void onMessage(String direction, Message message, SessionID sessionId)
 	{
 		MessagesTableModelData data = new MessagesTableModelData(new Date(),
-				direction, QFixUtil.getSessionName(sessionId), message
-						.toString());
+				direction, QFixUtil.getSessionName(sessionId),
+				message.toString());
 		addRow(data);
 	}
 }

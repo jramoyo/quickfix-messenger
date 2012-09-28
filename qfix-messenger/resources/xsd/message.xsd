@@ -85,6 +85,7 @@
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="required" />
 		<xs:attribute name="msgType" type="xs:string" use="required" />
+		<xs:attribute name="isRequiredOnly" type="xs:boolean" />
 	</xs:complexType>
 
 	<xs:element name="message" type="messageType" />

@@ -27,51 +27,31 @@
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
  * DAMAGE.
  *
- * MessagesTableCellRender.java
- * 15 Jun 2011
+ * FrameExitActionListener.java
+ * Sep 26, 2012
  */
-package com.jramoyo.qfixmessenger.ui.renderers;
+package com.jramoyo.qfixmessenger.ui.listeners;
 
-import java.awt.Color;
-import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
-import com.jramoyo.qfixmessenger.quickfix.QFixMessageListener;
-import com.jramoyo.qfixmessenger.ui.models.MessagesTableModel;
-import com.jramoyo.qfixmessenger.ui.models.data.MessagesTableModelData;
+import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 
 /**
- * @author jamoyo
+ * @author jramoyo
  */
-public class MessagesTableCellRender extends DefaultTableCellRenderer
+public class FrameExitActionListener implements ActionListener
 {
-	private static final long serialVersionUID = -5031829092122831674L;
+	private QFixMessengerFrame frame;
+
+	public FrameExitActionListener(QFixMessengerFrame frame)
+	{
+		this.frame = frame;
+	}
 
 	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value,
-			boolean isSelected, boolean hasFocus, int row, int column)
+	public void actionPerformed(ActionEvent e)
 	{
-		JLabel component = (JLabel) super.getTableCellRendererComponent(table,
-				value, isSelected, hasFocus, row, column);
-
-		if (!isSelected)
-		{
-			int modelRow = table.convertRowIndexToModel(row);
-			MessagesTableModel model = (MessagesTableModel) table.getModel();
-			MessagesTableModelData data = model.getData(modelRow);
-
-			if (data.getDirection().equals(QFixMessageListener.RECV))
-			{
-				component.setBackground(Color.ORANGE);
-			} else
-			{
-				component.setBackground(Color.GREEN);
-			}
-		}
-
-		return component;
+		frame.exit();
 	}
 }

@@ -97,6 +97,7 @@ public class ComponentPanel extends AbstractMemberPanel
 	{
 		ObjectFactory xmlObjectFactory = new ObjectFactory();
 		ComponentType xmlComponentType = xmlObjectFactory.createComponentType();
+		xmlComponentType.setName(component.getName());
 
 		for (MemberPanel memberPanel : members)
 		{

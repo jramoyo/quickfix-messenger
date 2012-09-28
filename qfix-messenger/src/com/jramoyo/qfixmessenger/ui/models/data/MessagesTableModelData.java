@@ -30,7 +30,7 @@
  * MessagesTableModelData.java
  * 14 Jun 2011
  */
-package com.jramoyo.qfixmessenger.ui.model;
+package com.jramoyo.qfixmessenger.ui.models.data;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,6 +38,8 @@ import java.util.Date;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 
 /**
+ * Represents message data to be displayed in a table
+ * 
  * @author jamoyo
  */
 public final class MessagesTableModelData
@@ -47,8 +49,8 @@ public final class MessagesTableModelData
 	public static final String SESSION_COLUMN = "Session ID";
 	public static final String MESSAGE_COLUMN = "Message";
 
-	public static final String[] COLUMN_NAMES =
-	{ DATE_COLUMN, DIRECTION_COLUMN, SESSION_COLUMN, MESSAGE_COLUMN };
+	public static final String[] COLUMN_NAMES = { DATE_COLUMN,
+			DIRECTION_COLUMN, SESSION_COLUMN, MESSAGE_COLUMN };
 
 	private final Date date;
 	private final String direction;
@@ -62,66 +64,6 @@ public final class MessagesTableModelData
 		this.direction = direction;
 		this.sessionName = sessionName;
 		this.message = message;
-	}
-
-	public Date getDate()
-	{
-		return date;
-	}
-
-	public String getDirection()
-	{
-		return direction;
-	}
-
-	public String getSessionName()
-	{
-		return sessionName;
-	}
-
-	public String getMessage()
-	{
-		return message;
-	}
-
-	public String getColumData(String columnName)
-	{
-		if (columnName.equals(DATE_COLUMN))
-		{
-			return new SimpleDateFormat(QFixMessengerConstants.UTC_DATE_FORMAT)
-					.format(getDate());
-		}
-
-		else if (columnName.equals(DIRECTION_COLUMN))
-		{
-			return getDirection();
-		}
-
-		else if (columnName.equals(SESSION_COLUMN))
-		{
-			return getSessionName();
-		}
-
-		else if (columnName.equals(MESSAGE_COLUMN))
-		{
-			return getMessage();
-		}
-
-		return "";
-	}
-
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
-		result = prime * result
-				+ ((direction == null) ? 0 : direction.hashCode());
-		result = prime * result + ((message == null) ? 0 : message.hashCode());
-		result = prime * result
-				+ ((sessionName == null) ? 0 : sessionName.hashCode());
-		return result;
 	}
 
 	@Override
@@ -159,5 +101,65 @@ public final class MessagesTableModelData
 		} else if (!sessionName.equals(other.sessionName))
 			return false;
 		return true;
+	}
+
+	public String getColumData(String columnName)
+	{
+		if (columnName.equals(DATE_COLUMN))
+		{
+			return new SimpleDateFormat(QFixMessengerConstants.UTC_DATE_FORMAT)
+					.format(getDate());
+		}
+
+		else if (columnName.equals(DIRECTION_COLUMN))
+		{
+			return getDirection();
+		}
+
+		else if (columnName.equals(SESSION_COLUMN))
+		{
+			return getSessionName();
+		}
+
+		else if (columnName.equals(MESSAGE_COLUMN))
+		{
+			return getMessage();
+		}
+
+		return "";
+	}
+
+	public Date getDate()
+	{
+		return date;
+	}
+
+	public String getDirection()
+	{
+		return direction;
+	}
+
+	public String getMessage()
+	{
+		return message;
+	}
+
+	public String getSessionName()
+	{
+		return sessionName;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result
+				+ ((direction == null) ? 0 : direction.hashCode());
+		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result
+				+ ((sessionName == null) ? 0 : sessionName.hashCode());
+		return result;
 	}
 }
