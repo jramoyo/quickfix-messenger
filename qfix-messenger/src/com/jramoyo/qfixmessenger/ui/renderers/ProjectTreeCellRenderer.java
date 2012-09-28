@@ -34,6 +34,7 @@ package com.jramoyo.qfixmessenger.ui.renderers;
 
 import java.awt.Component;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -49,6 +50,8 @@ import com.jramoyo.fix.xml.MessagesType;
 import com.jramoyo.fix.xml.ProjectType;
 import com.jramoyo.fix.xml.SessionType;
 import com.jramoyo.fix.xml.TrailerType;
+import com.jramoyo.qfixmessenger.ui.Icons;
+import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 
 /**
  * @author jramoyo
@@ -56,6 +59,13 @@ import com.jramoyo.fix.xml.TrailerType;
 public class ProjectTreeCellRenderer extends DefaultTreeCellRenderer
 {
 	private static final long serialVersionUID = -435212244413010769L;
+
+	private final QFixMessengerFrame frame;
+
+	public ProjectTreeCellRenderer(QFixMessengerFrame frame)
+	{
+		this.frame = frame;
+	}
 
 	public Component getTreeCellRendererComponent(JTree tree, Object value,
 			boolean sel, boolean expanded, boolean leaf, int row,
@@ -68,11 +78,33 @@ public class ProjectTreeCellRenderer extends DefaultTreeCellRenderer
 		{
 			ProjectType xmlProjectType = (ProjectType) value;
 			label.setText(xmlProjectType.getName());
+			if (expanded)
+			{
+				label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+						.getIconsLocation()
+						+ Icons.PROJECT_OPEN_ICON));
+			} else
+			{
+				label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+						.getIconsLocation()
+						+ Icons.PROJECT_ICON));
+			}
 		}
 
 		else if (value instanceof MessagesType)
 		{
 			label.setText("Messages");
+			if (expanded)
+			{
+				label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+						.getIconsLocation()
+						+ Icons.MESSAGES_OPEN_ICON));
+			} else
+			{
+				label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+						.getIconsLocation()
+						+ Icons.MESSAGES_ICON));
+			}
 		}
 
 		else if (value instanceof MessageType)
@@ -80,26 +112,49 @@ public class ProjectTreeCellRenderer extends DefaultTreeCellRenderer
 			MessageType xmlMessageType = (MessageType) value;
 			label.setText(xmlMessageType.getName() + " ("
 					+ xmlMessageType.getMsgType() + ")");
+			if (expanded)
+			{
+				label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+						.getIconsLocation()
+						+ Icons.MESSAGE_OPEN_ICON));
+			} else
+			{
+				label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+						.getIconsLocation()
+						+ Icons.MESSAGE_ICON));
+			}
 		}
 
 		else if (value instanceof SessionType)
 		{
 			label.setText("Session");
+			label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+					.getIconsLocation()
+					+ Icons.SESSION_ICON));
 		}
 
 		else if (value instanceof HeaderType)
 		{
 			label.setText("Header");
+			label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+					.getIconsLocation()
+					+ Icons.COMPONENT_ICON));
 		}
 
 		else if (value instanceof BodyType)
 		{
 			label.setText("Body");
+			label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+					.getIconsLocation()
+					+ Icons.COMPONENT_ICON));
 		}
 
 		else if (value instanceof TrailerType)
 		{
 			label.setText("Trailer");
+			label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+					.getIconsLocation()
+					+ Icons.COMPONENT_ICON));
 		}
 
 		else if (value instanceof GroupsType)
@@ -107,17 +162,26 @@ public class ProjectTreeCellRenderer extends DefaultTreeCellRenderer
 			GroupsType xmlGroupsType = (GroupsType) value;
 			label.setText(xmlGroupsType.getName() + " ("
 					+ xmlGroupsType.getId() + ")");
+			label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+					.getIconsLocation()
+					+ Icons.GROUPS_ICON));
 		}
 
 		else if (value instanceof GroupType)
 		{
 			label.setText("Group");
+			label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+					.getIconsLocation()
+					+ Icons.GROUP_ICON));
 		}
 
 		else if (value instanceof ComponentType)
 		{
 			ComponentType xmlComponentType = (ComponentType) value;
 			label.setText(xmlComponentType.getName());
+			label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+					.getIconsLocation()
+					+ Icons.COMPONENT_ICON));
 		}
 
 		else if (value instanceof FieldType)
@@ -125,6 +189,16 @@ public class ProjectTreeCellRenderer extends DefaultTreeCellRenderer
 			FieldType xmlFieldType = (FieldType) value;
 			label.setText(xmlFieldType.getName() + " (" + xmlFieldType.getId()
 					+ ")");
+			label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+					.getIconsLocation()
+					+ Icons.FIELD_ICON));
+		}
+
+		else
+		{
+			label.setIcon(new ImageIcon(frame.getMessenger().getConfig()
+					.getIconsLocation()
+					+ Icons.TEXT_ICON));
 		}
 
 		return label;

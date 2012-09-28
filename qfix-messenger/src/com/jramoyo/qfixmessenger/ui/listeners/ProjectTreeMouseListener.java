@@ -37,12 +37,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 
 import com.jramoyo.fix.xml.MessageType;
 import com.jramoyo.fix.xml.ProjectType;
+import com.jramoyo.qfixmessenger.ui.Icons;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 import com.jramoyo.qfixmessenger.ui.models.ProjectTreeModel;
 
@@ -65,10 +67,57 @@ public class ProjectTreeMouseListener extends MouseAdapter
 	{
 		if (event.getButton() == MouseEvent.BUTTON3)
 		{
+			JPopupMenu popUpMenu = new JPopupMenu();
+
+			JMenuItem collapseAllMenuItem = new JMenuItem("Collapse All");
+			collapseAllMenuItem.setIcon(new ImageIcon(frame.getMessenger()
+					.getConfig().getIconsLocation()
+					+ Icons.COLLAPSE_ICON));
+			collapseAllMenuItem.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					synchronized (projectTree)
+					{
+						int row = projectTree.getRowCount() - 1;
+						while (row >= 0)
+						{
+							projectTree.collapseRow(row);
+							row--;
+						}
+					}
+				}
+			});
+
+			JMenuItem expandAllMenuItem = new JMenuItem("Expand All");
+			expandAllMenuItem.setIcon(new ImageIcon(frame.getMessenger()
+					.getConfig().getIconsLocation()
+					+ Icons.EXPAND_ICON));
+			expandAllMenuItem.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					synchronized (projectTree)
+					{
+						int row = 0;
+						while (row < projectTree.getRowCount())
+						{
+							projectTree.expandRow(row);
+							row++;
+						}
+					}
+				}
+			});
+
 			if (projectTree.getLastSelectedPathComponent() != null
 					&& projectTree.getLastSelectedPathComponent() instanceof MessageType)
 			{
 				JMenuItem loadMessageMenuItem = new JMenuItem("Load Message");
+				loadMessageMenuItem.setIcon(new ImageIcon(frame.getMessenger()
+						.getConfig().getIconsLocation()
+						+ Icons.LOAD_ICON));
 				loadMessageMenuItem.addActionListener(new ActionListener()
 				{
 					@Override
@@ -82,6 +131,9 @@ public class ProjectTreeMouseListener extends MouseAdapter
 
 				JMenuItem deleteMessageMenuItem = new JMenuItem(
 						"Delete Message");
+				deleteMessageMenuItem.setIcon(new ImageIcon(frame
+						.getMessenger().getConfig().getIconsLocation()
+						+ Icons.DELETE_ICON));
 				deleteMessageMenuItem.addActionListener(new ActionListener()
 				{
 					@Override
@@ -111,11 +163,18 @@ public class ProjectTreeMouseListener extends MouseAdapter
 					}
 				});
 
-				JPopupMenu popUpMenu = new JPopupMenu();
 				popUpMenu.add(loadMessageMenuItem);
 				popUpMenu.add(deleteMessageMenuItem);
-				popUpMenu.show(projectTree, event.getX(), event.getY());
+				popUpMenu.addSeparator();
+				popUpMenu.add(collapseAllMenuItem);
+				popUpMenu.add(expandAllMenuItem);
+			} else
+			{
+				popUpMenu.add(collapseAllMenuItem);
+				popUpMenu.add(expandAllMenuItem);
 			}
+
+			popUpMenu.show(projectTree, event.getX(), event.getY());
 		}
 	}
 }

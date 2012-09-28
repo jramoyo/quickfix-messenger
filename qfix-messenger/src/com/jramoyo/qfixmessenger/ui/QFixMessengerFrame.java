@@ -133,6 +133,7 @@ import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 import com.jramoyo.qfixmessenger.quickfix.QFixMessageListener;
 import com.jramoyo.qfixmessenger.quickfix.util.QFixUtil;
 import com.jramoyo.qfixmessenger.ui.listeners.AboutActionListener;
+import com.jramoyo.qfixmessenger.ui.listeners.CloseProjectActionListener;
 import com.jramoyo.qfixmessenger.ui.listeners.FrameExitActionListener;
 import com.jramoyo.qfixmessenger.ui.listeners.HelpActionListener;
 import com.jramoyo.qfixmessenger.ui.listeners.ImportMessageActionListener;
@@ -174,6 +175,8 @@ public class QFixMessengerFrame extends JFrame
 
 	private static final String VERSION = "2.0";
 
+	private static final String EMPTY_PROJECT = "None";
+
 	private static final int LEFT_PANEL_WIDTH = 170;
 
 	private static final int MIDDLE_PANEL_WIDTH = 600;
@@ -194,7 +197,7 @@ public class QFixMessengerFrame extends JFrame
 
 	private String frameTitle;
 
-	private String projectTitle = "None";
+	private String projectTitle = EMPTY_PROJECT;
 
 	private ProjectType xmlProjectType;
 
@@ -223,6 +226,9 @@ public class QFixMessengerFrame extends JFrame
 	private JMenu helpMenu;
 
 	private JMenu windowMenu;
+
+	private JMenuItem closeProjectMenuItem;
+	private JMenuItem saveProjectMenuItem;
 
 	private JPanel leftPanel;
 
@@ -319,6 +325,23 @@ public class QFixMessengerFrame extends JFrame
 				"Exit QuickFIX Messenger?", "Quit", JOptionPane.YES_NO_OPTION);
 		if (choice == JOptionPane.YES_OPTION)
 		{
+			if (xmlProjectType != null)
+			{
+				choice = JOptionPane.showConfirmDialog(this,
+						"Do you want to save \"" + xmlProjectType.getName()
+								+ "\"?", "Save Current Project",
+						JOptionPane.YES_NO_CANCEL_OPTION);
+				switch (choice)
+				{
+				case JOptionPane.NO_OPTION:
+					break;
+				case JOptionPane.YES_OPTION:
+					marshallXmlProjectType();
+					break;
+				case JOptionPane.CANCEL_OPTION:
+					return;
+				}
+			}
 			setVisible(false);
 			messenger.exit();
 		}
@@ -359,8 +382,8 @@ public class QFixMessengerFrame extends JFrame
 	 */
 	public void launch()
 	{
-		setIconImage(new ImageIcon(messenger.getConfig().getAppIconLocation())
-				.getImage());
+		setIconImage(new ImageIcon(messenger.getConfig().getIconsLocation()
+				+ Icons.APP_ICON).getImage());
 
 		if (messenger.getConfig().isInitiator())
 		{
@@ -584,17 +607,28 @@ public class QFixMessengerFrame extends JFrame
 	public void setXmlProjectType(ProjectType xmlProjectType)
 	{
 		this.xmlProjectType = xmlProjectType;
-
-		projectTitle = xmlProjectType.getName();
-		loadFrameTitle();
-
 		if (projectFrame != null)
 		{
 			projectFrame.dispose();
 			projectFrame = null;
 		}
-		addButton.setEnabled(true);
-		launchProjectFrame();
+
+		if (xmlProjectType != null)
+		{
+			projectTitle = xmlProjectType.getName();
+			loadFrameTitle();
+			addButton.setEnabled(true);
+			saveProjectMenuItem.setEnabled(true);
+			closeProjectMenuItem.setEnabled(true);
+			launchProjectFrame();
+		} else
+		{
+			projectTitle = EMPTY_PROJECT;
+			loadFrameTitle();
+			saveProjectMenuItem.setEnabled(false);
+			closeProjectMenuItem.setEnabled(false);
+			addButton.setEnabled(false);
+		}
 	}
 
 	private void initAppVersionsComboBox()
@@ -647,41 +681,62 @@ public class QFixMessengerFrame extends JFrame
 		fileMenu.setMnemonic('F');
 
 		JMenuItem newProjectMenuItem = new JMenuItem("New Project");
+		newProjectMenuItem.setIcon(new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.NEW_ICON));
 		newProjectMenuItem.setMnemonic('N');
 		newProjectMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
 				InputEvent.CTRL_DOWN_MASK));
 		newProjectMenuItem
 				.addActionListener(new NewProjectActionListener(this));
 
-		JMenuItem saveProjectMenuItem = new JMenuItem("Save Project");
+		saveProjectMenuItem = new JMenuItem("Save Project");
+		saveProjectMenuItem.setIcon(new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.SAVE_ICON));
 		saveProjectMenuItem.setMnemonic('S');
 		saveProjectMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
 		saveProjectMenuItem.addActionListener(new SaveProjectActionListener(
 				this));
+		saveProjectMenuItem.setEnabled(false);
 
 		JMenuItem openProjectMenuItem = new JMenuItem("Open Project");
+		openProjectMenuItem.setIcon(new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.OPEN_ICON));
 		openProjectMenuItem.setMnemonic('O');
 		openProjectMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
 		openProjectMenuItem.addActionListener(new OpenProjectActionListener(
 				this));
 
-		JMenuItem exportMessageMenuItem = new JMenuItem("Export Message");
-		exportMessageMenuItem.setMnemonic('X');
-		exportMessageMenuItem.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
-		exportMessageMenuItem
-				.addActionListener(new ExportMessageActionListener(this));
+		closeProjectMenuItem = new JMenuItem("Close Project");
+		closeProjectMenuItem.setIcon(new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.CLOSE_ICON));
+		closeProjectMenuItem.setMnemonic('C');
+		closeProjectMenuItem.addActionListener(new CloseProjectActionListener(
+				this));
+		closeProjectMenuItem.setEnabled(false);
 
 		JMenuItem importMessageMenuItem = new JMenuItem("Import Message");
+		importMessageMenuItem.setIcon(new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.IMPORT_ICON));
 		importMessageMenuItem.setMnemonic('I');
 		importMessageMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK));
 		importMessageMenuItem
 				.addActionListener(new ImportMessageActionListener(this));
 
+		JMenuItem exportMessageMenuItem = new JMenuItem("Export Message");
+		exportMessageMenuItem.setIcon(new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.EXPORT_ICON));
+		exportMessageMenuItem
+				.addActionListener(new ExportMessageActionListener(this));
+		exportMessageMenuItem.setMnemonic('X');
+		exportMessageMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
+
 		JMenuItem exitMenuItem = new JMenuItem("Exit");
+		exitMenuItem.setIcon(new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.EXIT_ICON));
 		exitMenuItem.setMnemonic('x');
 		exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
 				InputEvent.ALT_DOWN_MASK));
@@ -690,9 +745,10 @@ public class QFixMessengerFrame extends JFrame
 		fileMenu.add(newProjectMenuItem);
 		fileMenu.add(saveProjectMenuItem);
 		fileMenu.add(openProjectMenuItem);
+		fileMenu.add(closeProjectMenuItem);
 		fileMenu.addSeparator();
-		fileMenu.add(exportMessageMenuItem);
 		fileMenu.add(importMessageMenuItem);
+		fileMenu.add(exportMessageMenuItem);
 		fileMenu.addSeparator();
 		fileMenu.add(exitMenuItem);
 	}
@@ -702,15 +758,17 @@ public class QFixMessengerFrame extends JFrame
 		helpMenu = new JMenu("Help");
 		helpMenu.setMnemonic('H');
 
-		JMenuItem aboutMenuItem = new JMenuItem("About");
-		aboutMenuItem.setMnemonic('A');
-		aboutMenuItem.addActionListener(new AboutActionListener(this));
-
 		JMenuItem helpMenuItem = new JMenuItem("Help");
+		helpMenuItem.setIcon(new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.HELP_ICON));
 		helpMenuItem.setMnemonic('H');
 		helpMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2,
 				InputEvent.SHIFT_DOWN_MASK));
 		helpMenuItem.addActionListener(new HelpActionListener(this));
+
+		JMenuItem aboutMenuItem = new JMenuItem("About");
+		aboutMenuItem.setMnemonic('A');
+		aboutMenuItem.addActionListener(new AboutActionListener(this));
 
 		helpMenu.add(helpMenuItem);
 		helpMenu.add(aboutMenuItem);
@@ -915,14 +973,14 @@ public class QFixMessengerFrame extends JFrame
 		});
 
 		ImageIcon addImageIcon = new ImageIcon(messenger.getConfig()
-				.getAddIconLocation());
+				.getIconsLocation() + Icons.ADD_ICON);
 		addButton = new JButton(addImageIcon);
 		addButton.addActionListener(new AddMessageActionListener(this));
 		addButton.setToolTipText("Adds the message to the current project");
 		addButton.setEnabled(false);
 
 		ImageIcon sendImageIcon = new ImageIcon(messenger.getConfig()
-				.getSendIconLocation());
+				.getIconsLocation() + Icons.SEND_ICON);
 		sendButton = new JButton(sendImageIcon);
 		sendButton.addActionListener(new SendActionListener(this));
 		sendButton.setToolTipText("Sends the message across the session");
@@ -987,6 +1045,8 @@ public class QFixMessengerFrame extends JFrame
 
 		JMenuItem logonAllSessionsMenuItem = new JMenuItem(
 				"All Sessions - Logon");
+		logonAllSessionsMenuItem.setIcon(new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.LOGON_ICON));
 		logonAllSessionsMenuItem.setMnemonic('n');
 		logonAllSessionsMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
@@ -995,6 +1055,8 @@ public class QFixMessengerFrame extends JFrame
 
 		JMenuItem logoffAllSessionsMenuItem = new JMenuItem(
 				"All Sessions - Logoff");
+		logoffAllSessionsMenuItem.setIcon(new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.LOGOFF_ICON));
 		logoffAllSessionsMenuItem.setMnemonic('f');
 		logoffAllSessionsMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK));
@@ -1003,6 +1065,8 @@ public class QFixMessengerFrame extends JFrame
 
 		JMenuItem resetAllSessionsMenuItem = new JMenuItem(
 				"All Sessions - Reset");
+		resetAllSessionsMenuItem.setIcon(new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.RESET_ICON));
 		resetAllSessionsMenuItem.setMnemonic('R');
 		resetAllSessionsMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
@@ -1053,6 +1117,8 @@ public class QFixMessengerFrame extends JFrame
 		windowMenu.setMnemonic('W');
 
 		JMenuItem projectWindowMenuItem = new JMenuItem("Project Window");
+		projectWindowMenuItem.setIcon(new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.WINDOW_ICON));
 		projectWindowMenuItem.setMnemonic('P');
 		projectWindowMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));

@@ -66,6 +66,24 @@ public class OpenProjectActionListener implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
+		if (frame.getXmlProjectType() != null)
+		{
+			int choice = JOptionPane.showConfirmDialog(frame,
+					"Do you want to save \""
+							+ frame.getXmlProjectType().getName() + "\"?",
+					"Save Current Project", JOptionPane.YES_NO_CANCEL_OPTION);
+			switch (choice)
+			{
+			case JOptionPane.NO_OPTION:
+				break;
+			case JOptionPane.YES_OPTION:
+				frame.marshallXmlProjectType();
+				break;
+			case JOptionPane.CANCEL_OPTION:
+				return;
+			}
+		}
+
 		JFileChooser jFileChooser = new JFileChooser();
 		jFileChooser.setFileFilter(XmlFileFilter.INSTANCE);
 

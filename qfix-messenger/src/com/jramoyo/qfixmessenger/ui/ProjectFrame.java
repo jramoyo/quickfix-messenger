@@ -81,7 +81,8 @@ public class ProjectFrame extends JFrame
 	public void launch()
 	{
 		setIconImage(new ImageIcon(frame.getMessenger().getConfig()
-				.getAppIconLocation()).getImage());
+				.getIconsLocation()
+				+ Icons.APP_ICON).getImage());
 		setTitle("Project Tree");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -108,7 +109,7 @@ public class ProjectFrame extends JFrame
 		projectTree = new JTree();
 		projectTree.setEditable(true);
 		projectTree.setModel(new ProjectTreeModel(xmlProjectType));
-		projectTree.setCellRenderer(new ProjectTreeCellRenderer());
+		projectTree.setCellRenderer(new ProjectTreeCellRenderer(frame));
 		projectTree.setCellEditor(new ProjectTreeCellEditor(projectTree));
 		projectTree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);

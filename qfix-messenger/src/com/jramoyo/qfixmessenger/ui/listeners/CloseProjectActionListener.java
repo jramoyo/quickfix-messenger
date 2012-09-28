@@ -27,8 +27,8 @@
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
  * DAMAGE.
  *
- * NewProjectActionListener.java
- * Sep 23, 2012
+ * CloseProjectActionListener.java
+ * Sep 28, 2012
  */
 package com.jramoyo.qfixmessenger.ui.listeners;
 
@@ -37,18 +37,16 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import com.jramoyo.fix.xml.ObjectFactory;
-import com.jramoyo.fix.xml.ProjectType;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 
 /**
  * @author jramoyo
  */
-public class NewProjectActionListener implements ActionListener
+public class CloseProjectActionListener implements ActionListener
 {
 	private QFixMessengerFrame frame;
 
-	public NewProjectActionListener(QFixMessengerFrame frame)
+	public CloseProjectActionListener(QFixMessengerFrame frame)
 	{
 		this.frame = frame;
 	}
@@ -56,34 +54,31 @@ public class NewProjectActionListener implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if (frame.getXmlProjectType() != null)
+		int choice = JOptionPane.showConfirmDialog(frame,
+				"Are you sure you want to close \""
+						+ frame.getXmlProjectType().getName() + "\"?",
+				"Close Project", JOptionPane.YES_NO_OPTION);
+		if (choice == JOptionPane.YES_OPTION)
 		{
-			int choice = JOptionPane.showConfirmDialog(frame,
-					"Do you want to save \""
-							+ frame.getXmlProjectType().getName() + "\"?",
-					"Save Current Project", JOptionPane.YES_NO_CANCEL_OPTION);
-			switch (choice)
+			if (frame.getXmlProjectType() != null)
 			{
-			case JOptionPane.NO_OPTION:
-				break;
-			case JOptionPane.YES_OPTION:
-				frame.marshallXmlProjectType();
-				break;
-			case JOptionPane.CANCEL_OPTION:
-				return;
+				choice = JOptionPane.showConfirmDialog(frame,
+						"Do you want to save \""
+								+ frame.getXmlProjectType().getName() + "\"?",
+						"Save Current Project",
+						JOptionPane.YES_NO_CANCEL_OPTION);
+				switch (choice)
+				{
+				case JOptionPane.NO_OPTION:
+					break;
+				case JOptionPane.YES_OPTION:
+					frame.marshallXmlProjectType();
+					break;
+				case JOptionPane.CANCEL_OPTION:
+					return;
+				}
 			}
-		}
-
-		String projectName = JOptionPane
-				.showInputDialog(frame, "Project Name:", "New Project",
-						JOptionPane.INFORMATION_MESSAGE);
-		if (projectName != null)
-		{
-			ObjectFactory xmlObjectFactory = new ObjectFactory();
-			ProjectType xmlProjectType = xmlObjectFactory.createProjectType();
-			xmlProjectType.setName(projectName);
-			xmlProjectType.setMessages(xmlObjectFactory.createMessagesType());
-			frame.setXmlProjectType(xmlProjectType);
+			frame.setXmlProjectType(null);
 		}
 	}
 }

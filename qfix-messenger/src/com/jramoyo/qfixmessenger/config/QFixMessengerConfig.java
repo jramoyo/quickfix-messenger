@@ -48,9 +48,7 @@ public class QFixMessengerConfig
 	private static final String IS_INITIATOR_PROP = "messenger.isInitiator";
 	private static final String PARSER_THREADS_PROP = "messenger.parser.threads";
 	private static final String LICENSE_PROP = "messenger.license";
-	private static final String ICON_APP_PROP = "messenger.icon.app";
-	private static final String ICON_ADD_PROP = "messenger.icon.add";
-	private static final String ICON_SEND_PROP = "messenger.icon.send";
+	private static final String ICONS_PROP = "messenger.icons";
 	private static final String HOME_URL_PROP = "messenger.home.url";
 	private static final String HELP_URL_PROP = "messenger.help.url";
 
@@ -152,20 +150,9 @@ public class QFixMessengerConfig
 				.booleanValue();
 	}
 
-	public String getAppIconLocation()
+	public String getIconsLocation()
 	{
-		return properties.getProperty(ICON_APP_PROP, "resources/icons/app.png");
-	}
-
-	public String getAddIconLocation()
-	{
-		return properties.getProperty(ICON_ADD_PROP, "resources/icons/add.png");
-	}
-
-	public String getSendIconLocation()
-	{
-		return properties.getProperty(ICON_SEND_PROP,
-				"resources/icons/send.png");
+		return properties.getProperty(ICONS_PROP, "resources/icons/");
 	}
 
 	public String getLicenseFileLocation()
