@@ -74,16 +74,16 @@ public class NewProjectActionListener implements ActionListener
 			}
 		}
 
-		String projectName = JOptionPane
-				.showInputDialog(frame, "Project Name:", "New Project",
-						JOptionPane.INFORMATION_MESSAGE);
+		String projectName = (String) JOptionPane.showInputDialog(frame,
+				"Project Name:", "New Project", JOptionPane.QUESTION_MESSAGE,
+				null, null, "Project");
 		if (projectName != null)
 		{
 			ObjectFactory xmlObjectFactory = new ObjectFactory();
 			ProjectType xmlProjectType = xmlObjectFactory.createProjectType();
 			xmlProjectType.setName(projectName);
 			xmlProjectType.setMessages(xmlObjectFactory.createMessagesType());
-			frame.setXmlProjectType(xmlProjectType);
+			frame.setXmlProjectType(xmlProjectType, null);
 		}
 	}
 }

@@ -78,7 +78,7 @@ public class CloseProjectActionListener implements ActionListener
 					return;
 				}
 			}
-			frame.setXmlProjectType(null);
+			frame.setXmlProjectType(null, null);
 		}
 	}
 }

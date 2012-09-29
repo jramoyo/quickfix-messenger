@@ -40,6 +40,7 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -397,6 +398,13 @@ public class QFixMessengerFrame extends JFrame
 		addWindowListener(new FrameWindowAdapter(this));
 
 		initComponents();
+
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		Dimension screenSize = tk.getScreenSize();
+		int screenHeight = screenSize.height;
+		int screenWidth = screenSize.width;
+		setSize(screenWidth / 2, screenHeight / 2);
+		setLocation(screenWidth / 4, screenHeight / 4);
 		setVisible(true);
 	}
 
@@ -604,9 +612,11 @@ public class QFixMessengerFrame extends JFrame
 	 * @param xmlProjectType
 	 *            an XML ProjectType
 	 */
-	public void setXmlProjectType(ProjectType xmlProjectType)
+	public void setXmlProjectType(ProjectType xmlProjectType,
+			File xmlProjectFile)
 	{
 		this.xmlProjectType = xmlProjectType;
+		this.xmlProjectFile = null;
 		if (projectFrame != null)
 		{
 			projectFrame.dispose();
