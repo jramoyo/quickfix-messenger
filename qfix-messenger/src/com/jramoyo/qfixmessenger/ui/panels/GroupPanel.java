@@ -131,16 +131,22 @@ public class GroupPanel extends AbstractMemberPanel
 				{
 					ComponentType xmlComponentType = ((ComponentPanel) memberPanel)
 							.getXmlComponent();
-					xmlGroupType.getFieldOrGroupsOrComponent().add(
-							xmlComponentType);
+					if (xmlComponentType != null)
+					{
+						xmlGroupType.getFieldOrGroupsOrComponent().add(
+								xmlComponentType);
+					}
 				}
 
 				if (memberPanel instanceof GroupPanel)
 				{
 					GroupsType xmlGroupsTypeMember = ((GroupPanel) memberPanel)
 							.getXmlGroups();
-					xmlGroupType.getFieldOrGroupsOrComponent().add(
-							xmlGroupsTypeMember);
+					if (xmlGroupsTypeMember != null)
+					{
+						xmlGroupType.getFieldOrGroupsOrComponent().add(
+								xmlGroupsTypeMember);
+					}
 				}
 			}
 

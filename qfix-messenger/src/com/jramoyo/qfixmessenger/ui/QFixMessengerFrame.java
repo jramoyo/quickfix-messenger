@@ -435,6 +435,8 @@ public class QFixMessengerFrame extends JFrame
 	{
 		JFileChooser jFileChooser = new JFileChooser();
 		jFileChooser.setFileFilter(XmlFileFilter.INSTANCE);
+		jFileChooser.setDialogTitle("Export Message");
+		jFileChooser.setSelectedFile(new File("*.xml"));
 
 		int choice = jFileChooser.showSaveDialog(this);
 		if (choice == JFileChooser.APPROVE_OPTION)
@@ -473,6 +475,8 @@ public class QFixMessengerFrame extends JFrame
 		{
 			JFileChooser jFileChooser = new JFileChooser();
 			jFileChooser.setFileFilter(XmlFileFilter.INSTANCE);
+			jFileChooser.setDialogTitle("Save Project");
+			jFileChooser.setSelectedFile(new File("*.xml"));
 
 			int choice = jFileChooser.showSaveDialog(this);
 			if (choice == JFileChooser.APPROVE_OPTION)
@@ -480,7 +484,7 @@ public class QFixMessengerFrame extends JFrame
 				xmlProjectFile = jFileChooser.getSelectedFile();
 			}
 
-			else if (choice == JOptionPane.CANCEL_OPTION)
+			else if (choice == JFileChooser.CANCEL_OPTION)
 			{
 				return;
 			}
@@ -548,9 +552,12 @@ public class QFixMessengerFrame extends JFrame
 				{
 					if (memberPanel instanceof FieldPanel)
 					{
-						FieldType xmlFieldType = ((FieldPanel) memberPanel)
-								.getXmlField();
-						xmlHeaderType.getField().add(xmlFieldType);
+						FieldPanel fieldPanel = (FieldPanel) memberPanel;
+						FieldType xmlFieldType = fieldPanel.getXmlField();
+						if (xmlFieldType != null)
+						{
+							xmlHeaderType.getField().add(xmlFieldType);
+						}
 					}
 				}
 			}
@@ -561,22 +568,35 @@ public class QFixMessengerFrame extends JFrame
 				if (memberPanel instanceof FieldPanel)
 				{
 					FieldPanel fieldPanel = (FieldPanel) memberPanel;
-					xmlBodyType.getFieldOrGroupsOrComponent().add(
-							fieldPanel.getXmlField());
+					FieldType xmlFieldType = fieldPanel.getXmlField();
+					if (xmlFieldType != null)
+					{
+						xmlBodyType.getFieldOrGroupsOrComponent().add(
+								xmlFieldType);
+					}
 				}
 
 				if (memberPanel instanceof GroupPanel)
 				{
 					GroupPanel groupPanel = (GroupPanel) memberPanel;
-					xmlBodyType.getFieldOrGroupsOrComponent().add(
-							groupPanel.getXmlGroups());
+					GroupsType xmlGroupsType = groupPanel.getXmlGroups();
+					if (xmlGroupsType != null)
+					{
+						xmlBodyType.getFieldOrGroupsOrComponent().add(
+								xmlGroupsType);
+					}
 				}
 
 				if (memberPanel instanceof ComponentPanel)
 				{
 					ComponentPanel componentPanel = (ComponentPanel) memberPanel;
-					xmlBodyType.getFieldOrGroupsOrComponent().add(
-							componentPanel.getXmlComponent());
+					ComponentType xmlComponentType = componentPanel
+							.getXmlComponent();
+					if (xmlComponentType != null)
+					{
+						xmlBodyType.getFieldOrGroupsOrComponent().add(
+								componentPanel.getXmlComponent());
+					}
 				}
 			}
 
@@ -587,9 +607,12 @@ public class QFixMessengerFrame extends JFrame
 				{
 					if (memberPanel instanceof FieldPanel)
 					{
-						FieldType xmlFieldType = ((FieldPanel) memberPanel)
-								.getXmlField();
-						xmlTrailerType.getField().add(xmlFieldType);
+						FieldPanel fieldPanel = (FieldPanel) memberPanel;
+						FieldType xmlFieldType = fieldPanel.getXmlField();
+						if (xmlFieldType != null)
+						{
+							xmlTrailerType.getField().add(xmlFieldType);
+						}
 					}
 				}
 			}

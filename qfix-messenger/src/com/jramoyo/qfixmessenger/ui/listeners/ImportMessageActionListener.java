@@ -68,6 +68,7 @@ public class ImportMessageActionListener implements ActionListener
 	{
 		JFileChooser jFileChooser = new JFileChooser();
 		jFileChooser.setFileFilter(XmlFileFilter.INSTANCE);
+		jFileChooser.setDialogTitle("Import Message");
 
 		int choice = jFileChooser.showOpenDialog(frame);
 		if (choice == JFileChooser.APPROVE_OPTION)

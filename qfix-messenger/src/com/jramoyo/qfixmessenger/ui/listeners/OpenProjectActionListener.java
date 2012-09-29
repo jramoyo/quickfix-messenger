@@ -86,6 +86,7 @@ public class OpenProjectActionListener implements ActionListener
 
 		JFileChooser jFileChooser = new JFileChooser();
 		jFileChooser.setFileFilter(XmlFileFilter.INSTANCE);
+		jFileChooser.setDialogTitle("Open Project");
 
 		int choice = jFileChooser.showOpenDialog(frame);
 		if (choice == JFileChooser.APPROVE_OPTION)
