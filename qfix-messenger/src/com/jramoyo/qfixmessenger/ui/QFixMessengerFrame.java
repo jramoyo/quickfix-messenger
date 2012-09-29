@@ -399,12 +399,14 @@ public class QFixMessengerFrame extends JFrame
 
 		initComponents();
 
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		Dimension screenSize = tk.getScreenSize();
+		// Position the frame at the center of the screen
+		Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
+		Dimension screenSize = defaultToolkit.getScreenSize();
 		int screenHeight = screenSize.height;
 		int screenWidth = screenSize.width;
 		setSize(screenWidth / 2, screenHeight / 2);
 		setLocation(screenWidth / 4, screenHeight / 4);
+
 		setVisible(true);
 	}
 

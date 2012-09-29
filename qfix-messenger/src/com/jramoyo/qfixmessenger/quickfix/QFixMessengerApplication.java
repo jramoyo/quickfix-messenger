@@ -35,16 +35,29 @@ package com.jramoyo.qfixmessenger.quickfix;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import quickfix.Application;
+import quickfix.ConfigError;
 import quickfix.DoNotSend;
+import quickfix.FieldConvertError;
 import quickfix.FieldNotFound;
 import quickfix.IncorrectDataFormat;
 import quickfix.IncorrectTagValue;
 import quickfix.Message;
 import quickfix.RejectLogon;
 import quickfix.SessionID;
+import quickfix.SessionSettings;
 import quickfix.UnsupportedMessageType;
 import quickfix.field.MsgType;
+import quickfix.field.Password;
+import quickfix.field.RawData;
+import quickfix.field.RawDataLength;
+import quickfix.field.TestMessageIndicator;
+import quickfix.field.Username;
+
+import com.jramoyo.qfixmessenger.util.StringUtil;
 
 /**
  * Implementation of QuickFIX application
@@ -53,7 +66,17 @@ import quickfix.field.MsgType;
  */
 public class QFixMessengerApplication implements Application
 {
-	private List<QFixMessageListener> messageListeners = new ArrayList<QFixMessageListener>();
+	private static final Logger logger = LoggerFactory
+			.getLogger(QFixMessengerApplication.class);
+
+	private final SessionSettings sessionSettings;
+
+	private final List<QFixMessageListener> messageListeners = new ArrayList<QFixMessageListener>();
+
+	public QFixMessengerApplication(SessionSettings sessionSettings)
+	{
+		this.sessionSettings = sessionSettings;
+	}
 
 	public void addMessageListener(QFixMessageListener messageListener)
 	{
@@ -112,6 +135,56 @@ public class QFixMessengerApplication implements Application
 	@Override
 	public void toAdmin(Message message, SessionID sessionId)
 	{
+		// Customize logon
+		if (isMessageOfType(message, MsgType.LOGON))
+		{
+			try
+			{
+				String usernameSetting = sessionSettings.getString(sessionId,
+						"Username");
+				if (!StringUtil.isNullOrEmpty(usernameSetting))
+				{
+					message.setField(new Username(usernameSetting));
+				}
+
+				String passwordSetting = sessionSettings.getString(sessionId,
+						"Password");
+				if (!StringUtil.isNullOrEmpty(passwordSetting))
+				{
+					message.setField(new Password(passwordSetting));
+				}
+
+				String rawDataSetting = sessionSettings.getString(sessionId,
+						"RawData");
+				if (!StringUtil.isNullOrEmpty(rawDataSetting))
+				{
+					message.setField(new RawData(rawDataSetting));
+				}
+
+				long rawDataLengthSetting = sessionSettings.getLong(sessionId,
+						"RawDataLength");
+				if (rawDataLengthSetting > 0)
+				{
+					message.setField(new RawDataLength(
+							(int) rawDataLengthSetting));
+				}
+
+				String testMessageIndicatorSetting = sessionSettings.getString(
+						sessionId, "TestMessageIndicator");
+				if (!StringUtil.isNullOrEmpty(testMessageIndicatorSetting))
+				{
+					message.setField(new TestMessageIndicator(Boolean
+							.valueOf(testMessageIndicatorSetting)));
+				}
+			} catch (ConfigError ex)
+			{
+				logger.debug(ex.getMessage());
+			} catch (FieldConvertError ex)
+			{
+				logger.error("An error occured while "
+						+ "fetching custom logon settings!", ex);
+			}
+		}
 	}
 
 	@Override
@@ -121,6 +194,19 @@ public class QFixMessengerApplication implements Application
 		{
 			messageListener.onMessage(QFixMessageListener.SENT, message,
 					sessionId);
+		}
+	}
+
+	private boolean isMessageOfType(Message message, String type)
+	{
+		try
+		{
+			return type.equals(message.getHeader().getField(new MsgType())
+					.getValue());
+		} catch (FieldNotFound ex)
+		{
+			logger.error("Unable to find MsgType from Message!", ex);
+			return false;
 		}
 	}
 }

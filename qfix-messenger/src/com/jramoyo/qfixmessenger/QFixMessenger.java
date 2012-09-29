@@ -95,7 +95,7 @@ public class QFixMessenger
 		parser = new QFixDictionaryParser(config.getNoOfParserThreads());
 
 		// Create the QuickFIX application
-		application = new QFixMessengerApplication();
+		application = new QFixMessengerApplication(settings);
 
 		// Initialise the factories
 		MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
