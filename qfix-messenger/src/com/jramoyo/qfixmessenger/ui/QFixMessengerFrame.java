@@ -369,6 +369,16 @@ public class QFixMessengerFrame extends JFrame
 	}
 
 	/**
+	 * Returns the current ProjectFrame instance
+	 * 
+	 * @return the current ProjectFrame instance
+	 */
+	public ProjectFrame getProjectFrame()
+	{
+		return projectFrame;
+	}
+
+	/**
 	 * Returns the active XML ProjectType
 	 * 
 	 * @return the active XML ProjectType

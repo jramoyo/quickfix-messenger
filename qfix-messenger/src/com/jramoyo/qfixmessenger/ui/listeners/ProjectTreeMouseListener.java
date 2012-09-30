@@ -70,6 +70,11 @@ public class ProjectTreeMouseListener extends MouseAdapter
 		{
 			JPopupMenu popUpMenu = new JPopupMenu();
 
+			JMenuItem sendAllMenuItem = new JMenuItem("Send All Messages");
+			sendAllMenuItem.setIcon(new ImageIcon(frame.getMessenger()
+					.getConfig().getIconsLocation()
+					+ Icons.SEND_ALL_ICON));
+
 			JMenuItem collapseAllMenuItem = new JMenuItem("Collapse All");
 			collapseAllMenuItem.setIcon(new ImageIcon(frame.getMessenger()
 					.getConfig().getIconsLocation()
@@ -130,6 +135,16 @@ public class ProjectTreeMouseListener extends MouseAdapter
 					}
 				});
 
+				JMenuItem sendMenuItem = new JMenuItem("Send Message");
+				sendMenuItem.setIcon(new ImageIcon(frame.getMessenger()
+						.getConfig().getIconsLocation()
+						+ Icons.SEND_SMALL_ICON));
+
+				JMenuItem exportMenuItem = new JMenuItem("Export Message");
+				exportMenuItem.setIcon(new ImageIcon(frame.getMessenger()
+						.getConfig().getIconsLocation()
+						+ Icons.EXPORT_ICON));
+
 				JMenuItem deleteMessageMenuItem = new JMenuItem(
 						"Delete Message");
 				deleteMessageMenuItem.setIcon(new ImageIcon(frame
@@ -143,8 +158,9 @@ public class ProjectTreeMouseListener extends MouseAdapter
 						MessageType xmlMessageType = (MessageType) projectTree
 								.getLastSelectedPathComponent();
 
-						int choice = JOptionPane.showConfirmDialog(projectTree,
-								"Delete \"" + xmlMessageType.getName() + "\"?",
+						int choice = JOptionPane.showConfirmDialog(
+								frame.getProjectFrame(), "Delete \""
+										+ xmlMessageType.getName() + "\"?",
 								"Delete Message", JOptionPane.YES_NO_OPTION);
 						if (choice == JOptionPane.YES_OPTION)
 						{
@@ -173,12 +189,18 @@ public class ProjectTreeMouseListener extends MouseAdapter
 				});
 
 				popUpMenu.add(loadMessageMenuItem);
+				popUpMenu.add(sendMenuItem);
+				popUpMenu.add(exportMenuItem);
 				popUpMenu.add(deleteMessageMenuItem);
+				popUpMenu.addSeparator();
+				popUpMenu.add(sendAllMenuItem);
 				popUpMenu.addSeparator();
 				popUpMenu.add(collapseAllMenuItem);
 				popUpMenu.add(expandAllMenuItem);
 			} else
 			{
+				popUpMenu.add(sendAllMenuItem);
+				popUpMenu.addSeparator();
 				popUpMenu.add(collapseAllMenuItem);
 				popUpMenu.add(expandAllMenuItem);
 			}

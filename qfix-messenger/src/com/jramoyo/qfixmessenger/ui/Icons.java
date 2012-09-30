@@ -66,6 +66,8 @@ public final class Icons
 
 	public static String LOAD_ICON = "/load.png";
 	public static String DELETE_ICON = "/delete.png";
+	public static String SEND_SMALL_ICON = "/send_small.png";
+	public static String SEND_ALL_ICON = "/send_all.png";
 	public static String COLLAPSE_ICON = "/collapse.png";
 	public static String EXPAND_ICON = "/expand.png";
 
