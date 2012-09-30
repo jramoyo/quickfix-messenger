@@ -39,6 +39,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 
@@ -142,24 +143,32 @@ public class ProjectTreeMouseListener extends MouseAdapter
 						MessageType xmlMessageType = (MessageType) projectTree
 								.getLastSelectedPathComponent();
 
-						ProjectTreeModel projectTreeModel = (ProjectTreeModel) projectTree
-								.getModel();
-						ProjectType xmlProjectType = (ProjectType) projectTreeModel
-								.getRoot();
-						int index = 0;
-						for (MessageType currentXmlMessageType : xmlProjectType
-								.getMessages().getMessage())
+						int choice = JOptionPane.showConfirmDialog(projectTree,
+								"Delete \"" + xmlMessageType.getName() + "\"?",
+								"Delete Message", JOptionPane.YES_NO_OPTION);
+						if (choice == JOptionPane.YES_OPTION)
 						{
-							if (currentXmlMessageType.equals(xmlMessageType))
+							ProjectTreeModel projectTreeModel = (ProjectTreeModel) projectTree
+									.getModel();
+							ProjectType xmlProjectType = (ProjectType) projectTreeModel
+									.getRoot();
+							int index = 0;
+							for (MessageType currentXmlMessageType : xmlProjectType
+									.getMessages().getMessage())
 							{
-								break;
+								if (currentXmlMessageType
+										.equals(xmlMessageType))
+								{
+									break;
+								}
+								index++;
 							}
-							index++;
-						}
 
-						xmlProjectType.getMessages().getMessage().remove(index);
-						projectTreeModel.updateMessageRemoved(xmlMessageType,
-								index);
+							xmlProjectType.getMessages().getMessage()
+									.remove(index);
+							projectTreeModel.updateMessageRemoved(
+									xmlMessageType, index);
+						}
 					}
 				});
 
