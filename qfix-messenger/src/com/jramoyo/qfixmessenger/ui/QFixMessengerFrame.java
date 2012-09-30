@@ -1493,6 +1493,8 @@ public class QFixMessengerFrame extends JFrame
 			Message message = listModel.getElementAt(i);
 			if (message.getMsgType().equals(xmlMessageType.getMsgType()))
 			{
+				messagesList.setSelectedIndex(i);
+
 				if (xmlMessageType.isIsRequiredOnly())
 				{
 					requiredCheckBox.setSelected(true);
@@ -1521,7 +1523,6 @@ public class QFixMessengerFrame extends JFrame
 					modifyTrailerCheckBox.setSelected(false);
 				}
 
-				messagesList.setSelectedIndex(i);
 				isRecognizedMessage = true;
 			}
 		}
@@ -1824,6 +1825,11 @@ public class QFixMessengerFrame extends JFrame
 				{
 					logger.debug("Selected message " + frame.activeMessage);
 				}
+
+				frame.requiredCheckBox.setSelected(true);
+				frame.modifyHeaderCheckBox.setSelected(false);
+				frame.modifyTrailerCheckBox.setSelected(false);
+
 				frame.loadMainPanel();
 			}
 		}
