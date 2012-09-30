@@ -1493,6 +1493,34 @@ public class QFixMessengerFrame extends JFrame
 			Message message = listModel.getElementAt(i);
 			if (message.getMsgType().equals(xmlMessageType.getMsgType()))
 			{
+				if (xmlMessageType.isIsRequiredOnly())
+				{
+					requiredCheckBox.setSelected(true);
+				} else
+				{
+					requiredCheckBox.setSelected(false);
+				}
+
+				if (xmlMessageType.getHeader() != null
+						&& xmlMessageType.getHeader().getField() != null
+						&& xmlMessageType.getHeader().getField().isEmpty())
+				{
+					modifyHeaderCheckBox.setSelected(true);
+				} else
+				{
+					modifyHeaderCheckBox.setSelected(false);
+				}
+
+				if (xmlMessageType.getTrailer() != null
+						&& xmlMessageType.getTrailer().getField() != null
+						&& xmlMessageType.getTrailer().getField().isEmpty())
+				{
+					modifyTrailerCheckBox.setSelected(true);
+				} else
+				{
+					modifyTrailerCheckBox.setSelected(false);
+				}
+
 				messagesList.setSelectedIndex(i);
 				isRecognizedMessage = true;
 			}
@@ -1509,34 +1537,6 @@ public class QFixMessengerFrame extends JFrame
 							+ xmlMessageType.getMsgType() + ")", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return false;
-		}
-
-		if (xmlMessageType.isIsRequiredOnly())
-		{
-			requiredCheckBox.setSelected(true);
-		} else
-		{
-			requiredCheckBox.setSelected(false);
-		}
-
-		if (xmlMessageType.getHeader() != null
-				&& xmlMessageType.getHeader().getField() != null
-				&& xmlMessageType.getHeader().getField().isEmpty())
-		{
-			modifyHeaderCheckBox.setSelected(true);
-		} else
-		{
-			modifyHeaderCheckBox.setSelected(false);
-		}
-
-		if (xmlMessageType.getTrailer() != null
-				&& xmlMessageType.getTrailer().getField() != null
-				&& xmlMessageType.getTrailer().getField().isEmpty())
-		{
-			modifyTrailerCheckBox.setSelected(true);
-		} else
-		{
-			modifyTrailerCheckBox.setSelected(false);
 		}
 
 		return true;
