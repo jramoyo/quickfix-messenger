@@ -328,26 +328,13 @@ public class QFixMessengerFrame extends JFrame
 	 */
 	public void launch()
 	{
-		setIconImage(new ImageIcon(messenger.getConfig().getIconsLocation()
-				+ Icons.APP_ICON).getImage());
-
-		if (messenger.getConfig().isInitiator())
-		{
-			frameTitle = "QuickFIX Messenger " + VERSION + " (Initiator)";
-		} else
-		{
-			frameTitle = "QuickFIX Messenger " + VERSION + " (Acceptor)";
-		}
-		loadFrameTitle();
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new FrameWindowAdapter(this));
-
-		initComponents();
-		positionFrame();
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
 			{
+				initFrame();
+				initComponents();
+				positionFrame();
 				setVisible(true);
 			}
 		});
@@ -631,6 +618,22 @@ public class QFixMessengerFrame extends JFrame
 		fileMenu.add(exportMessageMenuItem);
 		fileMenu.addSeparator();
 		fileMenu.add(exitMenuItem);
+	}
+
+	private void initFrame()
+	{
+		if (messenger.getConfig().isInitiator())
+		{
+			frameTitle = "QuickFIX Messenger " + VERSION + " (Initiator)";
+		} else
+		{
+			frameTitle = "QuickFIX Messenger " + VERSION + " (Acceptor)";
+		}
+		loadFrameTitle();
+		setIconImage(new ImageIcon(messenger.getConfig().getIconsLocation()
+				+ Icons.APP_ICON).getImage());
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new FrameWindowAdapter(this));
 	}
 
 	private void initHelpMenu()

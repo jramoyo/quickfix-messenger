@@ -73,38 +73,37 @@ public class ProjectFrame extends JFrame
 		this.xmlProjectType = xmlProjectType;
 	}
 
+	/**
+	 * Launches the frame
+	 */
 	public void launch()
 	{
-		setIconImage(new ImageIcon(frame.getMessenger().getConfig()
-				.getIconsLocation()
-				+ Icons.APP_ICON).getImage());
-		String title = "Project View";
-		if (frame.getMessenger().getConfig().isInitiator())
-		{
-			title = title + " (Initiator)";
-		} else
-		{
-			title = title + " (Acceptor)";
-		}
-		setTitle(title);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-		initComponents();
-		positionFrame();
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
 			{
+				initFrame();
+				initComponents();
+				positionFrame();
 				setVisible(true);
 			}
 		});
 	}
 
+	/**
+	 * Reloads the project tree
+	 */
 	public void reload()
 	{
 		((ProjectTreeModel) projectTree.getModel()).update();
 	}
 
+	/**
+	 * Updates the project tree that a message has been added
+	 * 
+	 * @param xmlMessageType
+	 *            an XML Message
+	 */
 	public void updateMessageAdded(MessageType xmlMessageType)
 	{
 		((ProjectTreeModel) projectTree.getModel())
@@ -136,6 +135,23 @@ public class ProjectFrame extends JFrame
 		mainScrollPane.getViewport().add(projectTree);
 
 		pack();
+	}
+
+	private void initFrame()
+	{
+		setIconImage(new ImageIcon(frame.getMessenger().getConfig()
+				.getIconsLocation()
+				+ Icons.APP_ICON).getImage());
+		String title = "Project View";
+		if (frame.getMessenger().getConfig().isInitiator())
+		{
+			title = title + " (Initiator)";
+		} else
+		{
+			title = title + " (Acceptor)";
+		}
+		setTitle(title);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 	/*
