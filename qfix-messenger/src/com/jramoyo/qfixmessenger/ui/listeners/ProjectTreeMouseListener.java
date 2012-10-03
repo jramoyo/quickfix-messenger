@@ -111,7 +111,7 @@ public class ProjectTreeMouseListener extends MouseAdapter
 					synchronized (projectTree)
 					{
 						int row = projectTree.getRowCount() - 1;
-						while (row >= 0)
+						while (row > 1)
 						{
 							projectTree.collapseRow(row);
 							row--;

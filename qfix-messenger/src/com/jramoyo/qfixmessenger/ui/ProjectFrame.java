@@ -78,15 +78,23 @@ public class ProjectFrame extends JFrame
 		setIconImage(new ImageIcon(frame.getMessenger().getConfig()
 				.getIconsLocation()
 				+ Icons.APP_ICON).getImage());
-		setTitle("Project Tree");
+		String title = "Project View";
+		if (frame.getMessenger().getConfig().isInitiator())
+		{
+			title = title + " (Initiator)";
+		} else
+		{
+			title = title + " (Acceptor)";
+		}
+		setTitle(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		initComponents();
+		positionFrame();
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
 			{
-				pack();
 				setVisible(true);
 			}
 		});
@@ -123,9 +131,23 @@ public class ProjectFrame extends JFrame
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		projectTree.addMouseListener(new ProjectTreeMouseListener(frame,
 				projectTree));
+		projectTree.expandRow(1);
 
 		mainScrollPane.getViewport().add(projectTree);
 
 		pack();
+	}
+
+	/*
+	 * Position the frame next to the main frame
+	 */
+	private void positionFrame()
+	{
+		int width = getSize().width;
+		int height = frame.getSize().height;
+		int x = frame.getLocation().x - 320;
+		int y = frame.getLocation().y;
+		setSize(width, height);
+		setLocation((x > 0) ? x : 0, y);
 	}
 }

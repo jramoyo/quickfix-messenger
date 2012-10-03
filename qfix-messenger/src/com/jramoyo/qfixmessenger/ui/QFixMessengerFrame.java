@@ -349,15 +349,7 @@ public class QFixMessengerFrame extends JFrame
 		addWindowListener(new FrameWindowAdapter(this));
 
 		initComponents();
-
-		// Position the frame at the center of the screen
-		Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
-		Dimension screenSize = defaultToolkit.getScreenSize();
-		int screenHeight = screenSize.height;
-		int screenWidth = screenSize.width;
-		setSize(screenWidth / 2, screenHeight / 2);
-		setLocation(screenWidth / 4, screenHeight / 4);
-
+		positionFrame();
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
@@ -1133,6 +1125,19 @@ public class QFixMessengerFrame extends JFrame
 		{
 			messagesList.setListData(new Message[] {});
 		}
+	}
+
+	/*
+	 * Position the frame at the center of the screen
+	 */
+	private void positionFrame()
+	{
+		Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
+		Dimension screenSize = defaultToolkit.getScreenSize();
+		int screenHeight = screenSize.height;
+		int screenWidth = screenSize.width;
+		setSize(screenWidth / 2, screenHeight / 2);
+		setLocation(screenWidth / 4, screenHeight / 4);
 	}
 
 	private boolean selectMessage(MessageType xmlMessageType)
