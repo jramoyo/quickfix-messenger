@@ -130,7 +130,7 @@ import com.jramoyo.qfixmessenger.ui.listeners.SessionsListSessionStateListener;
 import com.jramoyo.qfixmessenger.ui.models.MessagesTableModel;
 import com.jramoyo.qfixmessenger.ui.models.data.MessagesTableModelData;
 import com.jramoyo.qfixmessenger.ui.panels.FreeTextMessagePanel;
-import com.jramoyo.qfixmessenger.ui.panels.MemberPanel;
+import com.jramoyo.qfixmessenger.ui.panels.MemberPanelCache;
 import com.jramoyo.qfixmessenger.ui.panels.MessagePanel;
 import com.jramoyo.qfixmessenger.ui.panels.MessagePanel.MessagePanelBuilder;
 import com.jramoyo.qfixmessenger.ui.renderers.MessagesListCellRenderer;
@@ -236,20 +236,14 @@ public class QFixMessengerFrame extends JFrame
 
 	private ProjectFrame projectFrame;
 
-	private List<MemberPanel<?, ?, ?>> prevHeaderMembers;
-
-	private List<MemberPanel<?, ?, ?>> prevBodyMembers;
-
-	private List<MemberPanel<?, ?, ?>> prevTrailerMembers;
+	private MemberPanelCache memberPanelCache;
 
 	public QFixMessengerFrame(QFixMessenger messenger)
 	{
 		super();
 		this.messenger = messenger;
 
-		this.prevHeaderMembers = new ArrayList<MemberPanel<?, ?, ?>>();
-		this.prevBodyMembers = new ArrayList<MemberPanel<?, ?, ?>>();
-		this.prevTrailerMembers = new ArrayList<MemberPanel<?, ?, ?>>();
+		memberPanelCache = new MemberPanelCache();
 
 		FixDictionaryParser parser = messenger.getParser();
 		String fixTDictionaryFile = messenger.getConfig()
@@ -1039,9 +1033,12 @@ public class QFixMessengerFrame extends JFrame
 	{
 		if (messagePanel != null)
 		{
-			prevHeaderMembers.addAll(messagePanel.getHeaderMembers());
-			prevBodyMembers.addAll(messagePanel.getBodyMembers());
-			prevTrailerMembers.addAll(messagePanel.getTrailerMembers());
+			memberPanelCache.getHeaderMembers().addAll(
+					messagePanel.getHeaderMembers());
+			memberPanelCache.getBodyMembers().addAll(
+					messagePanel.getBodyMembers());
+			memberPanelCache.getTrailerMembers().addAll(
+					messagePanel.getTrailerMembers());
 		}
 
 		JPanel mainPanel;
@@ -1058,9 +1055,7 @@ public class QFixMessengerFrame extends JFrame
 				builder.setIsModifyHeader(isModifyHeader);
 				builder.setIsModifyTrailer(isModifyTrailer);
 				builder.setIsFixTSession(isFixTSession);
-				builder.setPrevHeaderMembers(prevHeaderMembers);
-				builder.setPrevBodyMembers(prevBodyMembers);
-				builder.setPrevTrailerMembers(prevTrailerMembers);
+				builder.setMemberPanelCache(memberPanelCache);
 				builder.setDictionary(activeDictionary);
 				builder.setFixTDictionary(fixTDictionary);
 
@@ -1076,18 +1071,10 @@ public class QFixMessengerFrame extends JFrame
 						MIDDLE_PANEL_WIDTH, freeTextMessagePanel
 								.getPreferredSize().height));
 
-				prevHeaderMembers.clear();
-				prevBodyMembers.clear();
-				prevTrailerMembers.clear();
-
 				mainPanel = freeTextMessagePanel;
 			}
 		} else
 		{
-			prevHeaderMembers.clear();
-			prevBodyMembers.clear();
-			prevTrailerMembers.clear();
-
 			mainPanel = blankPanel;
 		}
 

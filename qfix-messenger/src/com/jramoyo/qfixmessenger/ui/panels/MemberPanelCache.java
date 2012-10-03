@@ -27,48 +27,44 @@
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
  * DAMAGE.
  *
- * MemberPanel.java
- * 9 Jun 2011
+ * MemberPanelCache.java
+ * Oct 4, 2012
  */
 package com.jramoyo.qfixmessenger.ui.panels;
 
-import com.jramoyo.fix.model.Member;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * MemberPanel
- * <p>
- * Common interface for all member panels.
- * </p>
- * 
- * @author jamoyo
+ * @author jramoyo
  */
-public interface MemberPanel<M extends Member, Q, X>
+public class MemberPanelCache
 {
-	/**
-	 * Returns the FIX String representation of this MemberPanel
-	 * 
-	 * @return the FIX String representation of this MemberPanel
-	 */
-	String getFixString();
+	private final List<MemberPanel<?, ?, ?>> headerMembers;
 
-	/**
-	 * Returns the member
-	 * 
-	 * @return the member
-	 */
-	M getMember();
+	private final List<MemberPanel<?, ?, ?>> bodyMembers;
 
-	/**
-	 * Returns the QuickFIX representation of this MemberPanel
-	 * 
-	 * @return the QuickFIX representation of this MemberPanel
-	 */
-	Q getQuickFixMember();
+	private final List<MemberPanel<?, ?, ?>> trailerMembers;
 
-	/**
-	 * Returns the XML representation of this MemberPanel
-	 * 
-	 * @return the XML representation of this MemberPanel
-	 */
-	X getXmlMember();
+	public MemberPanelCache()
+	{
+		headerMembers = new ArrayList<>();
+		bodyMembers = new ArrayList<>();
+		trailerMembers = new ArrayList<>();
+	}
+
+	public List<MemberPanel<?, ?, ?>> getHeaderMembers()
+	{
+		return headerMembers;
+	}
+
+	public List<MemberPanel<?, ?, ?>> getBodyMembers()
+	{
+		return bodyMembers;
+	}
+
+	public List<MemberPanel<?, ?, ?>> getTrailerMembers()
+	{
+		return trailerMembers;
+	}
 }

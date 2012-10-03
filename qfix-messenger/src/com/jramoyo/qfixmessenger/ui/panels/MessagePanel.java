@@ -92,17 +92,13 @@ public class MessagePanel extends JPanel implements
 
 	private final boolean isFixTSession;
 
+	private final MemberPanelCache memberPanelCache;
+
 	private final List<MemberPanel<?, ?, ?>> headerMembers;
 
 	private final List<MemberPanel<?, ?, ?>> bodyMembers;
 
 	private final List<MemberPanel<?, ?, ?>> trailerMembers;
-
-	private final List<MemberPanel<?, ?, ?>> prevHeaderMembers;
-
-	private final List<MemberPanel<?, ?, ?>> prevBodyMembers;
-
-	private final List<MemberPanel<?, ?, ?>> prevTrailerMembers;
 
 	private final FixDictionary dictionary;
 
@@ -124,9 +120,7 @@ public class MessagePanel extends JPanel implements
 		this.bodyMembers = new ArrayList<MemberPanel<?, ?, ?>>();
 		this.trailerMembers = new ArrayList<MemberPanel<?, ?, ?>>();
 
-		this.prevHeaderMembers = builder.prevHeaderMembers;
-		this.prevBodyMembers = builder.prevBodyMembers;
-		this.prevTrailerMembers = builder.prevTrailerMembers;
+		this.memberPanelCache = builder.memberPanelCache;
 
 		this.dictionary = builder.dictionary;
 		this.fixTDictionary = builder.fixTDictionary;
@@ -439,7 +433,8 @@ public class MessagePanel extends JPanel implements
 				for (Entry<Member, Boolean> entry : dictionary.getHeader()
 						.getMembers().entrySet())
 				{
-					loadMember(headerPanel, prevHeaderMembers, headerMembers,
+					loadMember(headerPanel,
+							memberPanelCache.getHeaderMembers(), headerMembers,
 							entry);
 				}
 			} else
@@ -447,7 +442,8 @@ public class MessagePanel extends JPanel implements
 				for (Entry<Member, Boolean> entry : fixTDictionary.getHeader()
 						.getMembers().entrySet())
 				{
-					loadMember(headerPanel, prevHeaderMembers, headerMembers,
+					loadMember(headerPanel,
+							memberPanelCache.getHeaderMembers(), headerMembers,
 							entry);
 				}
 			}
@@ -474,7 +470,8 @@ public class MessagePanel extends JPanel implements
 
 		for (Entry<Member, Boolean> entry : message.getMembers().entrySet())
 		{
-			loadMember(bodyPanel, prevBodyMembers, bodyMembers, entry);
+			loadMember(bodyPanel, memberPanelCache.getBodyMembers(),
+					bodyMembers, entry);
 		}
 
 		add(bodyPanel);
@@ -503,7 +500,8 @@ public class MessagePanel extends JPanel implements
 				for (Entry<Member, Boolean> entry : dictionary.getTrailer()
 						.getMembers().entrySet())
 				{
-					loadMember(trailerPanel, prevTrailerMembers,
+					loadMember(trailerPanel,
+							memberPanelCache.getTrailerMembers(),
 							trailerMembers, entry);
 				}
 			} else
@@ -511,7 +509,8 @@ public class MessagePanel extends JPanel implements
 				for (Entry<Member, Boolean> entry : fixTDictionary.getTrailer()
 						.getMembers().entrySet())
 				{
-					loadMember(trailerPanel, prevTrailerMembers,
+					loadMember(trailerPanel,
+							memberPanelCache.getTrailerMembers(),
 							trailerMembers, entry);
 				}
 			}
@@ -591,6 +590,8 @@ public class MessagePanel extends JPanel implements
 
 		private boolean isFixTSession;
 
+		private MemberPanelCache memberPanelCache;
+
 		private List<MemberPanel<?, ?, ?>> prevHeaderMembers;
 
 		private List<MemberPanel<?, ?, ?>> prevBodyMembers;
@@ -606,64 +607,19 @@ public class MessagePanel extends JPanel implements
 			return new MessagePanel(this);
 		}
 
-		public String getAppVersion()
-		{
-			return appVersion;
-		}
-
-		public FixDictionary getDictionary()
-		{
-			return dictionary;
-		}
-
-		public FixDictionary getFixTDictionary()
-		{
-			return fixTDictionary;
-		}
-
-		public Message getMessage()
-		{
-			return message;
-		}
-
-		public List<MemberPanel<?, ?, ?>> getPrevBodyMembers()
-		{
-			return prevBodyMembers;
-		}
-
-		public List<MemberPanel<?, ?, ?>> getPrevHeaderMembers()
-		{
-			return prevHeaderMembers;
-		}
-
-		public List<MemberPanel<?, ?, ?>> getPrevTrailerMembers()
-		{
-			return prevTrailerMembers;
-		}
-
 		public Session getSession()
 		{
 			return session;
 		}
 
-		public boolean isFixTSession()
+		public void setSession(Session session)
 		{
-			return isFixTSession;
+			this.session = session;
 		}
 
-		public boolean isModifyHeader()
+		public String getAppVersion()
 		{
-			return isModifyHeader;
-		}
-
-		public boolean isModifyTrailer()
-		{
-			return isModifyTrailer;
-		}
-
-		public boolean isRequiredOnly()
-		{
-			return isRequiredOnly;
+			return appVersion;
 		}
 
 		public void setAppVersion(String appVersion)
@@ -671,34 +627,9 @@ public class MessagePanel extends JPanel implements
 			this.appVersion = appVersion;
 		}
 
-		public void setDictionary(FixDictionary dictionary)
+		public Message getMessage()
 		{
-			this.dictionary = dictionary;
-		}
-
-		public void setFixTDictionary(FixDictionary fixTDictionary)
-		{
-			this.fixTDictionary = fixTDictionary;
-		}
-
-		public void setIsFixTSession(boolean isFixTSession)
-		{
-			this.isFixTSession = isFixTSession;
-		}
-
-		public void setIsModifyHeader(boolean isModifyHeader)
-		{
-			this.isModifyHeader = isModifyHeader;
-		}
-
-		public void setIsModifyTrailer(boolean isModifyTrailer)
-		{
-			this.isModifyTrailer = isModifyTrailer;
-		}
-
-		public void setIsRequiredOnly(boolean isRequiredOnly)
-		{
-			this.isRequiredOnly = isRequiredOnly;
+			return message;
 		}
 
 		public void setMessage(Message message)
@@ -706,10 +637,59 @@ public class MessagePanel extends JPanel implements
 			this.message = message;
 		}
 
-		public void setPrevBodyMembers(
-				List<MemberPanel<?, ?, ?>> prevBodyMembers)
+		public boolean isRequiredOnly()
 		{
-			this.prevBodyMembers = prevBodyMembers;
+			return isRequiredOnly;
+		}
+
+		public void setIsRequiredOnly(boolean isRequiredOnly)
+		{
+			this.isRequiredOnly = isRequiredOnly;
+		}
+
+		public boolean isModifyHeader()
+		{
+			return isModifyHeader;
+		}
+
+		public void setIsModifyHeader(boolean isModifyHeader)
+		{
+			this.isModifyHeader = isModifyHeader;
+		}
+
+		public boolean isModifyTrailer()
+		{
+			return isModifyTrailer;
+		}
+
+		public void setIsModifyTrailer(boolean isModifyTrailer)
+		{
+			this.isModifyTrailer = isModifyTrailer;
+		}
+
+		public boolean isFixTSession()
+		{
+			return isFixTSession;
+		}
+
+		public void setIsFixTSession(boolean isFixTSession)
+		{
+			this.isFixTSession = isFixTSession;
+		}
+
+		public MemberPanelCache getMemberPanelCache()
+		{
+			return memberPanelCache;
+		}
+
+		public void setMemberPanelCache(MemberPanelCache memberPanelCache)
+		{
+			this.memberPanelCache = memberPanelCache;
+		}
+
+		public List<MemberPanel<?, ?, ?>> getPrevHeaderMembers()
+		{
+			return prevHeaderMembers;
 		}
 
 		public void setPrevHeaderMembers(
@@ -718,15 +698,46 @@ public class MessagePanel extends JPanel implements
 			this.prevHeaderMembers = prevHeaderMembers;
 		}
 
+		public List<MemberPanel<?, ?, ?>> getPrevBodyMembers()
+		{
+			return prevBodyMembers;
+		}
+
+		public void setPrevBodyMembers(
+				List<MemberPanel<?, ?, ?>> prevBodyMembers)
+		{
+			this.prevBodyMembers = prevBodyMembers;
+		}
+
+		public List<MemberPanel<?, ?, ?>> getPrevTrailerMembers()
+		{
+			return prevTrailerMembers;
+		}
+
 		public void setPrevTrailerMembers(
 				List<MemberPanel<?, ?, ?>> prevTrailerMembers)
 		{
 			this.prevTrailerMembers = prevTrailerMembers;
 		}
 
-		public void setSession(Session session)
+		public FixDictionary getDictionary()
 		{
-			this.session = session;
+			return dictionary;
+		}
+
+		public void setDictionary(FixDictionary dictionary)
+		{
+			this.dictionary = dictionary;
+		}
+
+		public FixDictionary getFixTDictionary()
+		{
+			return fixTDictionary;
+		}
+
+		public void setFixTDictionary(FixDictionary fixTDictionary)
+		{
+			this.fixTDictionary = fixTDictionary;
 		}
 	}
 }
