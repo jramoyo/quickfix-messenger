@@ -1280,8 +1280,8 @@ public class QFixMessengerFrame extends JFrame
 				} else
 				{
 					JOptionPane.showMessageDialog(frame,
-							"Free text message cannot be saved!", "Error",
-							JOptionPane.WARNING_MESSAGE);
+							"Projects do not support free text messages!",
+							"Error", JOptionPane.WARNING_MESSAGE);
 				}
 			} else
 			{
