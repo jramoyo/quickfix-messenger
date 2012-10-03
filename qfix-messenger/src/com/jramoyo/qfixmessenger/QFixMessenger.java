@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -108,23 +109,13 @@ public class QFixMessenger
 			}
 		});
 
-		// Set the UI look and feel
-		try
+		SwingUtilities.invokeLater(new Runnable()
 		{
-			String useSystemLookAndFeelProperty = System
-					.getProperty("useSystemLAF");
-			if (Boolean.valueOf(useSystemLookAndFeelProperty))
+			public void run()
 			{
-				UIManager.setLookAndFeel(UIManager
-						.getSystemLookAndFeelClassName());
-			} else
-			{
-				UIManager.setLookAndFeel("com.lipstikLF.LipstikLookAndFeel");
+				setLookAndFeel();
 			}
-		} catch (Exception ex)
-		{
-			logger.warn(ex.getMessage(), ex);
-		}
+		});
 
 		if (args.length == 2)
 		{
@@ -176,6 +167,26 @@ public class QFixMessenger
 			System.out.println("Usage: QFixMessenger <app cfg file>"
 					+ " <quickfix cfg file>");
 			System.exit(0);
+		}
+	}
+
+	private static void setLookAndFeel()
+	{
+		try
+		{
+			String useSystemLookAndFeelProperty = System
+					.getProperty("useSystemLAF");
+			if (Boolean.valueOf(useSystemLookAndFeelProperty))
+			{
+				UIManager.setLookAndFeel(UIManager
+						.getSystemLookAndFeelClassName());
+			} else
+			{
+				UIManager.setLookAndFeel("com.lipstikLF.LipstikLookAndFeel");
+			}
+		} catch (Exception ex)
+		{
+			logger.warn(ex.getMessage(), ex);
 		}
 	}
 
