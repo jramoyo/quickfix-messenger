@@ -41,7 +41,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.jramoyo.fix.xml.MessageType;
@@ -78,16 +77,10 @@ public class ProjectFrame extends JFrame
 	 */
 	public void launch()
 	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				initFrame();
-				initComponents();
-				positionFrame();
-				setVisible(true);
-			}
-		});
+		initFrame();
+		initComponents();
+		positionFrame();
+		setVisible(true);
 	}
 
 	/**

@@ -52,6 +52,6 @@ public class FrameExitActionListener implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		frame.exitFrame();
+		frame.close();
 	}
 }

@@ -293,7 +293,7 @@ public class QFixMessengerFrame extends JFrame
 	/**
 	 * Disposes the frame and gracefully exits the application
 	 */
-	public void exitFrame()
+	public void close()
 	{
 		int choice = JOptionPane.showConfirmDialog(this,
 				"Exit QuickFIX Messenger?", "Quit", JOptionPane.YES_NO_OPTION);
@@ -1378,7 +1378,7 @@ public class QFixMessengerFrame extends JFrame
 		@Override
 		public void windowClosing(WindowEvent e)
 		{
-			frame.exitFrame();
+			frame.close();
 		}
 	}
 
