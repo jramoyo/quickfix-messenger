@@ -142,10 +142,8 @@ public class QFixMessenger
 
 					QFixMessenger messenger = new QFixMessenger(configFileName,
 							settings);
-					QFixMessengerFrame frame = new QFixMessengerFrame(messenger);
-
 					messenger.logon();
-					frame.launch();
+					QFixMessengerFrame.launch(messenger);
 
 					shutdownLatch.await();
 					logger.info("Shutting down at " + new Date() + "...");

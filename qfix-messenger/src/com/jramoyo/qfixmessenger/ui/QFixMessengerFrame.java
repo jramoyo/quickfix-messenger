@@ -157,6 +157,34 @@ public class QFixMessengerFrame extends JFrame
 
 	private static final String EMPTY_PROJECT = "None";
 
+	/**
+	 * Launches the frame
+	 */
+	public static void launch(QFixMessenger messenger)
+	{
+		class Launcher implements Runnable
+		{
+			private final QFixMessenger messenger;
+
+			private Launcher(QFixMessenger messenger)
+			{
+				this.messenger = messenger;
+			}
+
+			@Override
+			public void run()
+			{
+				QFixMessengerFrame frame = new QFixMessengerFrame(messenger);
+				frame.initFrame();
+				frame.initComponents();
+				frame.positionFrame();
+				frame.setVisible(true);
+			}
+		}
+
+		SwingUtilities.invokeLater(new Launcher(messenger));
+	}
+
 	private final Message freeTextMessage = new Message("Free Text",
 			"FIX Message", null, new HashMap<Member, Boolean>());
 
@@ -238,7 +266,7 @@ public class QFixMessengerFrame extends JFrame
 
 	private MemberPanelCache memberPanelCache;
 
-	public QFixMessengerFrame(QFixMessenger messenger)
+	private QFixMessengerFrame(QFixMessenger messenger)
 	{
 		super();
 		this.messenger = messenger;
@@ -324,23 +352,6 @@ public class QFixMessengerFrame extends JFrame
 	}
 
 	/**
-	 * Launches the frame
-	 */
-	public void launch()
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				initFrame();
-				initComponents();
-				positionFrame();
-				setVisible(true);
-			}
-		});
-	}
-
-	/**
 	 * Loads an XML MessageType to the UI
 	 * 
 	 * @param xmlMessageType
@@ -348,27 +359,11 @@ public class QFixMessengerFrame extends JFrame
 	 */
 	public void loadXmlMessage(MessageType xmlMessageType)
 	{
-		class MessageLoader implements Runnable
-		{
-			private final MessageType xmlMessageType;
-
-			private MessageLoader(MessageType xmlMessageType)
-			{
-				this.xmlMessageType = xmlMessageType;
-			}
-
-			@Override
-			public void run()
-			{
-				messagePanel.populate(xmlMessageType);
-			}
-		}
-
 		if (selectSession(xmlMessageType.getSession()))
 		{
 			if (selectMessage(xmlMessageType))
 			{
-				SwingUtilities.invokeLater(new MessageLoader(xmlMessageType));
+				messagePanel.populate(xmlMessageType);
 			}
 		}
 	}
@@ -1081,23 +1076,7 @@ public class QFixMessengerFrame extends JFrame
 			mainPanel = blankPanel;
 		}
 
-		class PanelLoader implements Runnable
-		{
-			private final JPanel panel;
-
-			private PanelLoader(JPanel panel)
-			{
-				this.panel = panel;
-			}
-
-			@Override
-			public void run()
-			{
-				mainPanelScrollPane.getViewport().add(panel);
-			}
-		}
-
-		SwingUtilities.invokeLater(new PanelLoader(mainPanel));
+		mainPanelScrollPane.getViewport().add(mainPanel);
 	}
 
 	private void loadMessagesList()
