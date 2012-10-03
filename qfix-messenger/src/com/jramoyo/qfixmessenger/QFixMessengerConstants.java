@@ -38,6 +38,9 @@ import java.util.Map;
 
 /**
  * Constants used by QuickFIX Messenger
+ * <p>
+ * TODO These values need to be configurable
+ * </p>
  * 
  * @author jamoyo
  */
@@ -53,6 +56,8 @@ public class QFixMessengerConstants
 	public static final String BEGIN_STRING_FIX43 = "FIX.4.3";
 	public static final String BEGIN_STRING_FIX44 = "FIX.4.4";
 	public static final String BEGIN_STRING_FIX50 = "FIX.5.0";
+	public static final String BEGIN_STRING_FIX50SP1 = "FIX.5.0SP1";
+	public static final String BEGIN_STRING_FIX50SP2 = "FIX.5.0SP2";
 	public static final String BEGIN_STRING_FIXT11 = "FIXT.1.1";
 
 	public static final Map<String, String> APPVER_ID_MAP;
@@ -66,6 +71,8 @@ public class QFixMessengerConstants
 		appVerIDMap.put(BEGIN_STRING_FIX43, "5");
 		appVerIDMap.put(BEGIN_STRING_FIX44, "6");
 		appVerIDMap.put(BEGIN_STRING_FIX50, "7");
+		appVerIDMap.put(BEGIN_STRING_FIX50SP1, "8");
+		appVerIDMap.put(BEGIN_STRING_FIX50SP2, "9");
 
 		APPVER_ID_MAP = Collections.unmodifiableMap(appVerIDMap);
 	}

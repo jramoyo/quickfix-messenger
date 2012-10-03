@@ -27,43 +27,27 @@
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
  * DAMAGE.
  *
- * MemberPanel.java
- * 9 Jun 2011
+ * QFixMessengerException.java
+ * Oct 2, 2012
  */
-package com.jramoyo.qfixmessenger.ui.panels;
-
-import com.jramoyo.fix.model.Member;
+package com.jramoyo.qfixmessenger;
 
 /**
- * @author jamoyo
+ * QFixMessengerException
+ * 
+ * @author jramoyo
  */
-public interface MemberPanel<M extends Member, Q, X>
+public class QFixMessengerException extends Exception
 {
-	/**
-	 * Returns the FIX String representation of this MemberPanel
-	 * 
-	 * @return the FIX String representation of this MemberPanel
-	 */
-	String getFixString();
+	private static final long serialVersionUID = -3835891077672513984L;
 
-	/**
-	 * Returns the member
-	 * 
-	 * @return the member
-	 */
-	M getMember();
+	public QFixMessengerException(String message)
+	{
+		super(message);
+	}
 
-	/**
-	 * Returns the QuickFIX representation of this MemberPanel
-	 * 
-	 * @return the QuickFIX representation of this MemberPanel
-	 */
-	Q getQuickFixMember();
-
-	/**
-	 * Returns the XML representation of this MemberPanel
-	 * 
-	 * @return the XML representation of this MemberPanel
-	 */
-	X getXmlMember();
+	public QFixMessengerException(String message, Throwable ex)
+	{
+		super(message, ex);
+	}
 }

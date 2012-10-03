@@ -76,7 +76,7 @@ public class ImportMessageActionListener implements ActionListener
 			File file = jFileChooser.getSelectedFile();
 			try
 			{
-				Unmarshaller unmarshaller = frame.getJaxbContext()
+				Unmarshaller unmarshaller = frame.getMessenger().getJaxbContext()
 						.createUnmarshaller();
 				@SuppressWarnings("unchecked")
 				JAXBElement<MessageType> rootElement = (JAXBElement<MessageType>) unmarshaller

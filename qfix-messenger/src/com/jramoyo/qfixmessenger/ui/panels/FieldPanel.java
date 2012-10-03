@@ -55,7 +55,6 @@ import quickfix.StringField;
 import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.FieldType;
 import com.jramoyo.fix.model.FieldValue;
-import com.jramoyo.fix.model.Member;
 import com.jramoyo.fix.xml.ObjectFactory;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 import com.jramoyo.qfixmessenger.ui.renderers.FieldComboBoxCellRenderer;
@@ -64,7 +63,8 @@ import com.jramoyo.qfixmessenger.util.StringUtil;
 /**
  * @author jamoyo
  */
-public class FieldPanel extends AbstractMemberPanel
+public class FieldPanel extends
+		AbstractMemberPanel<Field, StringField, com.jramoyo.fix.xml.FieldType>
 {
 	private static final long serialVersionUID = -8397965355420860765L;
 
@@ -90,24 +90,25 @@ public class FieldPanel extends AbstractMemberPanel
 		initComponents();
 	}
 
-	public com.jramoyo.fix.xml.FieldType getXmlField()
+	@Override
+	public String getFixString()
 	{
 		if (!StringUtil.isNullOrEmpty(getValue()))
 		{
-			com.jramoyo.fix.xml.FieldType xmlFieldType = new ObjectFactory()
-					.createFieldType();
-			xmlFieldType.setId(field.getNumber());
-			xmlFieldType.setName(field.getName());
-			xmlFieldType.setValue(getValue());
-
-			return xmlFieldType;
+			return "" + field.getNumber() + "=" + getValue();
 		} else
 		{
-			return null;
+			return "";
 		}
 	}
 
-	public StringField getQuickFixField()
+	@Override
+	public Field getMember()
+	{
+		return field;
+	}
+
+	public StringField getQuickFixMember()
 	{
 		if (!StringUtil.isNullOrEmpty(getValue()))
 		{
@@ -122,22 +123,21 @@ public class FieldPanel extends AbstractMemberPanel
 		}
 	}
 
-	@Override
-	public String getFixString()
+	public com.jramoyo.fix.xml.FieldType getXmlMember()
 	{
 		if (!StringUtil.isNullOrEmpty(getValue()))
 		{
-			return "" + field.getNumber() + "=" + getValue();
+			com.jramoyo.fix.xml.FieldType xmlFieldType = new ObjectFactory()
+					.createFieldType();
+			xmlFieldType.setId(field.getNumber());
+			xmlFieldType.setName(field.getName());
+			xmlFieldType.setValue(getValue());
+
+			return xmlFieldType;
 		} else
 		{
-			return "";
+			return null;
 		}
-	}
-
-	@Override
-	public Member getMember()
-	{
-		return field;
 	}
 
 	public void populate(com.jramoyo.fix.xml.FieldType xmlFieldType)
@@ -159,6 +159,12 @@ public class FieldPanel extends AbstractMemberPanel
 		{
 			fieldTextField.setText(xmlFieldType.getValue());
 		}
+	}
+
+	private String generateUTCTimeStamp()
+	{
+		return new SimpleDateFormat(QFixMessengerConstants.UTC_DATE_FORMAT)
+				.format(new Date());
 	}
 
 	private String getValue()
@@ -237,11 +243,5 @@ public class FieldPanel extends AbstractMemberPanel
 
 		add(fieldLabel);
 		add(fieldValuePanel);
-	}
-
-	private String generateUTCTimeStamp()
-	{
-		return new SimpleDateFormat(QFixMessengerConstants.UTC_DATE_FORMAT)
-				.format(new Date());
 	}
 }

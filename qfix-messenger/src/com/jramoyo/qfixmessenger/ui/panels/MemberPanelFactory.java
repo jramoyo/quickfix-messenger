@@ -44,46 +44,12 @@ import com.jramoyo.fix.model.Member;
  */
 public class MemberPanelFactory
 {
-	public static FieldPanel createFieldPanel(List<MemberPanel> prevMembers,
-			Field field, boolean isRequired)
-	{
-		MemberPanel prevMemberPanel = findPreviousPanelByMember(prevMembers,
-				field);
-		FieldPanel fieldPanel;
-		if (prevMemberPanel != null)
-		{
-			fieldPanel = (FieldPanel) prevMemberPanel;
-		} else
-		{
-			fieldPanel = new FieldPanel(field, isRequired);
-		}
-
-		return fieldPanel;
-	}
-
-	public static GroupPanel createGroupPanel(List<MemberPanel> prevMembers,
-			Group group, boolean isRequiredOnly, boolean isRequired)
-	{
-		MemberPanel prevMemberPanel = findPreviousPanelByMember(prevMembers,
-				group);
-		GroupPanel groupPanel;
-		if (prevMemberPanel != null)
-		{
-			groupPanel = (GroupPanel) prevMemberPanel;
-		} else
-		{
-			groupPanel = new GroupPanel(group, isRequiredOnly, isRequired);
-		}
-
-		return groupPanel;
-	}
-
 	public static ComponentPanel createComponentPanel(
-			List<MemberPanel> prevMembers, Component component,
+			List<MemberPanel<?, ?, ?>> prevMembers, Component component,
 			boolean isRequiredOnly, boolean isRequired)
 	{
-		MemberPanel prevMemberPanel = findPreviousPanelByMember(prevMembers,
-				component);
+		MemberPanel<?, ?, ?> prevMemberPanel = findPreviousPanelByMember(
+				prevMembers, component);
 		ComponentPanel componentPanel;
 		if (prevMemberPanel != null)
 		{
@@ -97,10 +63,46 @@ public class MemberPanelFactory
 		return componentPanel;
 	}
 
-	private static MemberPanel findPreviousPanelByMember(
-			List<MemberPanel> prevMembers, Member member)
+	public static FieldPanel createFieldPanel(
+			List<MemberPanel<?, ?, ?>> prevMembers, Field field,
+			boolean isRequired)
 	{
-		for (MemberPanel memberPanel : prevMembers)
+		MemberPanel<?, ?, ?> prevMemberPanel = findPreviousPanelByMember(
+				prevMembers, field);
+		FieldPanel fieldPanel;
+		if (prevMemberPanel != null)
+		{
+			fieldPanel = (FieldPanel) prevMemberPanel;
+		} else
+		{
+			fieldPanel = new FieldPanel(field, isRequired);
+		}
+
+		return fieldPanel;
+	}
+
+	public static GroupPanel createGroupPanel(
+			List<MemberPanel<?, ?, ?>> prevMembers, Group group,
+			boolean isRequiredOnly, boolean isRequired)
+	{
+		MemberPanel<?, ?, ?> prevMemberPanel = findPreviousPanelByMember(
+				prevMembers, group);
+		GroupPanel groupPanel;
+		if (prevMemberPanel != null)
+		{
+			groupPanel = (GroupPanel) prevMemberPanel;
+		} else
+		{
+			groupPanel = new GroupPanel(group, isRequiredOnly, isRequired);
+		}
+
+		return groupPanel;
+	}
+
+	private static MemberPanel<?, ?, ?> findPreviousPanelByMember(
+			List<MemberPanel<?, ?, ?>> prevMembers, Member member)
+	{
+		for (MemberPanel<?, ?, ?> memberPanel : prevMembers)
 		{
 			if (memberPanel.getMember().equals(member))
 			{

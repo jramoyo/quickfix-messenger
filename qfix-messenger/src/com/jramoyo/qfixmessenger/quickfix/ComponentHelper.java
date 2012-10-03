@@ -27,43 +27,42 @@
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
  * DAMAGE.
  *
- * MemberPanel.java
- * 9 Jun 2011
+ * ComponentHelper.java
+ * Oct 3, 2012
  */
-package com.jramoyo.qfixmessenger.ui.panels;
+package com.jramoyo.qfixmessenger.quickfix;
 
-import com.jramoyo.fix.model.Member;
+import java.util.Collections;
+import java.util.List;
+
+import quickfix.StringField;
 
 /**
- * @author jamoyo
+ * ComponentHelper
+ * <p>
+ * A workaround to the lack of non-type-safe Components in QuickFIX/J
+ * </p>
+ * 
+ * @author jramoyo
  */
-public interface MemberPanel<M extends Member, Q, X>
+public class ComponentHelper
 {
-	/**
-	 * Returns the FIX String representation of this MemberPanel
-	 * 
-	 * @return the FIX String representation of this MemberPanel
-	 */
-	String getFixString();
+	private final List<StringField> fields;
+	private final List<quickfix.Group> groups;
 
-	/**
-	 * Returns the member
-	 * 
-	 * @return the member
-	 */
-	M getMember();
+	public ComponentHelper(List<StringField> fields, List<quickfix.Group> groups)
+	{
+		this.fields = fields;
+		this.groups = groups;
+	}
 
-	/**
-	 * Returns the QuickFIX representation of this MemberPanel
-	 * 
-	 * @return the QuickFIX representation of this MemberPanel
-	 */
-	Q getQuickFixMember();
+	public List<StringField> getFields()
+	{
+		return Collections.unmodifiableList(fields);
+	}
 
-	/**
-	 * Returns the XML representation of this MemberPanel
-	 * 
-	 * @return the XML representation of this MemberPanel
-	 */
-	X getXmlMember();
+	public List<quickfix.Group> getGroups()
+	{
+		return Collections.unmodifiableList(groups);
+	}
 }

@@ -46,14 +46,17 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Ignore;
 
 /**
  * @author jamoyo
  */
-public abstract class MemberPanelTestCase extends TestCase
+@Ignore("Abstract")
+public abstract class MemberPanelTestCase
 {
-	protected void setUp()
+	@Before
+	public void setUp()
 	{
 		try
 		{
@@ -63,7 +66,7 @@ public abstract class MemberPanelTestCase extends TestCase
 		}
 	}
 
-	protected void showInFrame(final MemberPanel memberPanel,
+	protected void showInFrame(final MemberPanel<?, ?, ?> memberPanel,
 			CountDownLatch latch)
 	{
 		JFrame frame = new JFrame("Test");

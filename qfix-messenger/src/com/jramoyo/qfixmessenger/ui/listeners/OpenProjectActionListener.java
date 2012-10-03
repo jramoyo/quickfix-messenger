@@ -94,8 +94,8 @@ public class OpenProjectActionListener implements ActionListener
 			File file = jFileChooser.getSelectedFile();
 			try
 			{
-				Unmarshaller unmarshaller = frame.getJaxbContext()
-						.createUnmarshaller();
+				Unmarshaller unmarshaller = frame.getMessenger()
+						.getJaxbContext().createUnmarshaller();
 				@SuppressWarnings("unchecked")
 				JAXBElement<ProjectType> rootElement = (JAXBElement<ProjectType>) unmarshaller
 						.unmarshal(file);

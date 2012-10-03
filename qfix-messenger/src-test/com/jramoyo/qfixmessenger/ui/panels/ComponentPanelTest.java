@@ -36,6 +36,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
+
 import com.jramoyo.fix.model.Component;
 import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.FieldType;
@@ -45,38 +49,10 @@ import com.jramoyo.fix.model.Member;
 /**
  * @author jamoyo
  */
+@RunWith(BlockJUnit4ClassRunner.class)
 public class ComponentPanelTest extends MemberPanelTestCase
 {
-	public void testVanillaComponent()
-	{
-		CountDownLatch latch = new CountDownLatch(1);
-
-		Map<Member, Boolean> members = new HashMap<Member, Boolean>();
-		Field field1 = new Field(101, "VanillaField1", FieldType.STRING, null);
-		Field field2 = new Field(102, "VanillaField2", FieldType.STRING, null);
-		Field field3 = new Field(103, "VanillaField3", FieldType.STRING, null);
-		Field field4 = new Field(104, "VanillaField4", FieldType.STRING, null);
-
-		members.put(field1, Boolean.TRUE);
-		members.put(field2, Boolean.TRUE);
-		members.put(field3, Boolean.FALSE);
-		members.put(field4, Boolean.FALSE);
-
-		Component component = new Component("Component1", members, field1);
-
-		ComponentPanel componentPanel = new ComponentPanel(component, false,
-				false);
-		showInFrame(componentPanel, latch);
-
-		try
-		{
-			latch.await();
-		} catch (InterruptedException ex)
-		{
-			Thread.currentThread().interrupt();
-		}
-	}
-
+	@Test
 	public void testComponentWithGroup()
 	{
 		CountDownLatch latch = new CountDownLatch(1);
@@ -110,6 +86,37 @@ public class ComponentPanelTest extends MemberPanelTestCase
 		members.put(field3, Boolean.FALSE);
 		members.put(field4, Boolean.FALSE);
 		members.put(group, Boolean.TRUE);
+
+		Component component = new Component("Component1", members, field1);
+
+		ComponentPanel componentPanel = new ComponentPanel(component, false,
+				false);
+		showInFrame(componentPanel, latch);
+
+		try
+		{
+			latch.await();
+		} catch (InterruptedException ex)
+		{
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	@Test
+	public void testVanillaComponent()
+	{
+		CountDownLatch latch = new CountDownLatch(1);
+
+		Map<Member, Boolean> members = new HashMap<Member, Boolean>();
+		Field field1 = new Field(101, "VanillaField1", FieldType.STRING, null);
+		Field field2 = new Field(102, "VanillaField2", FieldType.STRING, null);
+		Field field3 = new Field(103, "VanillaField3", FieldType.STRING, null);
+		Field field4 = new Field(104, "VanillaField4", FieldType.STRING, null);
+
+		members.put(field1, Boolean.TRUE);
+		members.put(field2, Boolean.TRUE);
+		members.put(field3, Boolean.FALSE);
+		members.put(field4, Boolean.FALSE);
 
 		Component component = new Component("Component1", members, field1);
 

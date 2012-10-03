@@ -36,6 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
+
 import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.FieldType;
 import com.jramoyo.fix.model.FieldValue;
@@ -43,12 +47,14 @@ import com.jramoyo.fix.model.FieldValue;
 /**
  * @author jamoyo
  */
+@RunWith(BlockJUnit4ClassRunner.class)
 public class FieldPanelTest extends MemberPanelTestCase
 {
-	public void testVanillaField()
+	@Test
+	public void testDateField()
 	{
 		CountDownLatch latch = new CountDownLatch(1);
-		Field field = new Field(100, "VanillaField", FieldType.STRING, null);
+		Field field = new Field(100, "TestField", FieldType.UTCDATE, null);
 
 		FieldPanel fieldPanel = new FieldPanel(field, false);
 		showInFrame(fieldPanel, latch);
@@ -62,24 +68,7 @@ public class FieldPanelTest extends MemberPanelTestCase
 		}
 	}
 
-	public void testRequiredVanillaField()
-	{
-		CountDownLatch latch = new CountDownLatch(1);
-		Field field = new Field(100, "RequiredVanillaField", FieldType.STRING,
-				null);
-
-		FieldPanel fieldPanel = new FieldPanel(field, true);
-		showInFrame(fieldPanel, latch);
-
-		try
-		{
-			latch.await();
-		} catch (InterruptedException ex)
-		{
-			Thread.currentThread().interrupt();
-		}
-	}
-
+	@Test
 	public void testEnumField()
 	{
 		CountDownLatch latch = new CountDownLatch(1);
@@ -102,10 +91,30 @@ public class FieldPanelTest extends MemberPanelTestCase
 		}
 	}
 
-	public void testDateField()
+	@Test
+	public void testRequiredVanillaField()
 	{
 		CountDownLatch latch = new CountDownLatch(1);
-		Field field = new Field(100, "TestField", FieldType.UTCDATE, null);
+		Field field = new Field(100, "RequiredVanillaField", FieldType.STRING,
+				null);
+
+		FieldPanel fieldPanel = new FieldPanel(field, true);
+		showInFrame(fieldPanel, latch);
+
+		try
+		{
+			latch.await();
+		} catch (InterruptedException ex)
+		{
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	@Test
+	public void testVanillaField()
+	{
+		CountDownLatch latch = new CountDownLatch(1);
+		Field field = new Field(100, "VanillaField", FieldType.STRING, null);
 
 		FieldPanel fieldPanel = new FieldPanel(field, false);
 		showInFrame(fieldPanel, latch);

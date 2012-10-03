@@ -32,10 +32,17 @@
  */
 package com.jramoyo.qfixmessenger.quickfix.parser;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import java.util.Map;
 import java.util.Map.Entry;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 
 import com.jramoyo.fix.model.Component;
 import com.jramoyo.fix.model.Field;
@@ -52,13 +59,15 @@ import com.jramoyo.fix.model.parser.FixParsingException;
  * 
  * @author jamoyo
  */
-public class QFixDictionaryParserTest extends TestCase
+@RunWith(BlockJUnit4ClassRunner.class)
+public class QFixDictionaryParserTest
 {
 	private static final String INDENT = "   ";
 
+	@Test
 	public void testParseFIX40()
 	{
-		String fileName = "resources/FIX40.xml";
+		String fileName = "resources/dictionary/FIX40.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
@@ -98,9 +107,10 @@ public class QFixDictionaryParserTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testParseFIX41()
 	{
-		String fileName = "resources/FIX41.xml";
+		String fileName = "resources/dictionary/FIX41.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
@@ -139,9 +149,10 @@ public class QFixDictionaryParserTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testParseFIX42()
 	{
-		String fileName = "resources/FIX42.xml";
+		String fileName = "resources/dictionary/FIX42.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
@@ -180,9 +191,10 @@ public class QFixDictionaryParserTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testParseFIX43()
 	{
-		String fileName = "resources/FIX43.xml";
+		String fileName = "resources/dictionary/FIX43.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
@@ -221,9 +233,10 @@ public class QFixDictionaryParserTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testParseFIX44()
 	{
-		String fileName = "resources/FIX44.xml";
+		String fileName = "resources/dictionary/FIX44.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
@@ -262,9 +275,10 @@ public class QFixDictionaryParserTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testParseFIX50()
 	{
-		String fileName = "resources/FIX50.xml";
+		String fileName = "resources/dictionary/FIX50.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
@@ -303,9 +317,10 @@ public class QFixDictionaryParserTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testParseFIXT11()
 	{
-		String fileName = "resources/FIXT11.xml";
+		String fileName = "resources/dictionary/FIXT11.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try

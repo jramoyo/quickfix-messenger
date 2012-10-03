@@ -40,10 +40,10 @@ import java.util.List;
  */
 public class MemberPanelUtil
 {
-	public static MemberPanel findMemberPanelByName(String name,
-			List<MemberPanel> memberPanels)
+	public static MemberPanel<?, ?, ?> findMemberPanelByName(String name,
+			List<MemberPanel<?, ?, ?>> memberPanels)
 	{
-		for (MemberPanel memberPanel : memberPanels)
+		for (MemberPanel<?, ?, ?> memberPanel : memberPanels)
 		{
 			if (memberPanel.getMember().getName().equals(name))
 			{

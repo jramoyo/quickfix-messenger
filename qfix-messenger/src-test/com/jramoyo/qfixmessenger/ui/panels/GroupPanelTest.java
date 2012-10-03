@@ -36,6 +36,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
+
 import com.jramoyo.fix.model.Component;
 import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.FieldType;
@@ -45,39 +49,10 @@ import com.jramoyo.fix.model.Member;
 /**
  * @author jamoyo
  */
+@RunWith(BlockJUnit4ClassRunner.class)
 public class GroupPanelTest extends MemberPanelTestCase
 {
-	public void testVanillaGroup()
-	{
-		CountDownLatch latch = new CountDownLatch(1);
-
-		Map<Member, Boolean> members = new HashMap<Member, Boolean>();
-		Field field1 = new Field(101, "VanillaField1", FieldType.STRING, null);
-		Field field2 = new Field(102, "VanillaField2", FieldType.STRING, null);
-		Field field3 = new Field(103, "VanillaField3", FieldType.STRING, null);
-		Field field4 = new Field(104, "VanillaField4", FieldType.STRING, null);
-
-		members.put(field1, Boolean.TRUE);
-		members.put(field2, Boolean.TRUE);
-		members.put(field3, Boolean.FALSE);
-		members.put(field4, Boolean.FALSE);
-
-		Field groupField = new Field(100, "GroupField", FieldType.STRING, null);
-
-		Group group = new Group(groupField, members, field1);
-
-		GroupPanel groupPanel = new GroupPanel(group, false, false);
-		showInFrame(groupPanel, latch);
-
-		try
-		{
-			latch.await();
-		} catch (InterruptedException ex)
-		{
-			Thread.currentThread().interrupt();
-		}
-	}
-
+	@Test
 	public void testGroupWithComponent()
 	{
 		CountDownLatch latch = new CountDownLatch(1);
@@ -128,6 +103,7 @@ public class GroupPanelTest extends MemberPanelTestCase
 		}
 	}
 
+	@Test
 	public void testGroupWithComponentFirst()
 	{
 		CountDownLatch latch = new CountDownLatch(1);
@@ -165,6 +141,38 @@ public class GroupPanelTest extends MemberPanelTestCase
 		Field groupField = new Field(100, "GroupField", FieldType.STRING, null);
 
 		Group group = new Group(groupField, members, component);
+
+		GroupPanel groupPanel = new GroupPanel(group, false, false);
+		showInFrame(groupPanel, latch);
+
+		try
+		{
+			latch.await();
+		} catch (InterruptedException ex)
+		{
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	@Test
+	public void testVanillaGroup()
+	{
+		CountDownLatch latch = new CountDownLatch(1);
+
+		Map<Member, Boolean> members = new HashMap<Member, Boolean>();
+		Field field1 = new Field(101, "VanillaField1", FieldType.STRING, null);
+		Field field2 = new Field(102, "VanillaField2", FieldType.STRING, null);
+		Field field3 = new Field(103, "VanillaField3", FieldType.STRING, null);
+		Field field4 = new Field(104, "VanillaField4", FieldType.STRING, null);
+
+		members.put(field1, Boolean.TRUE);
+		members.put(field2, Boolean.TRUE);
+		members.put(field3, Boolean.FALSE);
+		members.put(field4, Boolean.FALSE);
+
+		Field groupField = new Field(100, "GroupField", FieldType.STRING, null);
+
+		Group group = new Group(groupField, members, field1);
 
 		GroupPanel groupPanel = new GroupPanel(group, false, false);
 		showInFrame(groupPanel, latch);

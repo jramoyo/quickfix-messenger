@@ -36,6 +36,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -44,23 +45,114 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import quickfix.ConfigError;
+import quickfix.DataDictionary;
+import quickfix.InvalidMessage;
+import quickfix.Session;
+
+import com.jramoyo.fix.model.Message;
+import com.jramoyo.fix.xml.MessageType;
+import com.jramoyo.qfixmessenger.QFixMessenger;
+
 /**
  * @author jamoyo
  */
-public class FreeTextMessagePanel extends JPanel
+public class FreeTextMessagePanel extends JPanel implements
+		MemberPanel<Message, quickfix.Message, MessageType>
 {
 	private static final long serialVersionUID = -7614167852761624847L;
 
+	private final QFixMessenger messenger;
+
+	private final Session session;
+
+	private final String appVersion;
+
+	private final boolean isFixTSession;
+
 	private JTextArea messageTextArea;
 
-	public FreeTextMessagePanel()
+	public FreeTextMessagePanel(QFixMessenger messenger, Session session,
+			String appVersion, boolean isFixTSession)
 	{
+		this.messenger = messenger;
+		this.session = session;
+		this.appVersion = appVersion;
+		this.isFixTSession = isFixTSession;
+
 		initComponents();
 	}
 
+	@Override
 	public String getFixString()
 	{
 		return messageTextArea.getText();
+	}
+
+	@Override
+	public Message getMember()
+	{
+		return null;
+	}
+
+	@Override
+	public quickfix.Message getQuickFixMember()
+	{
+		quickfix.Message message = null;
+		try
+		{
+			message = new quickfix.Message();
+
+			if (!isFixTSession)
+			{
+				message.fromString(getFixString(), session.getDataDictionary(),
+						false);
+			} else
+			{
+				/*
+				 * FIXT sessions require the data dictionary of both the session
+				 * and the application version
+				 */
+				DataDictionary appDictionary = null;
+				DataDictionary sessionDictionary = null;
+				try
+				{
+					sessionDictionary = new DataDictionary(messenger
+							.getConfig().getFixT11DictionaryLocation());
+					appDictionary = new DataDictionary(messenger.getConfig()
+							.getFixDictionaryLocation(appVersion));
+					message.fromString(getFixString(), sessionDictionary,
+							appDictionary, false);
+				} catch (ConfigError ex)
+				{
+					message = null;
+					JOptionPane.showMessageDialog(getParent(),
+							"Unable to load Application "
+									+ "version dictionary!", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		} catch (InvalidMessage ex)
+		{
+			message = null;
+			JOptionPane.showMessageDialog(getParent(), "Message is invalid!",
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
+
+		return message;
+	}
+
+	@Override
+	public MessageType getXmlMember()
+	{
+		throw new IllegalStateException(
+				"FreeTextMessagePanel does not support XML Messages!");
+	}
+
+	public void populate(MessageType xmlMessageType)
+	{
+		throw new IllegalStateException(
+				"FreeTextMessagePanel does not support XML Messages!");
 	}
 
 	private void initComponents()

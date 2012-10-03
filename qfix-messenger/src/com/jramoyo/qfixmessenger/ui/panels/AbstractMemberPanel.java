@@ -43,12 +43,14 @@ import javax.swing.JPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jramoyo.fix.model.Member;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 
 /**
  * @author jamoyo
  */
-public abstract class AbstractMemberPanel extends JPanel implements MemberPanel
+public abstract class AbstractMemberPanel<M extends Member, Q, X> extends
+		JPanel implements MemberPanel<M, Q, X>
 {
 	private static final Logger logger = LoggerFactory
 			.getLogger(AbstractMemberPanel.class);
@@ -69,9 +71,9 @@ public abstract class AbstractMemberPanel extends JPanel implements MemberPanel
 
 	protected static class LinkMouseAdapter extends MouseAdapter
 	{
-		private AbstractMemberPanel memberPanel;
+		private AbstractMemberPanel<?, ?, ?> memberPanel;
 
-		public LinkMouseAdapter(AbstractMemberPanel memberPanel)
+		public LinkMouseAdapter(AbstractMemberPanel<?, ?, ?> memberPanel)
 		{
 			this.memberPanel = memberPanel;
 		}
@@ -87,7 +89,8 @@ public abstract class AbstractMemberPanel extends JPanel implements MemberPanel
 				} catch (IOException ex)
 				{
 					logger.error("An exception occured!", ex);
-					JOptionPane.showMessageDialog(memberPanel,
+					JOptionPane.showMessageDialog(
+							memberPanel,
 							"An exception occured:\n"
 									+ Arrays.toString(ex.getStackTrace()),
 							"Error", JOptionPane.ERROR_MESSAGE);
