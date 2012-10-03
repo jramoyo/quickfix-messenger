@@ -34,7 +34,6 @@ package com.jramoyo.qfixmessenger.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -262,7 +261,7 @@ public class QFixMessengerFrame extends JFrame
 
 	private FreeTextMessagePanel freeTextMessagePanel;
 
-	private ProjectFrame projectFrame;
+	private ProjectDialog projectDialog;
 
 	private MemberPanelCache memberPanelCache;
 
@@ -336,9 +335,9 @@ public class QFixMessengerFrame extends JFrame
 	 * 
 	 * @return the current ProjectFrame instance
 	 */
-	public ProjectFrame getProjectFrame()
+	public ProjectDialog getProjectFrame()
 	{
-		return projectFrame;
+		return projectDialog;
 	}
 
 	/**
@@ -469,10 +468,10 @@ public class QFixMessengerFrame extends JFrame
 	{
 		this.xmlProjectType = xmlProjectType;
 		this.xmlProjectFile = null;
-		if (projectFrame != null)
+		if (projectDialog != null)
 		{
-			projectFrame.dispose();
-			projectFrame = null;
+			projectDialog.dispose();
+			projectDialog = null;
 		}
 
 		if (xmlProjectType != null)
@@ -482,7 +481,7 @@ public class QFixMessengerFrame extends JFrame
 			addButton.setEnabled(true);
 			saveProjectMenuItem.setEnabled(true);
 			closeProjectMenuItem.setEnabled(true);
-			launchProjectFrame();
+			launchProjectDialog();
 		} else
 		{
 			projectTitle = EMPTY_PROJECT;
@@ -1006,19 +1005,15 @@ public class QFixMessengerFrame extends JFrame
 		windowMenu.add(projectWindowMenuItem);
 	}
 
-	private void launchProjectFrame()
+	private void launchProjectDialog()
 	{
-		if (projectFrame == null || !projectFrame.isDisplayable())
+		if (projectDialog == null || !projectDialog.isDisplayable())
 		{
-			projectFrame = new ProjectFrame(this, xmlProjectType);
-			projectFrame.launch();
+			projectDialog = new ProjectDialog(this, xmlProjectType);
+			projectDialog.launch();
 		} else
 		{
-			if (projectFrame.getState() == Frame.ICONIFIED)
-			{
-				projectFrame.setState(Frame.NORMAL);
-			}
-			projectFrame.requestFocus();
+			projectDialog.requestFocus();
 		}
 	}
 
@@ -1281,7 +1276,7 @@ public class QFixMessengerFrame extends JFrame
 					ProjectType xmlProjectType = frame.getXmlProjectType();
 					xmlProjectType.getMessages().getMessage()
 							.add(xmlMessageType);
-					frame.projectFrame.updateMessageAdded(xmlMessageType);
+					frame.projectDialog.updateMessageAdded(xmlMessageType);
 				} else
 				{
 					JOptionPane.showMessageDialog(frame,
@@ -1567,7 +1562,7 @@ public class QFixMessengerFrame extends JFrame
 		{
 			if (frame.xmlProjectType != null)
 			{
-				frame.launchProjectFrame();
+				frame.launchProjectDialog();
 			} else
 			{
 				JOptionPane.showMessageDialog(frame, "No active project!",

@@ -27,7 +27,7 @@
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
  * DAMAGE.
  *
- * ProjectFrame.java
+ * ProjectDialog.java
  * Sep 23, 2012
  */
 package com.jramoyo.qfixmessenger.ui;
@@ -37,6 +37,7 @@ import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -51,22 +52,23 @@ import com.jramoyo.qfixmessenger.ui.models.ProjectTreeModel;
 import com.jramoyo.qfixmessenger.ui.renderers.ProjectTreeCellRenderer;
 
 /**
- * ProjectFrame
+ * ProjectDialog
  * 
  * @author jramoyo
  */
-public class ProjectFrame extends JFrame
+public class ProjectDialog extends JDialog
 {
 	private static final long serialVersionUID = -1653220967743151936L;
 
 	private final QFixMessengerFrame frame;
+
 	private final ProjectType xmlProjectType;
 
 	private JPanel mainPanel;
 
 	private JTree projectTree;
 
-	public ProjectFrame(QFixMessengerFrame frame, ProjectType xmlProjectType)
+	public ProjectDialog(QFixMessengerFrame frame, ProjectType xmlProjectType)
 	{
 		this.frame = frame;
 		this.xmlProjectType = xmlProjectType;
@@ -77,7 +79,7 @@ public class ProjectFrame extends JFrame
 	 */
 	public void launch()
 	{
-		initFrame();
+		initDialog();
 		initComponents();
 		positionFrame();
 		setVisible(true);
@@ -130,7 +132,7 @@ public class ProjectFrame extends JFrame
 		pack();
 	}
 
-	private void initFrame()
+	private void initDialog()
 	{
 		setIconImage(new ImageIcon(frame.getMessenger().getConfig()
 				.getIconsLocation()
