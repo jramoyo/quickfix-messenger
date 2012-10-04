@@ -180,7 +180,8 @@ public class QFixMessenger
 						.getSystemLookAndFeelClassName());
 			} else
 			{
-				UIManager.setLookAndFeel("com.lipstikLF.LipstikLookAndFeel");
+				UIManager
+						.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceDustLookAndFeel");
 			}
 		} catch (Exception ex)
 		{
