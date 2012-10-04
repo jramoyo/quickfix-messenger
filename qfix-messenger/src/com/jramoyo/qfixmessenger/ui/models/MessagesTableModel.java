@@ -67,7 +67,13 @@ public class MessagesTableModel extends AbstractTableModel implements
 	@Override
 	public Class<?> getColumnClass(int c)
 	{
-		return getValueAt(0, c).getClass();
+		Object object = getValueAt(0, c);
+		if (object != null)
+		{
+			return object.getClass();
+		}
+
+		return null;
 	}
 
 	@Override
@@ -96,10 +102,15 @@ public class MessagesTableModel extends AbstractTableModel implements
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex)
 	{
-		MessagesTableModelData rowData = tableData.get(rowIndex);
+		if (!tableData.isEmpty())
+		{
+			MessagesTableModelData rowData = tableData.get(rowIndex);
 
-		return rowData
-				.getColumData(MessagesTableModelData.COLUMN_NAMES[columnIndex]);
+			return rowData
+					.getColumData(MessagesTableModelData.COLUMN_NAMES[columnIndex]);
+		}
+
+		return null;
 	}
 
 	@Override
