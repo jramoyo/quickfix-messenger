@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jramoyo.fix.model.Member;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
+import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 
 /**
  * @author jamoyo
@@ -52,14 +53,31 @@ import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 public abstract class AbstractMemberPanel<M extends Member, Q, X> extends
 		JPanel implements MemberPanel<M, Q, X>
 {
+	private static final long serialVersionUID = 6904389112190383945L;
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(AbstractMemberPanel.class);
 
-	private static final long serialVersionUID = 6904389112190383945L;
+	private QFixMessengerFrame frame;
 
-	public AbstractMemberPanel()
+	private M member;
+
+	public AbstractMemberPanel(QFixMessengerFrame frame, M member)
 	{
+		this.frame = frame;
+		this.member = member;
 		setOpaque(true);
+	}
+
+	@Override
+	public M getMember()
+	{
+		return member;
+	}
+
+	protected QFixMessengerFrame getFrame()
+	{
+		return frame;
 	}
 
 	private void goToWikiPage() throws IOException

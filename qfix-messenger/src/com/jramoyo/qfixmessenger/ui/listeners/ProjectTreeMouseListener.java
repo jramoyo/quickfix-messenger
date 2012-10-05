@@ -46,9 +46,9 @@ import javax.swing.JTree;
 import com.jramoyo.fix.xml.MessageType;
 import com.jramoyo.fix.xml.ProjectType;
 import com.jramoyo.qfixmessenger.QFixMessengerException;
-import com.jramoyo.qfixmessenger.ui.Icons;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 import com.jramoyo.qfixmessenger.ui.models.ProjectTreeModel;
+import com.jramoyo.qfixmessenger.ui.util.Icons;
 
 /**
  * @author jramoyo

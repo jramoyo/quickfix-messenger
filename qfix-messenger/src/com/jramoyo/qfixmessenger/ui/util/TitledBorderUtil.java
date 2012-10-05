@@ -27,44 +27,41 @@
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
  * DAMAGE.
  *
- * MemberPanelCache.java
- * Oct 4, 2012
+ * TitledBorderUtil.java
+ * Oct 5, 2012
  */
-package com.jramoyo.qfixmessenger.ui.panels;
+package com.jramoyo.qfixmessenger.ui.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.Font;
+
+import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
 
 /**
  * @author jramoyo
  */
-public class MemberPanelCache
+public class TitledBorderUtil
 {
-	private final List<MemberPanel<?, ?, ?>> headerMembers;
-
-	private final List<MemberPanel<?, ?, ?>> bodyMembers;
-
-	private final List<MemberPanel<?, ?, ?>> trailerMembers;
-
-	public MemberPanelCache()
+	/**
+	 * Formats the title of a given TitledBorder
+	 * <p>
+	 * Workaround for Java Bug ID: 7022041
+	 * </p>
+	 * 
+	 * @param titledBorder
+	 *            a TitledBorder
+	 * @return the given TitledBorder with a formatted title
+	 */
+	public static TitledBorder formatTitle(TitledBorder titledBorder)
 	{
-		headerMembers = new ArrayList<>();
-		bodyMembers = new ArrayList<>();
-		trailerMembers = new ArrayList<>();
-	}
+		Font titleBorderFont = UIManager.getDefaults().getFont(
+				"TitledBorder.font");
+		if (titleBorderFont != null)
+		{
+			titledBorder.setTitleFont(new Font(titleBorderFont.getName(),
+					Font.BOLD, titleBorderFont.getSize()));
+		}
 
-	public List<MemberPanel<?, ?, ?>> getBodyMembers()
-	{
-		return bodyMembers;
-	}
-
-	public List<MemberPanel<?, ?, ?>> getHeaderMembers()
-	{
-		return headerMembers;
-	}
-
-	public List<MemberPanel<?, ?, ?>> getTrailerMembers()
-	{
-		return trailerMembers;
+		return titledBorder;
 	}
 }

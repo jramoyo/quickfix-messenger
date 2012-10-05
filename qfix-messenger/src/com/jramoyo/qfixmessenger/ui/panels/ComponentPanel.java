@@ -59,6 +59,7 @@ import com.jramoyo.fix.xml.GroupsType;
 import com.jramoyo.fix.xml.ObjectFactory;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 import com.jramoyo.qfixmessenger.quickfix.ComponentHelper;
+import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 
 /**
  * @author jamoyo
@@ -67,8 +68,6 @@ public class ComponentPanel extends
 		AbstractMemberPanel<Component, ComponentHelper, ComponentType>
 {
 	private static final long serialVersionUID = 1982089310942186498L;
-
-	private final Component component;
 
 	private final boolean isRequired;
 
@@ -82,10 +81,10 @@ public class ComponentPanel extends
 
 	private JPanel membersPanel;
 
-	public ComponentPanel(Component component, boolean isRequiredOnly,
-			boolean isRequired)
+	public ComponentPanel(QFixMessengerFrame frame, Component component,
+			boolean isRequiredOnly, boolean isRequired)
 	{
-		this.component = component;
+		super(frame, component);
 		this.isRequiredOnly = isRequiredOnly;
 		this.isRequired = isRequired;
 
@@ -107,12 +106,6 @@ public class ComponentPanel extends
 		}
 
 		return sb.toString();
-	}
-
-	@Override
-	public Component getMember()
-	{
-		return component;
 	}
 
 	@Override
@@ -149,7 +142,7 @@ public class ComponentPanel extends
 	{
 		ObjectFactory xmlObjectFactory = new ObjectFactory();
 		ComponentType xmlComponentType = xmlObjectFactory.createComponentType();
-		xmlComponentType.setName(component.getName());
+		xmlComponentType.setName(getMember().getName());
 
 		for (MemberPanel<?, ?, ?> memberPanel : members)
 		{
@@ -214,7 +207,7 @@ public class ComponentPanel extends
 	{
 		setLayout(new BorderLayout());
 
-		componentLabel = new JLabel(component.toString());
+		componentLabel = new JLabel(getMember().toString());
 		componentLabel
 				.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		componentLabel.addMouseListener(new LinkMouseAdapter(this));
@@ -225,7 +218,7 @@ public class ComponentPanel extends
 		}
 
 		componentLabel.setFont(new Font(componentLabel.getFont().getName(),
-				Font.BOLD, 15));
+				Font.BOLD, componentLabel.getFont().getSize()));
 
 		membersPanel = new JPanel();
 		if (isRequired)
@@ -251,11 +244,11 @@ public class ComponentPanel extends
 		c.weightx = 0.5;
 		c.weighty = 0.0;
 
-		Field firstTag = component.getFirstField();
+		Field firstTag = getMember().getFirstField();
 		if (firstTag != null)
 		{
 			FieldPanel fieldPanel = MemberPanelFactory.createFieldPanel(
-					prevMembers, firstTag, true);
+					getFrame(), prevMembers, firstTag, true);
 			fieldPanel.setMaximumSize(new Dimension(getPreferredSize().width,
 					fieldPanel.getPreferredSize().height));
 
@@ -265,7 +258,7 @@ public class ComponentPanel extends
 			members.add(fieldPanel);
 		}
 
-		for (Entry<Member, Boolean> entry : component.getMembers().entrySet())
+		for (Entry<Member, Boolean> entry : getMember().getMembers().entrySet())
 		{
 			if (isRequiredOnly && !entry.getValue())
 			{
@@ -278,7 +271,7 @@ public class ComponentPanel extends
 				if (!field.equals(firstTag))
 				{
 					FieldPanel fieldPanel = MemberPanelFactory
-							.createFieldPanel(prevMembers, field,
+							.createFieldPanel(getFrame(), prevMembers, field,
 									entry.getValue());
 					fieldPanel.setMaximumSize(new Dimension(
 							getPreferredSize().width, fieldPanel
@@ -296,7 +289,8 @@ public class ComponentPanel extends
 				Group group = (Group) entry.getKey();
 
 				GroupPanel groupPanel = MemberPanelFactory.createGroupPanel(
-						prevMembers, group, isRequiredOnly, entry.getValue());
+						getFrame(), prevMembers, group, isRequiredOnly,
+						entry.getValue());
 				groupPanel.setMaximumSize(new Dimension(
 						getPreferredSize().width,
 						groupPanel.getPreferredSize().height));
@@ -312,8 +306,8 @@ public class ComponentPanel extends
 				Component component = (Component) entry.getKey();
 
 				ComponentPanel componentPanel = MemberPanelFactory
-						.createComponentPanel(prevMembers, component,
-								isRequiredOnly, entry.getValue());
+						.createComponentPanel(getFrame(), prevMembers,
+								component, isRequiredOnly, entry.getValue());
 
 				componentPanel.setMaximumSize(new Dimension(
 						getPreferredSize().width, componentPanel

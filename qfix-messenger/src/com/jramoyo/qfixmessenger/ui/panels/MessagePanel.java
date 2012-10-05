@@ -34,7 +34,6 @@ package com.jramoyo.qfixmessenger.ui.panels;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +42,6 @@ import java.util.Map.Entry;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
@@ -69,6 +67,7 @@ import com.jramoyo.fix.xml.TrailerType;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 import com.jramoyo.qfixmessenger.quickfix.util.QFixUtil;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
+import com.jramoyo.qfixmessenger.ui.util.TitledBorderUtil;
 
 /**
  * @author jramoyo
@@ -77,6 +76,8 @@ public class MessagePanel extends JPanel implements
 		MemberPanel<Message, quickfix.Message, MessageType>
 {
 	private static final long serialVersionUID = 7937359075224178112L;
+
+	private final QFixMessengerFrame frame;
 
 	private final Session session;
 
@@ -106,6 +107,8 @@ public class MessagePanel extends JPanel implements
 
 	private MessagePanel(MessagePanelBuilder builder)
 	{
+		this.frame = builder.frame;
+
 		this.session = builder.session;
 		this.appVersion = builder.appVersion;
 
@@ -128,26 +131,21 @@ public class MessagePanel extends JPanel implements
 		initComponents();
 	}
 
-	public List<MemberPanel<?, ?, ?>> getHeaderMembers()
-	{
-		return Collections.unmodifiableList(headerMembers);
-	}
-
 	public List<MemberPanel<?, ?, ?>> getBodyMembers()
 	{
 		return Collections.unmodifiableList(bodyMembers);
 	}
 
-	public List<MemberPanel<?, ?, ?>> getTrailerMembers()
-	{
-		return Collections.unmodifiableList(trailerMembers);
-	}
-
 	@Override
 	public String getFixString()
 	{
-		// TODO
+		// TODO There is currently no need for this
 		return null;
+	}
+
+	public List<MemberPanel<?, ?, ?>> getHeaderMembers()
+	{
+		return Collections.unmodifiableList(headerMembers);
 	}
 
 	@Override
@@ -239,6 +237,11 @@ public class MessagePanel extends JPanel implements
 		}
 
 		return qfixMessage;
+	}
+
+	public List<MemberPanel<?, ?, ?>> getTrailerMembers()
+	{
+		return Collections.unmodifiableList(trailerMembers);
 	}
 
 	@Override
@@ -418,15 +421,7 @@ public class MessagePanel extends JPanel implements
 
 			TitledBorder headerBorder = new TitledBorder(new LineBorder(
 					Color.BLACK), "Message Header");
-			// TODO Workaround for Java Bug ID: 7022041
-			Font headerTitleBorderFont = UIManager.getDefaults().getFont(
-					"TitledBorder.font");
-			if (headerTitleBorderFont != null)
-			{
-				headerBorder.setTitleFont(new Font(headerTitleBorderFont
-						.getName(), Font.BOLD, 15));
-			}
-			headerPanel.setBorder(headerBorder);
+			headerPanel.setBorder(TitledBorderUtil.formatTitle(headerBorder));
 
 			if (!isFixTSession)
 			{
@@ -458,15 +453,7 @@ public class MessagePanel extends JPanel implements
 
 		TitledBorder bodyBorder = new TitledBorder(new LineBorder(Color.BLACK),
 				"Message Body");
-		// TODO Workaround for Java Bug ID: 7022041
-		Font bodyTitleBorderFont = UIManager.getDefaults().getFont(
-				"TitledBorder.font");
-		if (bodyTitleBorderFont != null)
-		{
-			bodyBorder.setTitleFont(new Font(bodyTitleBorderFont.getName(),
-					Font.BOLD, 15));
-		}
-		bodyPanel.setBorder(bodyBorder);
+		bodyPanel.setBorder(TitledBorderUtil.formatTitle(bodyBorder));
 
 		for (Entry<Member, Boolean> entry : message.getMembers().entrySet())
 		{
@@ -485,15 +472,7 @@ public class MessagePanel extends JPanel implements
 
 			TitledBorder trailerBorder = new TitledBorder(new LineBorder(
 					Color.BLACK), "Message Trailer");
-			// TODO Workaround for Java Bug ID: 7022041
-			Font trailerTitleBorderFont = UIManager.getDefaults().getFont(
-					"TitledBorder.font");
-			if (trailerTitleBorderFont != null)
-			{
-				trailerBorder.setTitleFont(new Font(trailerTitleBorderFont
-						.getName(), Font.BOLD, 15));
-			}
-			trailerPanel.setBorder(trailerBorder);
+			trailerPanel.setBorder(TitledBorderUtil.formatTitle(trailerBorder));
 
 			if (!isFixTSession)
 			{
@@ -533,7 +512,7 @@ public class MessagePanel extends JPanel implements
 		{
 			Field field = (Field) entry.getKey();
 
-			FieldPanel fieldPanel = MemberPanelFactory.createFieldPanel(
+			FieldPanel fieldPanel = MemberPanelFactory.createFieldPanel(frame,
 					previousMemberList, field, entry.getValue());
 			fieldPanel.setMaximumSize(new Dimension(
 					QFixMessengerFrame.MIDDLE_PANEL_WIDTH, fieldPanel
@@ -548,7 +527,7 @@ public class MessagePanel extends JPanel implements
 			Group group = (Group) entry.getKey();
 
 			GroupPanel groupPanel = MemberPanelFactory
-					.createGroupPanel(previousMemberList, group,
+					.createGroupPanel(frame, previousMemberList, group,
 							isRequiredOnly, entry.getValue());
 			groupPanel.setMaximumSize(new Dimension(
 					QFixMessengerFrame.MIDDLE_PANEL_WIDTH, groupPanel
@@ -563,7 +542,7 @@ public class MessagePanel extends JPanel implements
 			Component component = (Component) entry.getKey();
 
 			ComponentPanel componentPanel = MemberPanelFactory
-					.createComponentPanel(previousMemberList, component,
+					.createComponentPanel(frame, previousMemberList, component,
 							isRequiredOnly, entry.getValue());
 			componentPanel.setMaximumSize(new Dimension(
 					QFixMessengerFrame.MIDDLE_PANEL_WIDTH, componentPanel
@@ -576,6 +555,8 @@ public class MessagePanel extends JPanel implements
 
 	public static class MessagePanelBuilder
 	{
+		private QFixMessengerFrame frame;
+
 		private Session session;
 
 		private String appVersion;
@@ -607,74 +588,24 @@ public class MessagePanel extends JPanel implements
 			return new MessagePanel(this);
 		}
 
-		public Session getSession()
-		{
-			return session;
-		}
-
-		public void setSession(Session session)
-		{
-			this.session = session;
-		}
-
 		public String getAppVersion()
 		{
 			return appVersion;
 		}
 
-		public void setAppVersion(String appVersion)
+		public FixDictionary getDictionary()
 		{
-			this.appVersion = appVersion;
+			return dictionary;
 		}
 
-		public Message getMessage()
+		public FixDictionary getFixTDictionary()
 		{
-			return message;
+			return fixTDictionary;
 		}
 
-		public void setMessage(Message message)
+		public QFixMessengerFrame getFrame()
 		{
-			this.message = message;
-		}
-
-		public boolean isRequiredOnly()
-		{
-			return isRequiredOnly;
-		}
-
-		public void setIsRequiredOnly(boolean isRequiredOnly)
-		{
-			this.isRequiredOnly = isRequiredOnly;
-		}
-
-		public boolean isModifyHeader()
-		{
-			return isModifyHeader;
-		}
-
-		public void setIsModifyHeader(boolean isModifyHeader)
-		{
-			this.isModifyHeader = isModifyHeader;
-		}
-
-		public boolean isModifyTrailer()
-		{
-			return isModifyTrailer;
-		}
-
-		public void setIsModifyTrailer(boolean isModifyTrailer)
-		{
-			this.isModifyTrailer = isModifyTrailer;
-		}
-
-		public boolean isFixTSession()
-		{
-			return isFixTSession;
-		}
-
-		public void setIsFixTSession(boolean isFixTSession)
-		{
-			this.isFixTSession = isFixTSession;
+			return frame;
 		}
 
 		public MemberPanelCache getMemberPanelCache()
@@ -682,9 +613,14 @@ public class MessagePanel extends JPanel implements
 			return memberPanelCache;
 		}
 
-		public void setMemberPanelCache(MemberPanelCache memberPanelCache)
+		public Message getMessage()
 		{
-			this.memberPanelCache = memberPanelCache;
+			return message;
+		}
+
+		public List<MemberPanel<?, ?, ?>> getPrevBodyMembers()
+		{
+			return prevBodyMembers;
 		}
 
 		public List<MemberPanel<?, ?, ?>> getPrevHeaderMembers()
@@ -692,15 +628,84 @@ public class MessagePanel extends JPanel implements
 			return prevHeaderMembers;
 		}
 
-		public void setPrevHeaderMembers(
-				List<MemberPanel<?, ?, ?>> prevHeaderMembers)
+		public List<MemberPanel<?, ?, ?>> getPrevTrailerMembers()
 		{
-			this.prevHeaderMembers = prevHeaderMembers;
+			return prevTrailerMembers;
 		}
 
-		public List<MemberPanel<?, ?, ?>> getPrevBodyMembers()
+		public Session getSession()
 		{
-			return prevBodyMembers;
+			return session;
+		}
+
+		public boolean isFixTSession()
+		{
+			return isFixTSession;
+		}
+
+		public boolean isModifyHeader()
+		{
+			return isModifyHeader;
+		}
+
+		public boolean isModifyTrailer()
+		{
+			return isModifyTrailer;
+		}
+
+		public boolean isRequiredOnly()
+		{
+			return isRequiredOnly;
+		}
+
+		public void setAppVersion(String appVersion)
+		{
+			this.appVersion = appVersion;
+		}
+
+		public void setDictionary(FixDictionary dictionary)
+		{
+			this.dictionary = dictionary;
+		}
+
+		public void setFixTDictionary(FixDictionary fixTDictionary)
+		{
+			this.fixTDictionary = fixTDictionary;
+		}
+
+		public void setFrame(QFixMessengerFrame frame)
+		{
+			this.frame = frame;
+		}
+
+		public void setIsFixTSession(boolean isFixTSession)
+		{
+			this.isFixTSession = isFixTSession;
+		}
+
+		public void setIsModifyHeader(boolean isModifyHeader)
+		{
+			this.isModifyHeader = isModifyHeader;
+		}
+
+		public void setIsModifyTrailer(boolean isModifyTrailer)
+		{
+			this.isModifyTrailer = isModifyTrailer;
+		}
+
+		public void setIsRequiredOnly(boolean isRequiredOnly)
+		{
+			this.isRequiredOnly = isRequiredOnly;
+		}
+
+		public void setMemberPanelCache(MemberPanelCache memberPanelCache)
+		{
+			this.memberPanelCache = memberPanelCache;
+		}
+
+		public void setMessage(Message message)
+		{
+			this.message = message;
 		}
 
 		public void setPrevBodyMembers(
@@ -709,9 +714,10 @@ public class MessagePanel extends JPanel implements
 			this.prevBodyMembers = prevBodyMembers;
 		}
 
-		public List<MemberPanel<?, ?, ?>> getPrevTrailerMembers()
+		public void setPrevHeaderMembers(
+				List<MemberPanel<?, ?, ?>> prevHeaderMembers)
 		{
-			return prevTrailerMembers;
+			this.prevHeaderMembers = prevHeaderMembers;
 		}
 
 		public void setPrevTrailerMembers(
@@ -720,24 +726,9 @@ public class MessagePanel extends JPanel implements
 			this.prevTrailerMembers = prevTrailerMembers;
 		}
 
-		public FixDictionary getDictionary()
+		public void setSession(Session session)
 		{
-			return dictionary;
-		}
-
-		public void setDictionary(FixDictionary dictionary)
-		{
-			this.dictionary = dictionary;
-		}
-
-		public FixDictionary getFixTDictionary()
-		{
-			return fixTDictionary;
-		}
-
-		public void setFixTDictionary(FixDictionary fixTDictionary)
-		{
-			this.fixTDictionary = fixTDictionary;
+			this.session = session;
 		}
 	}
 }

@@ -135,6 +135,7 @@ import com.jramoyo.qfixmessenger.ui.panels.MessagePanel.MessagePanelBuilder;
 import com.jramoyo.qfixmessenger.ui.renderers.MessagesListCellRenderer;
 import com.jramoyo.qfixmessenger.ui.renderers.MessagesTableCellRender;
 import com.jramoyo.qfixmessenger.ui.renderers.SessionsListCellRenderer;
+import com.jramoyo.qfixmessenger.ui.util.Icons;
 
 /**
  * Main frame
@@ -318,6 +319,59 @@ public class QFixMessengerFrame extends JFrame
 			dispose();
 			messenger.exit();
 		}
+	}
+
+	public void displayMainPanel()
+	{
+		if (messagePanel != null)
+		{
+			memberPanelCache.getHeaderMembers().addAll(
+					messagePanel.getHeaderMembers());
+			memberPanelCache.getBodyMembers().addAll(
+					messagePanel.getBodyMembers());
+			memberPanelCache.getTrailerMembers().addAll(
+					messagePanel.getTrailerMembers());
+		}
+
+		JPanel mainPanel;
+		if (activeMessage != null)
+		{
+			if (!activeMessage.equals(freeTextMessage))
+			{
+				MessagePanelBuilder builder = new MessagePanelBuilder();
+				builder.setFrame(this);
+				builder.setSession(sessionsList.getSelectedValue());
+				builder.setAppVersion((String) appVersionsComboBox
+						.getSelectedItem());
+				builder.setMessage(activeMessage);
+				builder.setIsRequiredOnly(isRequiredOnly);
+				builder.setIsModifyHeader(isModifyHeader);
+				builder.setIsModifyTrailer(isModifyTrailer);
+				builder.setIsFixTSession(isFixTSession);
+				builder.setMemberPanelCache(memberPanelCache);
+				builder.setDictionary(activeDictionary);
+				builder.setFixTDictionary(fixTDictionary);
+
+				messagePanel = builder.build();
+				mainPanel = messagePanel;
+			} else
+			{
+				freeTextMessagePanel = new FreeTextMessagePanel(messenger,
+						sessionsList.getSelectedValue(),
+						(String) appVersionsComboBox.getSelectedItem(),
+						isFixTSession);
+				freeTextMessagePanel.setMaximumSize(new Dimension(
+						MIDDLE_PANEL_WIDTH, freeTextMessagePanel
+								.getPreferredSize().height));
+
+				mainPanel = freeTextMessagePanel;
+			}
+		} else
+		{
+			mainPanel = blankPanel;
+		}
+
+		mainPanelScrollPane.getViewport().add(mainPanel);
 	}
 
 	/**
@@ -764,7 +818,7 @@ public class QFixMessengerFrame extends JFrame
 				{
 					logger.debug("Selected isRequiredOnly = " + isRequiredOnly);
 				}
-				loadMainPanel();
+				displayMainPanel();
 			}
 		});
 
@@ -786,7 +840,7 @@ public class QFixMessengerFrame extends JFrame
 				{
 					logger.debug("Selected isModifyHeader = " + isModifyHeader);
 				}
-				loadMainPanel();
+				displayMainPanel();
 			}
 		});
 
@@ -809,7 +863,7 @@ public class QFixMessengerFrame extends JFrame
 					logger.debug("Selected isModifyTrailer = "
 							+ isModifyTrailer);
 				}
-				loadMainPanel();
+				displayMainPanel();
 			}
 		});
 
@@ -1020,58 +1074,6 @@ public class QFixMessengerFrame extends JFrame
 	private void loadFrameTitle()
 	{
 		setTitle(frameTitle + " - " + projectTitle);
-	}
-
-	private void loadMainPanel()
-	{
-		if (messagePanel != null)
-		{
-			memberPanelCache.getHeaderMembers().addAll(
-					messagePanel.getHeaderMembers());
-			memberPanelCache.getBodyMembers().addAll(
-					messagePanel.getBodyMembers());
-			memberPanelCache.getTrailerMembers().addAll(
-					messagePanel.getTrailerMembers());
-		}
-
-		JPanel mainPanel;
-		if (activeMessage != null)
-		{
-			if (!activeMessage.equals(freeTextMessage))
-			{
-				MessagePanelBuilder builder = new MessagePanelBuilder();
-				builder.setSession(sessionsList.getSelectedValue());
-				builder.setAppVersion((String) appVersionsComboBox
-						.getSelectedItem());
-				builder.setMessage(activeMessage);
-				builder.setIsRequiredOnly(isRequiredOnly);
-				builder.setIsModifyHeader(isModifyHeader);
-				builder.setIsModifyTrailer(isModifyTrailer);
-				builder.setIsFixTSession(isFixTSession);
-				builder.setMemberPanelCache(memberPanelCache);
-				builder.setDictionary(activeDictionary);
-				builder.setFixTDictionary(fixTDictionary);
-
-				messagePanel = builder.build();
-				mainPanel = messagePanel;
-			} else
-			{
-				freeTextMessagePanel = new FreeTextMessagePanel(messenger,
-						sessionsList.getSelectedValue(),
-						(String) appVersionsComboBox.getSelectedItem(),
-						isFixTSession);
-				freeTextMessagePanel.setMaximumSize(new Dimension(
-						MIDDLE_PANEL_WIDTH, freeTextMessagePanel
-								.getPreferredSize().height));
-
-				mainPanel = freeTextMessagePanel;
-			}
-		} else
-		{
-			mainPanel = blankPanel;
-		}
-
-		mainPanelScrollPane.getViewport().add(mainPanel);
 	}
 
 	private void loadMessagesList()
@@ -1445,7 +1447,7 @@ public class QFixMessengerFrame extends JFrame
 				frame.modifyHeaderCheckBox.setSelected(false);
 				frame.modifyTrailerCheckBox.setSelected(false);
 
-				frame.loadMainPanel();
+				frame.displayMainPanel();
 			}
 		}
 	}
@@ -1761,7 +1763,7 @@ public class QFixMessengerFrame extends JFrame
 				}
 
 				frame.activeMessage = null;
-				frame.loadMainPanel();
+				frame.displayMainPanel();
 				frame.loadMessagesList();
 			}
 		}

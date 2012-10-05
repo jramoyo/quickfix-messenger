@@ -30,48 +30,45 @@
  * Icons.java
  * Sep 28, 2012
  */
-package com.jramoyo.qfixmessenger.ui;
+package com.jramoyo.qfixmessenger.ui.util;
 
 /**
  * @author jramoyo
  */
 public final class Icons
 {
-	private Icons()
-	{
-	}
-
 	public static String APP_ICON = "/app.png";
 
 	public static String ADD_ICON = "/add.png";
-	public static String SEND_ICON = "/send.png";
 
+	public static String SEND_ICON = "/send.png";
 	public static String NEW_ICON = "/new.png";
+
 	public static String OPEN_ICON = "/open.png";
 	public static String SAVE_ICON = "/save.png";
 	public static String CLOSE_ICON = "/close.png";
-
 	public static String IMPORT_ICON = "/import.png";
-	public static String EXPORT_ICON = "/export.png";
 
+	public static String EXPORT_ICON = "/export.png";
 	public static String EXIT_ICON = "/exit.png";
 
 	public static String LOGON_ICON = "/logon.png";
+
 	public static String LOGOFF_ICON = "/logoff.png";
 	public static String RESET_ICON = "/reset.png";
-
 	public static String HELP_ICON = "/help.png";
 
 	public static String WINDOW_ICON = "/window.png";
 
 	public static String LOAD_ICON = "/load.png";
+
 	public static String DELETE_ICON = "/delete.png";
 	public static String SEND_SMALL_ICON = "/send_small.png";
 	public static String SEND_ALL_ICON = "/send_all.png";
 	public static String COLLAPSE_ICON = "/collapse.png";
 	public static String EXPAND_ICON = "/expand.png";
-
 	public static String PROJECT_ICON = "/project.png";
+
 	public static String PROJECT_OPEN_ICON = "/project_open.png";
 	public static String MESSAGES_ICON = "/messages.png";
 	public static String MESSAGES_OPEN_ICON = "/messages_open.png";
@@ -83,4 +80,7 @@ public final class Icons
 	public static String GROUPS_ICON = "/groups.png";
 	public static String FIELD_ICON = "/field.png";
 	public static String TEXT_ICON = "/text.png";
+	private Icons()
+	{
+	}
 }

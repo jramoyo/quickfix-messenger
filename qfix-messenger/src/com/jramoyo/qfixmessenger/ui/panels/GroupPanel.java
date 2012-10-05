@@ -35,10 +35,8 @@ package com.jramoyo.qfixmessenger.ui.panels;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -50,8 +48,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
 import quickfix.StringField;
 
@@ -65,6 +64,8 @@ import com.jramoyo.fix.xml.GroupType;
 import com.jramoyo.fix.xml.GroupsType;
 import com.jramoyo.fix.xml.ObjectFactory;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
+import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
+import com.jramoyo.qfixmessenger.ui.util.TitledBorderUtil;
 
 /**
  * @author jamoyo
@@ -73,10 +74,6 @@ public class GroupPanel extends
 		AbstractMemberPanel<Group, List<quickfix.Group>, GroupsType>
 {
 	private static final long serialVersionUID = -1327365939623841550L;
-
-	private final JPanel blankPanel = new JPanel();
-
-	private final Group group;
 
 	private final boolean isRequired;
 
@@ -88,13 +85,14 @@ public class GroupPanel extends
 
 	private JButton setButton;
 
-	private JScrollPane membersScrollPane;
+	private JPanel groupPanels;
 
 	private List<List<MemberPanel<?, ?, ?>>> groups;
 
-	public GroupPanel(Group group, boolean isRequiredOnly, boolean isRequired)
+	public GroupPanel(QFixMessengerFrame frame, Group group,
+			boolean isRequiredOnly, boolean isRequired)
 	{
-		this.group = group;
+		super(frame, group);
 		this.isRequired = isRequired;
 		this.isRequiredOnly = isRequiredOnly;
 
@@ -106,7 +104,7 @@ public class GroupPanel extends
 	@Override
 	public String getFixString()
 	{
-		StringBuilder sb = new StringBuilder("" + group.getNumber())
+		StringBuilder sb = new StringBuilder("" + getMember().getNumber())
 				.append('=').append(groupTextField.getText().trim())
 				.append(QFixMessengerConstants.SOH);
 
@@ -122,12 +120,6 @@ public class GroupPanel extends
 		return sb.toString();
 	}
 
-	@Override
-	public Group getMember()
-	{
-		return group;
-	}
-
 	public List<quickfix.Group> getQuickFixMember()
 	{
 		List<quickfix.Group> qfixGroups = new ArrayList<quickfix.Group>();
@@ -135,17 +127,17 @@ public class GroupPanel extends
 		for (List<MemberPanel<?, ?, ?>> groupMembers : groups)
 		{
 			quickfix.Group qfixGroup;
-			Member firstMember = group.getFirstMember();
+			Member firstMember = getMember().getFirstMember();
 			if (firstMember instanceof Component)
 			{
 				Component firstComponent = (Component) firstMember;
 				Field firstField = firstComponent.getFirstField();
-				qfixGroup = new quickfix.Group(group.getNumber(),
+				qfixGroup = new quickfix.Group(getMember().getNumber(),
 						firstField.getNumber());
 			} else
 			{
 				Field firstField = (Field) firstMember;
-				qfixGroup = new quickfix.Group(group.getNumber(),
+				qfixGroup = new quickfix.Group(getMember().getNumber(),
 						firstField.getNumber());
 			}
 
@@ -194,8 +186,8 @@ public class GroupPanel extends
 	{
 		ObjectFactory xmlObjectFactory = new ObjectFactory();
 		GroupsType xmlGroupsType = xmlObjectFactory.createGroupsType();
-		xmlGroupsType.setId(group.getNumber());
-		xmlGroupsType.setName(group.getName());
+		xmlGroupsType.setId(getMember().getNumber());
+		xmlGroupsType.setName(getMember().getName());
 		xmlGroupsType.setCount(groups.size());
 
 		for (List<MemberPanel<?, ?, ?>> groupMembers : groups)
@@ -291,7 +283,7 @@ public class GroupPanel extends
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
-		groupLabel = new JLabel(group.toString());
+		groupLabel = new JLabel(getMember().toString());
 		groupLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		groupLabel.addMouseListener(new LinkMouseAdapter(this));
 		groupLabel.setToolTipText("Double-click to look-up in FIXwiki");
@@ -318,7 +310,8 @@ public class GroupPanel extends
 		groupValuePanel.add(groupTextField);
 		groupValuePanel.add(setButton);
 
-		membersScrollPane = new JScrollPane();
+		groupPanels = new JPanel();
+		groupPanels.setLayout(new BoxLayout(groupPanels, BoxLayout.Y_AXIS));
 
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 0.5;
@@ -334,14 +327,14 @@ public class GroupPanel extends
 
 		c.gridx = 0;
 		c.gridy = 2;
-		c.ipady = 150;
-		add(membersScrollPane, c);
+		add(groupPanels, c);
 	}
 
 	private void loadMembers()
 	{
 		// Clear the members
 		groups.clear();
+		groupPanels.removeAll();
 
 		// Reload the members
 		String noOfGroupsString = groupTextField.getText().trim();
@@ -350,9 +343,6 @@ public class GroupPanel extends
 			try
 			{
 				int noOfGroups = Integer.parseInt(noOfGroupsString);
-
-				JPanel membersPanel = new JPanel();
-				membersPanel.setLayout(new GridLayout(noOfGroups, 1));
 
 				for (int i = 0; i < noOfGroups; i++)
 				{
@@ -366,21 +356,18 @@ public class GroupPanel extends
 					c.weightx = 0.5;
 					c.weighty = 0.0;
 
-					JLabel groupLabel = new JLabel("Group #" + (i + 1));
-					groupLabel.setFont(new Font(groupLabel.getFont().getName(),
-							Font.BOLD, groupLabel.getFont().getSize()));
+					TitledBorder titledBoarder = new TitledBorder(
+							new LineBorder(Color.BLACK), getMember().getName()
+									+ " [" + (i + 1) + "]");
+					groupPanel.setBorder(TitledBorderUtil
+							.formatTitle(titledBoarder));
 
-					c.gridx = 0;
-					c.gridy = rows;
-					groupPanel.add(groupLabel, c);
-					rows++;
-
-					Member firstMember = group.getFirstMember();
+					Member firstMember = getMember().getFirstMember();
 					if (firstMember != null)
 					{
 						if (firstMember instanceof Field)
 						{
-							FieldPanel fieldPanel = new FieldPanel(
+							FieldPanel fieldPanel = new FieldPanel(getFrame(),
 									(Field) firstMember, true);
 
 							fieldPanel.setMaximumSize(new Dimension(
@@ -397,8 +384,8 @@ public class GroupPanel extends
 						else if (firstMember instanceof Component)
 						{
 							ComponentPanel componentPanel = new ComponentPanel(
-									(Component) firstMember, isRequiredOnly,
-									true);
+									getFrame(), (Component) firstMember,
+									isRequiredOnly, true);
 
 							componentPanel.setMaximumSize(new Dimension(
 									getPreferredSize().width, componentPanel
@@ -412,8 +399,8 @@ public class GroupPanel extends
 						}
 					}
 
-					for (Entry<Member, Boolean> entry : group.getMembers()
-							.entrySet())
+					for (Entry<Member, Boolean> entry : getMember()
+							.getMembers().entrySet())
 					{
 						if (isRequiredOnly && !entry.getValue())
 						{
@@ -425,8 +412,8 @@ public class GroupPanel extends
 							Field field = (Field) entry.getKey();
 							if (!field.equals(firstMember))
 							{
-								FieldPanel fieldPanel = new FieldPanel(field,
-										entry.getValue());
+								FieldPanel fieldPanel = new FieldPanel(
+										getFrame(), field, entry.getValue());
 
 								fieldPanel.setMaximumSize(new Dimension(
 										getPreferredSize().width, fieldPanel
@@ -443,8 +430,9 @@ public class GroupPanel extends
 						if (entry.getKey() instanceof Group)
 						{
 							Group group = (Group) entry.getKey();
-							GroupPanel memberGroupPanel = new GroupPanel(group,
-									isRequiredOnly, entry.getValue());
+							GroupPanel memberGroupPanel = new GroupPanel(
+									getFrame(), group, isRequiredOnly,
+									entry.getValue());
 
 							groupPanel.setMaximumSize(new Dimension(
 									getPreferredSize().width, groupPanel
@@ -463,7 +451,7 @@ public class GroupPanel extends
 							if (!component.equals(firstMember))
 							{
 								ComponentPanel componentPanel = new ComponentPanel(
-										component, isRequiredOnly,
+										getFrame(), component, isRequiredOnly,
 										entry.getValue());
 
 								componentPanel
@@ -482,10 +470,8 @@ public class GroupPanel extends
 					}
 
 					groups.add(groupMembers);
-					membersPanel.add(groupPanel);
+					groupPanels.add(groupPanel);
 				}
-
-				membersScrollPane.getViewport().add(membersPanel);
 			} catch (NumberFormatException ex)
 			{
 				JOptionPane.showMessageDialog(this, "Invalid number of group!",
@@ -493,7 +479,9 @@ public class GroupPanel extends
 			}
 		} else
 		{
-			membersScrollPane.getViewport().add(blankPanel);
+			groupPanels.removeAll();
 		}
+
+		getFrame().displayMainPanel();
 	}
 }

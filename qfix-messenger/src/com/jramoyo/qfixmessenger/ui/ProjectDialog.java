@@ -50,6 +50,7 @@ import com.jramoyo.qfixmessenger.ui.editors.ProjectTreeCellEditor;
 import com.jramoyo.qfixmessenger.ui.listeners.ProjectTreeMouseListener;
 import com.jramoyo.qfixmessenger.ui.models.ProjectTreeModel;
 import com.jramoyo.qfixmessenger.ui.renderers.ProjectTreeCellRenderer;
+import com.jramoyo.qfixmessenger.ui.util.Icons;
 
 /**
  * ProjectDialog

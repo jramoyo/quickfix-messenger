@@ -57,6 +57,7 @@ import com.jramoyo.fix.model.FieldType;
 import com.jramoyo.fix.model.FieldValue;
 import com.jramoyo.fix.xml.ObjectFactory;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
+import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 import com.jramoyo.qfixmessenger.ui.renderers.FieldComboBoxCellRenderer;
 import com.jramoyo.qfixmessenger.util.StringUtil;
 
@@ -70,8 +71,6 @@ public class FieldPanel extends
 
 	private static final FieldValue EMPTY_FIELD_VALUE = new FieldValue("", "");
 
-	private final Field field;
-
 	private final boolean isRequired;
 
 	private JLabel fieldLabel;
@@ -82,9 +81,9 @@ public class FieldPanel extends
 
 	private JButton dateButton;
 
-	public FieldPanel(Field field, boolean isRequired)
+	public FieldPanel(QFixMessengerFrame frame, Field field, boolean isRequired)
 	{
-		this.field = field;
+		super(frame, field);
 		this.isRequired = isRequired;
 
 		initComponents();
@@ -95,17 +94,11 @@ public class FieldPanel extends
 	{
 		if (!StringUtil.isNullOrEmpty(getValue()))
 		{
-			return "" + field.getNumber() + "=" + getValue();
+			return "" + getMember().getNumber() + "=" + getValue();
 		} else
 		{
 			return "";
 		}
-	}
-
-	@Override
-	public Field getMember()
-	{
-		return field;
 	}
 
 	public StringField getQuickFixMember()
@@ -116,7 +109,7 @@ public class FieldPanel extends
 			 * Since all values are entered as text, all fields are represented
 			 * as an instance of StringField.
 			 */
-			return new StringField(field.getNumber(), getValue());
+			return new StringField(getMember().getNumber(), getValue());
 		} else
 		{
 			return null;
@@ -129,8 +122,8 @@ public class FieldPanel extends
 		{
 			com.jramoyo.fix.xml.FieldType xmlFieldType = new ObjectFactory()
 					.createFieldType();
-			xmlFieldType.setId(field.getNumber());
-			xmlFieldType.setName(field.getName());
+			xmlFieldType.setId(getMember().getNumber());
+			xmlFieldType.setName(getMember().getName());
 			xmlFieldType.setValue(getValue());
 
 			return xmlFieldType;
@@ -186,7 +179,7 @@ public class FieldPanel extends
 	{
 		setLayout(new GridLayout(2, 1));
 
-		fieldLabel = new JLabel(field.toString());
+		fieldLabel = new JLabel(getMember().toString());
 		fieldLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		fieldLabel.addMouseListener(new LinkMouseAdapter(this));
 		fieldLabel.setToolTipText("Double-click to look-up in FIXwiki");
@@ -199,7 +192,8 @@ public class FieldPanel extends
 		fieldValuePanel.setLayout(new BoxLayout(fieldValuePanel,
 				BoxLayout.X_AXIS));
 
-		if (field.getValues() != null && !field.getValues().isEmpty())
+		if (getMember().getValues() != null
+				&& !getMember().getValues().isEmpty())
 		{
 			List<FieldValue> fieldValues = new ArrayList<FieldValue>();
 			if (!isRequired)
@@ -207,7 +201,7 @@ public class FieldPanel extends
 				fieldValues.add(EMPTY_FIELD_VALUE);
 			}
 
-			fieldValues.addAll(field.getValues());
+			fieldValues.addAll(getMember().getValues());
 			fieldComboBox = new JComboBox<FieldValue>(
 					fieldValues.toArray(new FieldValue[] {}));
 			fieldComboBox.setRenderer(new FieldComboBoxCellRenderer());
@@ -215,10 +209,10 @@ public class FieldPanel extends
 			fieldValuePanel.add(fieldComboBox);
 		}
 
-		else if (field.getType().equals(FieldType.UTCTIMESTAMP)
-				|| field.getType().equals(FieldType.UTCDATEONLY)
-				|| field.getType().equals(FieldType.UTCDATE)
-				|| field.getType().equals(FieldType.UTCTIMEONLY))
+		else if (getMember().getType().equals(FieldType.UTCTIMESTAMP)
+				|| getMember().getType().equals(FieldType.UTCDATEONLY)
+				|| getMember().getType().equals(FieldType.UTCDATE)
+				|| getMember().getType().equals(FieldType.UTCTIMEONLY))
 		{
 			fieldTextField = new JTextField();
 			dateButton = new JButton("UTC Date");

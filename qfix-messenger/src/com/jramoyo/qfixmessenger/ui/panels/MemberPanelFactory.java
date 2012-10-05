@@ -38,13 +38,14 @@ import com.jramoyo.fix.model.Component;
 import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.Group;
 import com.jramoyo.fix.model.Member;
+import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 
 /**
  * @author jamoyo
  */
 public class MemberPanelFactory
 {
-	public static ComponentPanel createComponentPanel(
+	public static ComponentPanel createComponentPanel(QFixMessengerFrame frame,
 			List<MemberPanel<?, ?, ?>> prevMembers, Component component,
 			boolean isRequiredOnly, boolean isRequired)
 	{
@@ -56,14 +57,14 @@ public class MemberPanelFactory
 			componentPanel = (ComponentPanel) prevMemberPanel;
 		} else
 		{
-			componentPanel = new ComponentPanel(component, isRequiredOnly,
-					isRequired);
+			componentPanel = new ComponentPanel(frame, component,
+					isRequiredOnly, isRequired);
 		}
 
 		return componentPanel;
 	}
 
-	public static FieldPanel createFieldPanel(
+	public static FieldPanel createFieldPanel(QFixMessengerFrame frame,
 			List<MemberPanel<?, ?, ?>> prevMembers, Field field,
 			boolean isRequired)
 	{
@@ -75,13 +76,13 @@ public class MemberPanelFactory
 			fieldPanel = (FieldPanel) prevMemberPanel;
 		} else
 		{
-			fieldPanel = new FieldPanel(field, isRequired);
+			fieldPanel = new FieldPanel(frame, field, isRequired);
 		}
 
 		return fieldPanel;
 	}
 
-	public static GroupPanel createGroupPanel(
+	public static GroupPanel createGroupPanel(QFixMessengerFrame frame,
 			List<MemberPanel<?, ?, ?>> prevMembers, Group group,
 			boolean isRequiredOnly, boolean isRequired)
 	{
@@ -93,7 +94,8 @@ public class MemberPanelFactory
 			groupPanel = (GroupPanel) prevMemberPanel;
 		} else
 		{
-			groupPanel = new GroupPanel(group, isRequiredOnly, isRequired);
+			groupPanel = new GroupPanel(frame, group, isRequiredOnly,
+					isRequired);
 		}
 
 		return groupPanel;

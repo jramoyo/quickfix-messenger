@@ -50,8 +50,8 @@ import com.jramoyo.fix.xml.MessagesType;
 import com.jramoyo.fix.xml.ProjectType;
 import com.jramoyo.fix.xml.SessionType;
 import com.jramoyo.fix.xml.TrailerType;
-import com.jramoyo.qfixmessenger.ui.Icons;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
+import com.jramoyo.qfixmessenger.ui.util.Icons;
 
 /**
  * @author jramoyo
