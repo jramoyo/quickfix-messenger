@@ -38,8 +38,13 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import quickfix.FieldNotFound;
 import quickfix.Message;
 import quickfix.SessionID;
+import quickfix.field.MsgType;
 
 import com.jramoyo.qfixmessenger.quickfix.QFixMessageListener;
 import com.jramoyo.qfixmessenger.quickfix.util.QFixUtil;
@@ -53,6 +58,9 @@ import com.jramoyo.qfixmessenger.ui.models.data.MessagesTableModelData;
 public class MessagesTableModel extends AbstractTableModel implements
 		QFixMessageListener
 {
+	private static final Logger logger = LoggerFactory
+			.getLogger(MessagesTableModel.class);
+
 	private static final long serialVersionUID = 3045456639720725016L;
 
 	private final List<MessagesTableModelData> tableData = new ArrayList<MessagesTableModelData>();
@@ -137,9 +145,17 @@ public class MessagesTableModel extends AbstractTableModel implements
 	@Override
 	public void onMessage(String direction, Message message, SessionID sessionId)
 	{
-		MessagesTableModelData data = new MessagesTableModelData(new Date(),
-				direction, QFixUtil.getSessionName(sessionId),
-				message.toString());
-		addRow(data);
+		try
+		{
+			MsgType msgType = (MsgType) message.getHeader().getField(
+					new MsgType());
+			MessagesTableModelData data = new MessagesTableModelData(
+					new Date(), direction, QFixUtil.getSessionName(sessionId),
+					message.toString(), msgType.getValue());
+			addRow(data);
+		} catch (FieldNotFound ex)
+		{
+			logger.error("An exception occured!", ex);
+		}
 	}
 }

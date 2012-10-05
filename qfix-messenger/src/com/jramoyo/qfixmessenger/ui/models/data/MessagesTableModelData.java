@@ -47,23 +47,26 @@ public final class MessagesTableModelData
 	public static final String DATE_COLUMN = "Time Stamp";
 	public static final String DIRECTION_COLUMN = "Direction";
 	public static final String SESSION_COLUMN = "Session ID";
+	public static final String MSG_TYPE_COLUMN = "MsgType";
 	public static final String MESSAGE_COLUMN = "Message";
 
 	public static final String[] COLUMN_NAMES = { DATE_COLUMN,
-			DIRECTION_COLUMN, SESSION_COLUMN, MESSAGE_COLUMN };
+			DIRECTION_COLUMN, SESSION_COLUMN, MSG_TYPE_COLUMN, MESSAGE_COLUMN };
 
 	private final Date date;
 	private final String direction;
 	private final String sessionName;
 	private final String message;
+	private final String msgType;
 
 	public MessagesTableModelData(Date date, String direction,
-			String sessionName, String message)
+			String sessionName, String message, String msgType)
 	{
 		this.date = date;
 		this.direction = direction;
 		this.sessionName = sessionName;
 		this.message = message;
+		this.msgType = msgType;
 	}
 
 	@Override
@@ -94,6 +97,12 @@ public final class MessagesTableModelData
 				return false;
 		} else if (!message.equals(other.message))
 			return false;
+		if (msgType == null)
+		{
+			if (other.msgType != null)
+				return false;
+		} else if (!msgType.equals(other.msgType))
+			return false;
 		if (sessionName == null)
 		{
 			if (other.sessionName != null)
@@ -121,6 +130,11 @@ public final class MessagesTableModelData
 			return getSessionName();
 		}
 
+		else if (columnName.equals(MSG_TYPE_COLUMN))
+		{
+			return getMsgType();
+		}
+
 		else if (columnName.equals(MESSAGE_COLUMN))
 		{
 			return getMessage();
@@ -144,6 +158,11 @@ public final class MessagesTableModelData
 		return message;
 	}
 
+	public String getMsgType()
+	{
+		return msgType;
+	}
+
 	public String getSessionName()
 	{
 		return sessionName;
@@ -158,6 +177,7 @@ public final class MessagesTableModelData
 		result = prime * result
 				+ ((direction == null) ? 0 : direction.hashCode());
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result + ((msgType == null) ? 0 : msgType.hashCode());
 		result = prime * result
 				+ ((sessionName == null) ? 0 : sessionName.hashCode());
 		return result;

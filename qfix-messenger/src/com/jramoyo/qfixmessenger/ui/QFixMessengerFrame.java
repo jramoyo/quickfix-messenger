@@ -560,8 +560,9 @@ public class QFixMessengerFrame extends JFrame
 		messagesTable = new JTable(messagesTableModel);
 		messagesTable.getColumnModel().getColumn(0).setPreferredWidth(90);
 		messagesTable.getColumnModel().getColumn(1).setPreferredWidth(5);
-		messagesTable.getColumnModel().getColumn(2).setPreferredWidth(70);
-		messagesTable.getColumnModel().getColumn(3).setPreferredWidth(520);
+		messagesTable.getColumnModel().getColumn(2).setPreferredWidth(75);
+		messagesTable.getColumnModel().getColumn(3).setPreferredWidth(5);
+		messagesTable.getColumnModel().getColumn(4).setPreferredWidth(510);
 
 		messagesTable.setDefaultRenderer(String.class,
 				new MessagesTableCellRender());
@@ -1551,7 +1552,8 @@ public class QFixMessengerFrame extends JFrame
 					panel.add(messageTextScrollPane, c);
 
 					JOptionPane.showMessageDialog(frame, panel,
-							"Message Details", JOptionPane.PLAIN_MESSAGE);
+							"MsgType(35) = " + data.getMsgType(),
+							JOptionPane.PLAIN_MESSAGE);
 				}
 			} else if (e.getButton() == MouseEvent.BUTTON3)
 			{
