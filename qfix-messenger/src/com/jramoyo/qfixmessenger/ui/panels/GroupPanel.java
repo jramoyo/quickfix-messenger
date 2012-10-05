@@ -39,18 +39,21 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JLayer;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.LayerUI;
 
 import quickfix.StringField;
 
@@ -65,6 +68,7 @@ import com.jramoyo.fix.xml.GroupsType;
 import com.jramoyo.fix.xml.ObjectFactory;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
+import com.jramoyo.qfixmessenger.ui.layers.FieldValidationLayerUI;
 import com.jramoyo.qfixmessenger.ui.util.TitledBorderUtil;
 
 /**
@@ -81,7 +85,9 @@ public class GroupPanel extends
 
 	private JLabel groupLabel;
 
-	private JTextField groupTextField;
+	private LayerUI<JFormattedTextField> layerUI;
+
+	private JFormattedTextField groupTextField;
 
 	private JButton setButton;
 
@@ -283,6 +289,8 @@ public class GroupPanel extends
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
+		layerUI = new FieldValidationLayerUI();
+
 		groupLabel = new JLabel(getMember().toString());
 		groupLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		groupLabel.addMouseListener(new LinkMouseAdapter(this));
@@ -296,7 +304,9 @@ public class GroupPanel extends
 		groupValuePanel.setLayout(new BoxLayout(groupValuePanel,
 				BoxLayout.X_AXIS));
 
-		groupTextField = new JTextField();
+		groupTextField = new JFormattedTextField(
+				NumberFormat.getIntegerInstance());
+		groupTextField.setFocusLostBehavior(JFormattedTextField.PERSIST);
 		setButton = new JButton("Set");
 		setButton.addActionListener(new ActionListener()
 		{
@@ -307,7 +317,8 @@ public class GroupPanel extends
 			}
 		});
 
-		groupValuePanel.add(groupTextField);
+		groupValuePanel.add(new JLayer<JFormattedTextField>(groupTextField,
+				layerUI));
 		groupValuePanel.add(setButton);
 
 		groupPanels = new JPanel();

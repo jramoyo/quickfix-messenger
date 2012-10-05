@@ -37,6 +37,7 @@ import java.awt.Cursor;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,9 +47,11 @@ import javax.swing.BoxLayout;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JLayer;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.plaf.LayerUI;
 
 import quickfix.StringField;
 
@@ -58,6 +61,7 @@ import com.jramoyo.fix.model.FieldValue;
 import com.jramoyo.fix.xml.ObjectFactory;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
+import com.jramoyo.qfixmessenger.ui.layers.FieldValidationLayerUI;
 import com.jramoyo.qfixmessenger.ui.renderers.FieldComboBoxCellRenderer;
 import com.jramoyo.qfixmessenger.util.StringUtil;
 
@@ -75,9 +79,11 @@ public class FieldPanel extends
 
 	private JLabel fieldLabel;
 
-	private JTextField fieldTextField;
+	private JFormattedTextField fieldTextField;
 
 	private JComboBox<FieldValue> fieldComboBox;
+
+	private LayerUI<JFormattedTextField> layerUI;
 
 	private JButton dateButton;
 
@@ -154,7 +160,7 @@ public class FieldPanel extends
 		}
 	}
 
-	private String generateUTCTimeStamp()
+	private String generateUtcTimeStamp()
 	{
 		return new SimpleDateFormat(QFixMessengerConstants.UTC_DATE_FORMAT)
 				.format(new Date());
@@ -178,6 +184,8 @@ public class FieldPanel extends
 	private void initComponents()
 	{
 		setLayout(new GridLayout(2, 1));
+
+		layerUI = new FieldValidationLayerUI();
 
 		fieldLabel = new JLabel(getMember().toString());
 		fieldLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -209,33 +217,86 @@ public class FieldPanel extends
 			fieldValuePanel.add(fieldComboBox);
 		}
 
-		else if (getMember().getType().equals(FieldType.UTCTIMESTAMP)
-				|| getMember().getType().equals(FieldType.UTCDATEONLY)
-				|| getMember().getType().equals(FieldType.UTCDATE)
-				|| getMember().getType().equals(FieldType.UTCTIMEONLY))
+		else if (isFieldUtcType())
 		{
-			fieldTextField = new JTextField();
+			fieldTextField = new JFormattedTextField(new SimpleDateFormat(
+					QFixMessengerConstants.UTC_DATE_FORMAT));
+			fieldTextField.setFocusLostBehavior(JFormattedTextField.PERSIST);
 			dateButton = new JButton("UTC Date");
 			dateButton.addActionListener(new ActionListener()
 			{
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					fieldTextField.setText(generateUTCTimeStamp());
+					fieldTextField.setText(generateUtcTimeStamp());
 				}
 			});
 
-			fieldValuePanel.add(fieldTextField);
+			fieldValuePanel.add(new JLayer<JFormattedTextField>(fieldTextField,
+					layerUI));
 			fieldValuePanel.add(dateButton);
 		}
 
 		else
 		{
-			fieldTextField = new JTextField();
-			fieldValuePanel.add(fieldTextField);
+			if (isFieldDoubleType())
+			{
+				fieldTextField = new JFormattedTextField(
+						NumberFormat.getNumberInstance());
+			}
+
+			else if (isFieldIntegerType())
+			{
+				fieldTextField = new JFormattedTextField(
+						NumberFormat.getIntegerInstance());
+			}
+
+			else
+			{
+				fieldTextField = new JFormattedTextField();
+			}
+
+			fieldTextField.setFocusLostBehavior(JFormattedTextField.PERSIST);
+			fieldValuePanel.add(new JLayer<JFormattedTextField>(fieldTextField,
+					layerUI));
 		}
 
 		add(fieldLabel);
 		add(fieldValuePanel);
+	}
+
+	private boolean isFieldDoubleType()
+	{
+		if (getMember().getType().getJavaClass() != null
+				&& getMember().getType().getJavaClass().equals(Double.class))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean isFieldIntegerType()
+	{
+		if (getMember().getType().getJavaClass() != null
+				&& getMember().getType().getJavaClass().equals(Integer.class))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean isFieldUtcType()
+	{
+		if (getMember().getType().equals(FieldType.UTCTIMESTAMP)
+				|| getMember().getType().equals(FieldType.UTCDATEONLY)
+				|| getMember().getType().equals(FieldType.UTCDATE)
+				|| getMember().getType().equals(FieldType.UTCTIMEONLY))
+		{
+			return true;
+		}
+
+		return false;
 	}
 }

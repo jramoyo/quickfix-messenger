@@ -82,6 +82,7 @@ public final class Icons
 	public static String TEXT_ICON = "/text.png";
 
 	public static String CLEAR_ALL_ICON = "/clear-all.png";
+	public static String INVALID_FIELD = "/invalid-field.png";
 
 	private Icons()
 	{
