@@ -185,7 +185,7 @@ public class FieldPanel extends
 	{
 		setLayout(new GridLayout(2, 1));
 
-		layerUI = new FieldValidationLayerUI();
+		layerUI = new FieldValidationLayerUI(getFrame());
 
 		fieldLabel = new JLabel(getMember().toString());
 		fieldLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -221,7 +221,7 @@ public class FieldPanel extends
 		{
 			fieldTextField = new JFormattedTextField(new SimpleDateFormat(
 					QFixMessengerConstants.UTC_DATE_FORMAT));
-			fieldTextField.setFocusLostBehavior(JFormattedTextField.PERSIST);
+			fieldTextField.setFocusLostBehavior(JFormattedTextField.COMMIT);
 			dateButton = new JButton("UTC Date");
 			dateButton.addActionListener(new ActionListener()
 			{
@@ -256,7 +256,7 @@ public class FieldPanel extends
 				fieldTextField = new JFormattedTextField();
 			}
 
-			fieldTextField.setFocusLostBehavior(JFormattedTextField.PERSIST);
+			fieldTextField.setFocusLostBehavior(JFormattedTextField.COMMIT);
 			fieldValuePanel.add(new JLayer<JFormattedTextField>(fieldTextField,
 					layerUI));
 		}

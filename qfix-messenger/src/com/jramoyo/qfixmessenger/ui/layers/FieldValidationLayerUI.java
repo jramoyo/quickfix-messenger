@@ -32,15 +32,18 @@
  */
 package com.jramoyo.qfixmessenger.ui.layers;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLayer;
 import javax.swing.plaf.LayerUI;
+
+import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
+import com.jramoyo.qfixmessenger.ui.util.Icons;
 
 /**
  * @author jramoyo
@@ -48,6 +51,13 @@ import javax.swing.plaf.LayerUI;
 public class FieldValidationLayerUI extends LayerUI<JFormattedTextField>
 {
 	private static final long serialVersionUID = 8928847899297723141L;
+
+	private QFixMessengerFrame frame;
+
+	public FieldValidationLayerUI(QFixMessengerFrame frame)
+	{
+		this.frame = frame;
+	}
 
 	@Override
 	public void paint(Graphics g, JComponent c)
@@ -68,16 +78,15 @@ public class FieldValidationLayerUI extends LayerUI<JFormattedTextField>
 					RenderingHints.VALUE_ANTIALIAS_ON);
 			int w = c.getWidth();
 			int h = c.getHeight();
-			int s = 8;
-			int pad = 4;
+			// int pad = 4;
+			int s = 10;
+			int pad = 10;
 			int x = w - pad - s;
 			int y = (h - s) / 2;
-			g2.setPaint(Color.red);
-			g2.fillRect(x, y, s + 1, s + 1);
-			g2.setPaint(Color.white);
-			g2.drawLine(x, y, x + s, y + s);
-			g2.drawLine(x, y + s, x + s, y);
-
+			ImageIcon icon = new ImageIcon(frame.getMessenger().getConfig()
+					.getIconsLocation()
+					+ Icons.INVALID_FIELD);
+			g2.drawImage(icon.getImage(), x, y, null);
 			g2.dispose();
 		}
 	}

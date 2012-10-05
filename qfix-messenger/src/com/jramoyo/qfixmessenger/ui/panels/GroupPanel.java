@@ -289,7 +289,7 @@ public class GroupPanel extends
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
-		layerUI = new FieldValidationLayerUI();
+		layerUI = new FieldValidationLayerUI(getFrame());
 
 		groupLabel = new JLabel(getMember().toString());
 		groupLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -306,7 +306,7 @@ public class GroupPanel extends
 
 		groupTextField = new JFormattedTextField(
 				NumberFormat.getIntegerInstance());
-		groupTextField.setFocusLostBehavior(JFormattedTextField.PERSIST);
+		groupTextField.setFocusLostBehavior(JFormattedTextField.COMMIT);
 		setButton = new JButton("Set");
 		setButton.addActionListener(new ActionListener()
 		{
