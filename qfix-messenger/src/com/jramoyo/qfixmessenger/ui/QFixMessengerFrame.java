@@ -566,7 +566,7 @@ public class QFixMessengerFrame extends JFrame
 		messagesTable.setDefaultRenderer(String.class,
 				new MessagesTableCellRender());
 		messagesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		messagesTable.addMouseListener(new MessagesTableMouseAdapter(this));
+		messagesTable.addMouseListener(new MessagesTableMouseListener(this));
 
 		messenger.getApplication().addMessageListener(messagesTableModel);
 
@@ -1452,11 +1452,11 @@ public class QFixMessengerFrame extends JFrame
 		}
 	}
 
-	private class MessagesTableMouseAdapter extends MouseAdapter
+	private class MessagesTableMouseListener extends MouseAdapter
 	{
 		private QFixMessengerFrame frame;
 
-		public MessagesTableMouseAdapter(QFixMessengerFrame frame)
+		public MessagesTableMouseListener(QFixMessengerFrame frame)
 		{
 			this.frame = frame;
 		}
@@ -1464,88 +1464,116 @@ public class QFixMessengerFrame extends JFrame
 		@Override
 		public void mouseClicked(MouseEvent e)
 		{
-			if (e.getClickCount() == 2)
+			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				int viewRow = frame.messagesTable.rowAtPoint(e.getPoint());
-				int modelRow = frame.messagesTable
-						.convertRowIndexToModel(viewRow);
-
-				MessagesTableModel model = (MessagesTableModel) frame.messagesTable
-						.getModel();
-				MessagesTableModelData data = model.getData(modelRow);
-
-				JPanel panel = new JPanel();
-				panel.setLayout(new GridBagLayout());
-				GridBagConstraints c = new GridBagConstraints();
-				c.fill = GridBagConstraints.HORIZONTAL;
-				c.weightx = 0.5;
-				c.weighty = 0.0;
-				c.ipadx = 2;
-				c.ipady = 2;
-
-				JLabel timeLabel = new JLabel(
-						"<html><b>Time Stamp:</b> <i><font color = 'blue'>"
-								+ data.getDate() + "</font></i></html>");
-
-				c.gridx = 0;
-				c.gridy = 3;
-				panel.add(Box.createRigidArea(new Dimension(50, 10)), c);
-
-				JLabel directionLabel;
-				if (data.getDirection().equals(QFixMessageListener.RECV))
+				if (e.getClickCount() == 2)
 				{
-					directionLabel = new JLabel(
-							"<html><b>Direction:</b> <i><b><font color = '#FF8040'>"
-									+ data.getDirection()
-									+ "</font></b></i></html>");
-				} else
-				{
-					directionLabel = new JLabel(
-							"<html><b>Direction:</b> <i><b><font color = '#669900'>"
-									+ data.getDirection()
-									+ "</font></b></i></html>");
+					int viewRow = frame.messagesTable.rowAtPoint(e.getPoint());
+					int modelRow = frame.messagesTable
+							.convertRowIndexToModel(viewRow);
+
+					MessagesTableModel model = (MessagesTableModel) frame.messagesTable
+							.getModel();
+					MessagesTableModelData data = model.getData(modelRow);
+
+					JPanel panel = new JPanel();
+					panel.setLayout(new GridBagLayout());
+					GridBagConstraints c = new GridBagConstraints();
+					c.fill = GridBagConstraints.HORIZONTAL;
+					c.weightx = 0.5;
+					c.weighty = 0.0;
+					c.ipadx = 2;
+					c.ipady = 2;
+
+					JLabel timeLabel = new JLabel(
+							"<html><b>Time Stamp:</b> <i><font color = 'blue'>"
+									+ data.getDate() + "</font></i></html>");
+
+					c.gridx = 0;
+					c.gridy = 3;
+					panel.add(Box.createRigidArea(new Dimension(50, 10)), c);
+
+					JLabel directionLabel;
+					if (data.getDirection().equals(QFixMessageListener.RECV))
+					{
+						directionLabel = new JLabel(
+								"<html><b>Direction:</b> <i><b><font color = '#FF8040'>"
+										+ data.getDirection()
+										+ "</font></b></i></html>");
+					} else
+					{
+						directionLabel = new JLabel(
+								"<html><b>Direction:</b> <i><b><font color = '#669900'>"
+										+ data.getDirection()
+										+ "</font></b></i></html>");
+					}
+
+					JLabel sessionIdLabel = new JLabel(
+							"<html><b>Session ID:</b> <i><font color = 'blue'>"
+									+ data.getSessionName()
+									+ "</font></i></html>");
+
+					JLabel messageLabel = new JLabel(
+							"<html><b>Message:</b></html>");
+
+					c.gridx = 0;
+					c.gridy = 0;
+					panel.add(timeLabel, c);
+
+					c.gridx = 0;
+					c.gridy = 1;
+					panel.add(directionLabel, c);
+
+					c.gridx = 0;
+					c.gridy = 2;
+					panel.add(sessionIdLabel, c);
+
+					c.gridx = 0;
+					c.gridy = 2;
+					panel.add(sessionIdLabel, c);
+
+					c.gridx = 0;
+					c.gridy = 4;
+					panel.add(messageLabel, c);
+
+					JTextArea messageText = new JTextArea(data.getMessage(), 5,
+							60);
+					messageText.setLineWrap(true);
+					messageText.setEditable(false);
+
+					JScrollPane messageTextScrollPane = new JScrollPane(
+							messageText);
+					messageText.setPreferredSize(new Dimension(300, 200));
+					messageTextScrollPane.setBorder(new EtchedBorder());
+
+					c.gridx = 0;
+					c.gridy = 5;
+					panel.add(messageTextScrollPane, c);
+
+					JOptionPane.showMessageDialog(frame, panel,
+							"Message Details", JOptionPane.PLAIN_MESSAGE);
 				}
+			} else if (e.getButton() == MouseEvent.BUTTON3)
+			{
+				JPopupMenu popupMenu = new JPopupMenu();
 
-				JLabel sessionIdLabel = new JLabel(
-						"<html><b>Session ID:</b> <i><font color = 'blue'>"
-								+ data.getSessionName() + "</font></i></html>");
+				JMenuItem clearAllMenuItem = new JMenuItem("Clear All");
+				clearAllMenuItem.setIcon(new ImageIcon(frame.getMessenger()
+						.getConfig().getIconsLocation()
+						+ Icons.CLEAR_ALL_ICON));
+				clearAllMenuItem.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(ActionEvent e)
+					{
+						MessagesTableModel model = (MessagesTableModel) frame.messagesTable
+								.getModel();
+						model.clear();
+					}
+				});
 
-				JLabel messageLabel = new JLabel("<html><b>Message:</b></html>");
-
-				c.gridx = 0;
-				c.gridy = 0;
-				panel.add(timeLabel, c);
-
-				c.gridx = 0;
-				c.gridy = 1;
-				panel.add(directionLabel, c);
-
-				c.gridx = 0;
-				c.gridy = 2;
-				panel.add(sessionIdLabel, c);
-
-				c.gridx = 0;
-				c.gridy = 2;
-				panel.add(sessionIdLabel, c);
-
-				c.gridx = 0;
-				c.gridy = 4;
-				panel.add(messageLabel, c);
-
-				JTextArea messageText = new JTextArea(data.getMessage(), 5, 60);
-				messageText.setLineWrap(true);
-				messageText.setEditable(false);
-
-				JScrollPane messageTextScrollPane = new JScrollPane(messageText);
-				messageText.setPreferredSize(new Dimension(300, 200));
-				messageTextScrollPane.setBorder(new EtchedBorder());
-
-				c.gridx = 0;
-				c.gridy = 5;
-				panel.add(messageTextScrollPane, c);
-
-				JOptionPane.showMessageDialog(frame, panel, "Message Details",
-						JOptionPane.PLAIN_MESSAGE);
+				popupMenu.add(clearAllMenuItem);
+				popupMenu.show(frame.messagesTable, e.getX(), e.getY());
 			}
 		}
 	}

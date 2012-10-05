@@ -57,11 +57,26 @@ public class MessagesTableModel extends AbstractTableModel implements
 
 	private final List<MessagesTableModelData> tableData = new ArrayList<MessagesTableModelData>();
 
+	/**
+	 * Adds a message to the table
+	 * 
+	 * @param rowData
+	 *            a message data
+	 */
 	public void addRow(MessagesTableModelData rowData)
 	{
 		int row = tableData.size();
 		tableData.add(rowData);
 		fireTableRowsInserted(row, row);
+	}
+
+	/**
+	 * Clears the messages table
+	 */
+	public void clear()
+	{
+		tableData.clear();
+		fireTableDataChanged();
 	}
 
 	@Override

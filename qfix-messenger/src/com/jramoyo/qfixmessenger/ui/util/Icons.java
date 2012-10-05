@@ -63,23 +63,26 @@ public final class Icons
 	public static String LOAD_ICON = "/load.png";
 
 	public static String DELETE_ICON = "/delete.png";
-	public static String SEND_SMALL_ICON = "/send_small.png";
-	public static String SEND_ALL_ICON = "/send_all.png";
+	public static String SEND_SMALL_ICON = "/send-small.png";
+	public static String SEND_ALL_ICON = "/send-all.png";
 	public static String COLLAPSE_ICON = "/collapse.png";
 	public static String EXPAND_ICON = "/expand.png";
 	public static String PROJECT_ICON = "/project.png";
 
-	public static String PROJECT_OPEN_ICON = "/project_open.png";
+	public static String PROJECT_OPEN_ICON = "/project-open.png";
 	public static String MESSAGES_ICON = "/messages.png";
-	public static String MESSAGES_OPEN_ICON = "/messages_open.png";
+	public static String MESSAGES_OPEN_ICON = "/messages-open.png";
 	public static String MESSAGE_ICON = "/message.png";
-	public static String MESSAGE_OPEN_ICON = "/message_open.png";
+	public static String MESSAGE_OPEN_ICON = "/message-open.png";
 	public static String SESSION_ICON = "/session.png";
 	public static String COMPONENT_ICON = "/component.png";
 	public static String GROUP_ICON = "/group.png";
 	public static String GROUPS_ICON = "/groups.png";
 	public static String FIELD_ICON = "/field.png";
 	public static String TEXT_ICON = "/text.png";
+
+	public static String CLEAR_ALL_ICON = "/clear-all.png";
+
 	private Icons()
 	{
 	}
