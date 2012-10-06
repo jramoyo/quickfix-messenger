@@ -538,7 +538,7 @@ public class MessagePanel extends JPanel implements
 			FieldPanel fieldPanel = MemberPanelFactory.createFieldPanel(frame,
 					previousMemberList, field, entry.getValue());
 			fieldPanel.setMaximumSize(new Dimension(
-					QFixMessengerFrame.MIDDLE_PANEL_WIDTH, fieldPanel
+					fieldPanel.getMaximumSize().width, fieldPanel
 							.getPreferredSize().height));
 
 			mainPanel.add(fieldPanel);
@@ -553,7 +553,7 @@ public class MessagePanel extends JPanel implements
 					.createGroupPanel(frame, previousMemberList, group,
 							isRequiredOnly, entry.getValue());
 			groupPanel.setMaximumSize(new Dimension(
-					QFixMessengerFrame.MIDDLE_PANEL_WIDTH, groupPanel
+					groupPanel.getMaximumSize().width, groupPanel
 							.getPreferredSize().height));
 
 			mainPanel.add(groupPanel);
@@ -567,9 +567,9 @@ public class MessagePanel extends JPanel implements
 			ComponentPanel componentPanel = MemberPanelFactory
 					.createComponentPanel(frame, previousMemberList, component,
 							isRequiredOnly, entry.getValue());
-			componentPanel.setMaximumSize(new Dimension(
-					QFixMessengerFrame.MIDDLE_PANEL_WIDTH, componentPanel
-							.getPreferredSize().height));
+			componentPanel.setMaximumSize(new Dimension(componentPanel
+					.getMaximumSize().width,
+					componentPanel.getPreferredSize().height));
 
 			mainPanel.add(componentPanel);
 			memberList.add(componentPanel);

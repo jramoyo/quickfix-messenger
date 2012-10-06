@@ -219,12 +219,9 @@ public class FieldPanel extends
 				&& !getMember().getValues().isEmpty())
 		{
 			List<FieldValue> fieldValues = new ArrayList<FieldValue>();
-			if (!isRequired)
-			{
-				fieldValues.add(EMPTY_FIELD_VALUE);
-			}
-
+			fieldValues.add(EMPTY_FIELD_VALUE);
 			fieldValues.addAll(getMember().getValues());
+
 			fieldComboBox = new JComboBox<FieldValue>(
 					fieldValues.toArray(new FieldValue[] {}));
 			fieldComboBox.setRenderer(new FieldComboBoxCellRenderer());

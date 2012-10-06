@@ -34,13 +34,12 @@ package com.jramoyo.qfixmessenger.ui.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
+import java.awt.Dimension;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -53,6 +52,7 @@ import quickfix.Session;
 import com.jramoyo.fix.model.Message;
 import com.jramoyo.fix.xml.MessageType;
 import com.jramoyo.qfixmessenger.QFixMessenger;
+import com.jramoyo.qfixmessenger.ui.util.TitledBorderUtil;
 
 /**
  * @author jamoyo
@@ -163,19 +163,13 @@ public class FreeTextMessagePanel extends JPanel implements
 
 	private void initComponents()
 	{
+		setMaximumSize(new Dimension(this.getPreferredSize().width,
+				this.getPreferredSize().height));
 		setLayout(new BorderLayout());
 
 		TitledBorder titledBorder = new TitledBorder(
 				new LineBorder(Color.BLACK), "Free Text");
-		// TODO Workaround for Java Bug ID: 7022041
-		Font trailerTitleBorderFont = UIManager.getDefaults().getFont(
-				"TitledBorder.font");
-		if (trailerTitleBorderFont != null)
-		{
-			titledBorder.setTitleFont(new Font(
-					trailerTitleBorderFont.getName(), Font.BOLD, 15));
-		}
-		setBorder(titledBorder);
+		setBorder(TitledBorderUtil.formatTitle(titledBorder));
 
 		messageTextArea = new JTextArea(5, 60);
 		messageTextArea.setLineWrap(true);

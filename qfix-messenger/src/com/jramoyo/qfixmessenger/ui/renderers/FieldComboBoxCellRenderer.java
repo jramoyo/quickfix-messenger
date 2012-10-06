@@ -65,7 +65,7 @@ public class FieldComboBoxCellRenderer extends DefaultListCellRenderer
 					+ fieldValue.getDescription() + "</html>");
 		} else
 		{
-			label.setText("");
+			label.setText("<html><font color='gray'>[NONE]</font>");
 		}
 
 		return label;

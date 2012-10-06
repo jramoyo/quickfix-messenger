@@ -321,7 +321,6 @@ public class ComponentPanel extends
 				ComponentPanel componentPanel = MemberPanelFactory
 						.createComponentPanel(getFrame(), prevMembers,
 								component, isRequiredOnly, entry.getValue());
-
 				componentPanel.setMaximumSize(new Dimension(
 						getPreferredSize().width, componentPanel
 								.getPreferredSize().height));

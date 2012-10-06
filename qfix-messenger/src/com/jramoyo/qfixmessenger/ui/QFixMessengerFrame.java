@@ -146,8 +146,6 @@ public class QFixMessengerFrame extends JFrame
 {
 	public static final int LEFT_PANEL_WIDTH = 170;
 
-	public static final int MIDDLE_PANEL_WIDTH = 600;
-
 	private static final long serialVersionUID = 7906369617506618477L;
 
 	private static final Logger logger = LoggerFactory
@@ -360,10 +358,6 @@ public class QFixMessengerFrame extends JFrame
 						sessionsList.getSelectedValue(),
 						(String) appVersionsComboBox.getSelectedItem(),
 						isFixTSession);
-				freeTextMessagePanel.setMaximumSize(new Dimension(
-						MIDDLE_PANEL_WIDTH, freeTextMessagePanel
-								.getPreferredSize().height));
-
 				mainPanel = freeTextMessagePanel;
 			}
 		} else
@@ -573,7 +567,7 @@ public class QFixMessengerFrame extends JFrame
 
 		bottomPanelScrollPane = new JScrollPane(messagesTable);
 		bottomPanelScrollPane.setPreferredSize(new Dimension(
-				MIDDLE_PANEL_WIDTH, 120));
+				bottomPanelScrollPane.getPreferredSize().width, 120));
 		bottomPanelScrollPane.getViewport().add(messagesTable);
 		add(bottomPanelScrollPane, BorderLayout.SOUTH);
 	}
@@ -760,9 +754,6 @@ public class QFixMessengerFrame extends JFrame
 	private void initMainPanel()
 	{
 		mainPanelScrollPane = new JScrollPane();
-		mainPanelScrollPane.setPreferredSize(new Dimension(MIDDLE_PANEL_WIDTH,
-				400));
-
 		add(mainPanelScrollPane, BorderLayout.CENTER);
 	}
 
