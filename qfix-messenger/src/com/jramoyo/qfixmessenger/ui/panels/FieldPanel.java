@@ -256,7 +256,7 @@ public class FieldPanel extends
 
 			else if (isFieldDoubleType())
 			{
-				format = new DecimalFormat("###.###0");
+				format = new DecimalFormat("###.######");
 				toolTip = "Enter a floating point value";
 			}
 
