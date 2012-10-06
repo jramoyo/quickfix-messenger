@@ -80,7 +80,4 @@ public class QFixMessengerConstants
 	public static final String[] FIXT_APP_VERSIONS = { BEGIN_STRING_FIX40,
 			BEGIN_STRING_FIX41, BEGIN_STRING_FIX42, BEGIN_STRING_FIX43,
 			BEGIN_STRING_FIX44, BEGIN_STRING_FIX50 };
-
-	// TODO Find a way to be configurable
-	public static final String FIX_WIKI_URL = "http://fixwiki.org/fixwiki/";
 }

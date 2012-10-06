@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jramoyo.fix.model.Member;
-import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 
 /**
@@ -82,7 +81,7 @@ public abstract class AbstractMemberPanel<M extends Member, Q, X> extends
 
 	private void goToWikiPage() throws IOException
 	{
-		String url = QFixMessengerConstants.FIX_WIKI_URL
+		String url = frame.getMessenger().getConfig().getFixWikiUrl()
 				+ getMember().getName();
 		java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
 	}

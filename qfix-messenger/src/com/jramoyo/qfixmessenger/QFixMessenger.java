@@ -99,7 +99,6 @@ public class QFixMessenger
 
 	public static void main(String[] args) throws Exception
 	{
-		// Set handler for all uncaught exceptions
 		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()
 		{
 			@Override

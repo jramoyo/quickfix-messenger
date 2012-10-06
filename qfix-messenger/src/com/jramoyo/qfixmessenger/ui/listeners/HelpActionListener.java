@@ -66,7 +66,7 @@ public class HelpActionListener implements ActionListener
 		{
 			java.awt.Desktop.getDesktop().browse(
 					java.net.URI.create(frame.getMessenger().getConfig()
-							.getHelpURL()));
+							.getHelpUrl()));
 		} catch (IOException ex)
 		{
 			logger.error("An exception occured!", ex);

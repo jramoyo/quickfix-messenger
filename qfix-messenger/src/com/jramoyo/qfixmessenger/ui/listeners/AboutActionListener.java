@@ -91,7 +91,7 @@ public class AboutActionListener implements ActionListener
 		JLabel webpageLabel = new JLabel(
 				"<html><a href=''>quickfix-messenger</a></html>");
 		webpageLabel.addMouseListener(new LinkMouseAdapter(this, frame
-				.getMessenger().getConfig().getHomeURL()));
+				.getMessenger().getConfig().getHomeUrl()));
 		webpageLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
 		JLabel licenseLabel = new JLabel("<html><b>License</b></html>");

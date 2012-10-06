@@ -51,6 +51,7 @@ public class QFixMessengerConfig
 	private static final String ICONS_PROP = "messenger.icons";
 	private static final String HOME_URL_PROP = "messenger.home.url";
 	private static final String HELP_URL_PROP = "messenger.help.url";
+	private static final String FIXWIKI_URL_PROP = "messenger.fixwiki.url";
 
 	private static final String DICT_FIX40_PROP = "messenger.dict.fix40";
 	private static final String DICT_FIX41_PROP = "messenger.dict.fix41";
@@ -160,16 +161,22 @@ public class QFixMessengerConfig
 		return properties.getProperty(LICENSE_PROP, "resources/license.txt");
 	}
 
-	public String getHomeURL()
+	public String getHomeUrl()
 	{
 		return properties.getProperty(HOME_URL_PROP,
 				"https://code.google.com/p/quickfix-messenger/");
 	}
 
-	public String getHelpURL()
+	public String getHelpUrl()
 	{
 		return properties.getProperty(HELP_URL_PROP,
 				"http://code.google.com/p/quickfix-messenger/wiki/Index");
+	}
+
+	public String getFixWikiUrl()
+	{
+		return properties.getProperty(FIXWIKI_URL_PROP,
+				"http://fixwiki.org/fixwiki/");
 	}
 
 	public int getNoOfParserThreads()

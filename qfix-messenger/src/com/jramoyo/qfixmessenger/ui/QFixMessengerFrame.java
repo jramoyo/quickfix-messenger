@@ -1395,7 +1395,8 @@ public class QFixMessengerFrame extends JFrame
 				{
 					try
 					{
-						String url = QFixMessengerConstants.FIX_WIKI_URL
+						String url = frame.getMessenger().getConfig()
+								.getFixWikiUrl()
 								+ message.getName();
 						java.awt.Desktop.getDesktop().browse(
 								java.net.URI.create(url));
