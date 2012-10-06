@@ -82,13 +82,13 @@ import javax.swing.KeyStroke;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 
@@ -439,28 +439,8 @@ public class QFixMessengerFrame extends JFrame
 			}
 		}
 
-		try
-		{
-			JAXBElement<ProjectType> rootElement = new JAXBElement<ProjectType>(
-					new QName("http://xml.fix.jramoyo.com", "project"),
-					ProjectType.class, activeXmlProject);
-			Marshaller marshaller = messenger.getJaxbContext()
-					.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
-					Boolean.TRUE);
-			marshaller.marshal(rootElement, activeProjectFile);
-			logger.debug("Message exported to " + activeProjectFile.getName());
-			JOptionPane.showMessageDialog(this, "Project saved to "
-					+ activeProjectFile.getName(), "Export",
-					JOptionPane.INFORMATION_MESSAGE);
-		} catch (JAXBException ex)
-		{
-			logger.error("A JAXBException occurred while exporting message.",
-					ex);
-			JOptionPane.showMessageDialog(this,
-					"An error occurred while saving project!", "Error",
-					JOptionPane.ERROR_MESSAGE);
-		}
+		new MarshallProjectTypeWorker(this, activeXmlProject, activeProjectFile)
+				.execute();
 	}
 
 	/**
@@ -480,28 +460,7 @@ public class QFixMessengerFrame extends JFrame
 		if (choice == JFileChooser.APPROVE_OPTION)
 		{
 			File file = jFileChooser.getSelectedFile();
-			try
-			{
-				JAXBElement<MessageType> rootElement = new JAXBElement<MessageType>(
-						new QName("http://xml.fix.jramoyo.com", "message"),
-						MessageType.class, xmlMessageType);
-				Marshaller marshaller = messenger.getJaxbContext()
-						.createMarshaller();
-				marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
-						Boolean.TRUE);
-				marshaller.marshal(rootElement, file);
-				logger.debug("Message exported to " + file.getName());
-				JOptionPane.showMessageDialog(this, "Message exported to "
-						+ file.getName(), "Export",
-						JOptionPane.INFORMATION_MESSAGE);
-			} catch (JAXBException ex)
-			{
-				logger.error(
-						"A JAXBException occurred while exporting message.", ex);
-				JOptionPane.showMessageDialog(this,
-						"An error occurred while exporting message!", "Error",
-						JOptionPane.ERROR_MESSAGE);
-			}
+			new MarshallMessageTypeWorker(this, xmlMessageType, file).execute();
 		}
 	}
 
@@ -515,7 +474,7 @@ public class QFixMessengerFrame extends JFrame
 			File xmlProjectFile)
 	{
 		this.activeXmlProject = xmlProjectType;
-		this.activeProjectFile = null;
+		this.activeProjectFile = xmlProjectFile;
 		if (projectDialog != null)
 		{
 			projectDialog.dispose();
@@ -1368,6 +1327,104 @@ public class QFixMessengerFrame extends JFrame
 		public void windowClosing(WindowEvent e)
 		{
 			frame.close();
+		}
+	}
+
+	private static class MarshallMessageTypeWorker extends
+			SwingWorker<Void, Void>
+	{
+		private final QFixMessengerFrame frame;
+		private final MessageType xmlMessageType;
+		private final File file;
+
+		MarshallMessageTypeWorker(QFixMessengerFrame frame,
+				MessageType xmlMessageType, File file)
+		{
+			this.frame = frame;
+			this.xmlMessageType = xmlMessageType;
+			this.file = file;
+		}
+
+		@Override
+		protected Void doInBackground() throws Exception
+		{
+			JAXBElement<MessageType> rootElement = new JAXBElement<MessageType>(
+					new QName("http://xml.fix.jramoyo.com", "message"),
+					MessageType.class, xmlMessageType);
+			Marshaller marshaller = frame.messenger.getJaxbContext()
+					.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
+					Boolean.TRUE);
+			marshaller.marshal(rootElement, file);
+			return null;
+		}
+
+		protected void done()
+		{
+			try
+			{
+				get();
+				logger.debug("Message exported to " + file.getName());
+				JOptionPane.showMessageDialog(frame, "Message exported to "
+						+ file.getName(), "Export",
+						JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception ex)
+			{
+				logger.error(
+						"A JAXBException occurred while exporting message.", ex);
+				JOptionPane.showMessageDialog(frame,
+						"An error occurred while exporting message!", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	private static class MarshallProjectTypeWorker extends
+			SwingWorker<Void, Void>
+	{
+		private final QFixMessengerFrame frame;
+		private final ProjectType xmlProjectType;
+		private final File file;
+
+		MarshallProjectTypeWorker(QFixMessengerFrame frame,
+				ProjectType xmlProjectType, File file)
+		{
+			this.frame = frame;
+			this.xmlProjectType = xmlProjectType;
+			this.file = file;
+		}
+
+		@Override
+		protected Void doInBackground() throws Exception
+		{
+			JAXBElement<ProjectType> rootElement = new JAXBElement<ProjectType>(
+					new QName("http://xml.fix.jramoyo.com", "project"),
+					ProjectType.class, xmlProjectType);
+			Marshaller marshaller = frame.messenger.getJaxbContext()
+					.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
+					Boolean.TRUE);
+			marshaller.marshal(rootElement, file);
+			return null;
+		}
+
+		protected void done()
+		{
+			try
+			{
+				get();
+				logger.debug("Message exported to " + xmlProjectType.getName());
+				JOptionPane.showMessageDialog(frame, "Project saved to "
+						+ xmlProjectType.getName(), "Export",
+						JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception ex)
+			{
+				logger.error(
+						"A JAXBException occurred while exporting message.", ex);
+				JOptionPane.showMessageDialog(frame,
+						"An error occurred while saving project!", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 
