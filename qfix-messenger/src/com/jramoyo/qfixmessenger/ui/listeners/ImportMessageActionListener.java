@@ -38,6 +38,7 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 
@@ -74,20 +75,45 @@ public class ImportMessageActionListener implements ActionListener
 		if (choice == JFileChooser.APPROVE_OPTION)
 		{
 			File file = jFileChooser.getSelectedFile();
+			new UnmarshallWorker(frame, file).execute();
+		}
+	}
+
+	private static class UnmarshallWorker extends
+			SwingWorker<MessageType, Void>
+	{
+		private QFixMessengerFrame frame;
+		private File file;
+
+		public UnmarshallWorker(QFixMessengerFrame frame, File file)
+		{
+			this.frame = frame;
+			this.file = file;
+		}
+
+		@Override
+		protected MessageType doInBackground() throws Exception
+		{
+			Unmarshaller unmarshaller = frame.getMessenger().getJaxbContext()
+					.createUnmarshaller();
+			@SuppressWarnings("unchecked")
+			JAXBElement<MessageType> rootElement = (JAXBElement<MessageType>) unmarshaller
+					.unmarshal(file);
+			return rootElement.getValue();
+		}
+
+		@Override
+		protected void done()
+		{
+			MessageType xmlMessageType;
 			try
 			{
-				Unmarshaller unmarshaller = frame.getMessenger().getJaxbContext()
-						.createUnmarshaller();
-				@SuppressWarnings("unchecked")
-				JAXBElement<MessageType> rootElement = (JAXBElement<MessageType>) unmarshaller
-						.unmarshal(file);
-				MessageType xmlMessageType = rootElement.getValue();
-
+				xmlMessageType = get();
 				frame.loadXmlMessage(xmlMessageType);
 			} catch (Exception ex)
 			{
-				logger.error(
-						"A JAXBException occurred while importing message.", ex);
+				logger.error("An Exception occurred while importing message.",
+						ex);
 				JOptionPane.showMessageDialog(frame, "Unable to open file!",
 						"Error", JOptionPane.ERROR_MESSAGE);
 			}

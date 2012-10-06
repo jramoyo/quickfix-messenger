@@ -38,6 +38,7 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 
@@ -66,18 +67,18 @@ public class OpenProjectActionListener implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if (frame.getXmlProjectType() != null)
+		if (frame.getActiveXmlProject() != null)
 		{
 			int choice = JOptionPane.showConfirmDialog(frame,
 					"Do you want to save \""
-							+ frame.getXmlProjectType().getName() + "\"?",
+							+ frame.getActiveXmlProject().getName() + "\"?",
 					"Save Current Project", JOptionPane.YES_NO_CANCEL_OPTION);
 			switch (choice)
 			{
 			case JOptionPane.NO_OPTION:
 				break;
 			case JOptionPane.YES_OPTION:
-				frame.marshallXmlProjectType();
+				frame.marshallActiveXmlProject();
 				break;
 			case JOptionPane.CANCEL_OPTION:
 				return;
@@ -94,18 +95,52 @@ public class OpenProjectActionListener implements ActionListener
 			File file = jFileChooser.getSelectedFile();
 			try
 			{
-				Unmarshaller unmarshaller = frame.getMessenger()
-						.getJaxbContext().createUnmarshaller();
-				@SuppressWarnings("unchecked")
-				JAXBElement<ProjectType> rootElement = (JAXBElement<ProjectType>) unmarshaller
-						.unmarshal(file);
-				ProjectType xmlProjectType = rootElement.getValue();
-
-				frame.setXmlProjectType(xmlProjectType, file);
+				new UnmarshallWorker(frame, file).execute();
 			} catch (Exception ex)
 			{
 				logger.error(
 						"A JAXBException occurred while importing message.", ex);
+				JOptionPane.showMessageDialog(frame, "Unable to open file!",
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	private static class UnmarshallWorker extends
+			SwingWorker<ProjectType, Void>
+	{
+		private QFixMessengerFrame frame;
+		private File file;
+
+		public UnmarshallWorker(QFixMessengerFrame frame, File file)
+		{
+			this.frame = frame;
+			this.file = file;
+		}
+
+		@Override
+		protected ProjectType doInBackground() throws Exception
+		{
+			Unmarshaller unmarshaller = frame.getMessenger().getJaxbContext()
+					.createUnmarshaller();
+			@SuppressWarnings("unchecked")
+			JAXBElement<ProjectType> rootElement = (JAXBElement<ProjectType>) unmarshaller
+					.unmarshal(file);
+			return rootElement.getValue();
+		}
+
+		@Override
+		protected void done()
+		{
+			ProjectType xmlProjectType;
+			try
+			{
+				xmlProjectType = get();
+				frame.setActiveXmlProject(xmlProjectType, file);
+			} catch (Exception ex)
+			{
+				logger.error("An Exception occurred while importing message.",
+						ex);
 				JOptionPane.showMessageDialog(frame, "Unable to open file!",
 						"Error", JOptionPane.ERROR_MESSAGE);
 			}

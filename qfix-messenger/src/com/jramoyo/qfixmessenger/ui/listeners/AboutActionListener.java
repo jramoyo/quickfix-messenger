@@ -137,6 +137,11 @@ public class AboutActionListener implements ActionListener
 				JOptionPane.PLAIN_MESSAGE);
 	}
 
+	private void goToWikiPage(String url) throws IOException
+	{
+		java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+	}
+
 	private String readLicenseFile()
 	{
 		StringBuilder license = new StringBuilder();
@@ -173,11 +178,6 @@ public class AboutActionListener implements ActionListener
 		}
 
 		return license.toString();
-	}
-
-	private void goToWikiPage(String url) throws IOException
-	{
-		java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
 	}
 
 	private static class LinkMouseAdapter extends MouseAdapter

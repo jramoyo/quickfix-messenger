@@ -80,7 +80,7 @@ public class ProjectTreeMouseListener extends MouseAdapter
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					for (MessageType xmlMessageType : frame.getXmlProjectType()
+					for (MessageType xmlMessageType : frame.getActiveXmlProject()
 							.getMessages().getMessage())
 					{
 						try

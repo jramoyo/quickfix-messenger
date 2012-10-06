@@ -196,9 +196,9 @@ public class QFixMessengerFrame extends JFrame
 
 	private String projectTitle = EMPTY_PROJECT;
 
-	private ProjectType xmlProjectType;
+	private ProjectType activeXmlProject;
 
-	private File xmlProjectFile;
+	private File activeProjectFile;
 
 	private volatile FixDictionary activeDictionary;
 
@@ -297,10 +297,10 @@ public class QFixMessengerFrame extends JFrame
 				"Exit QuickFIX Messenger?", "Quit", JOptionPane.YES_NO_OPTION);
 		if (choice == JOptionPane.YES_OPTION)
 		{
-			if (xmlProjectType != null)
+			if (activeXmlProject != null)
 			{
 				choice = JOptionPane.showConfirmDialog(this,
-						"Do you want to save \"" + xmlProjectType.getName()
+						"Do you want to save \"" + activeXmlProject.getName()
 								+ "\"?", "Save Current Project",
 						JOptionPane.YES_NO_CANCEL_OPTION);
 				switch (choice)
@@ -308,7 +308,7 @@ public class QFixMessengerFrame extends JFrame
 				case JOptionPane.NO_OPTION:
 					break;
 				case JOptionPane.YES_OPTION:
-					marshallXmlProjectType();
+					marshallActiveXmlProject();
 					break;
 				case JOptionPane.CANCEL_OPTION:
 					return;
@@ -369,6 +369,16 @@ public class QFixMessengerFrame extends JFrame
 	}
 
 	/**
+	 * Returns the active XML ProjectType
+	 * 
+	 * @return the active XML ProjectType
+	 */
+	public ProjectType getActiveXmlProject()
+	{
+		return activeXmlProject;
+	}
+
+	/**
 	 * Returns the application instance
 	 * 
 	 * @return the application instance
@@ -389,16 +399,6 @@ public class QFixMessengerFrame extends JFrame
 	}
 
 	/**
-	 * Returns the active XML ProjectType
-	 * 
-	 * @return the active XML ProjectType
-	 */
-	public ProjectType getXmlProjectType()
-	{
-		return xmlProjectType;
-	}
-
-	/**
 	 * Loads an XML MessageType to the UI
 	 * 
 	 * @param xmlMessageType
@@ -412,6 +412,54 @@ public class QFixMessengerFrame extends JFrame
 			{
 				messagePanel.populateXml(xmlMessageType);
 			}
+		}
+	}
+
+	/**
+	 * Saves the active XML ProjectType to a file
+	 */
+	public void marshallActiveXmlProject()
+	{
+		if (activeProjectFile == null)
+		{
+			JFileChooser jFileChooser = new JFileChooser();
+			jFileChooser.setFileFilter(XmlFileFilter.INSTANCE);
+			jFileChooser.setDialogTitle("Save Project");
+			jFileChooser.setSelectedFile(new File("*.xml"));
+
+			int choice = jFileChooser.showSaveDialog(this);
+			if (choice == JFileChooser.APPROVE_OPTION)
+			{
+				activeProjectFile = jFileChooser.getSelectedFile();
+			}
+
+			else if (choice == JFileChooser.CANCEL_OPTION)
+			{
+				return;
+			}
+		}
+
+		try
+		{
+			JAXBElement<ProjectType> rootElement = new JAXBElement<ProjectType>(
+					new QName("http://xml.fix.jramoyo.com", "project"),
+					ProjectType.class, activeXmlProject);
+			Marshaller marshaller = messenger.getJaxbContext()
+					.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
+					Boolean.TRUE);
+			marshaller.marshal(rootElement, activeProjectFile);
+			logger.debug("Message exported to " + activeProjectFile.getName());
+			JOptionPane.showMessageDialog(this, "Project saved to "
+					+ activeProjectFile.getName(), "Export",
+					JOptionPane.INFORMATION_MESSAGE);
+		} catch (JAXBException ex)
+		{
+			logger.error("A JAXBException occurred while exporting message.",
+					ex);
+			JOptionPane.showMessageDialog(this,
+					"An error occurred while saving project!", "Error",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -458,64 +506,16 @@ public class QFixMessengerFrame extends JFrame
 	}
 
 	/**
-	 * Saves the active XML ProjectType to a file
-	 */
-	public void marshallXmlProjectType()
-	{
-		if (xmlProjectFile == null)
-		{
-			JFileChooser jFileChooser = new JFileChooser();
-			jFileChooser.setFileFilter(XmlFileFilter.INSTANCE);
-			jFileChooser.setDialogTitle("Save Project");
-			jFileChooser.setSelectedFile(new File("*.xml"));
-
-			int choice = jFileChooser.showSaveDialog(this);
-			if (choice == JFileChooser.APPROVE_OPTION)
-			{
-				xmlProjectFile = jFileChooser.getSelectedFile();
-			}
-
-			else if (choice == JFileChooser.CANCEL_OPTION)
-			{
-				return;
-			}
-		}
-
-		try
-		{
-			JAXBElement<ProjectType> rootElement = new JAXBElement<ProjectType>(
-					new QName("http://xml.fix.jramoyo.com", "project"),
-					ProjectType.class, xmlProjectType);
-			Marshaller marshaller = messenger.getJaxbContext()
-					.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
-					Boolean.TRUE);
-			marshaller.marshal(rootElement, xmlProjectFile);
-			logger.debug("Message exported to " + xmlProjectFile.getName());
-			JOptionPane.showMessageDialog(this, "Project saved to "
-					+ xmlProjectFile.getName(), "Export",
-					JOptionPane.INFORMATION_MESSAGE);
-		} catch (JAXBException ex)
-		{
-			logger.error("A JAXBException occurred while exporting message.",
-					ex);
-			JOptionPane.showMessageDialog(this,
-					"An error occurred while saving project!", "Error",
-					JOptionPane.ERROR_MESSAGE);
-		}
-	}
-
-	/**
 	 * Sets the active XML ProjectType
 	 * 
 	 * @param xmlProjectType
 	 *            an XML ProjectType
 	 */
-	public void setXmlProjectType(ProjectType xmlProjectType,
+	public void setActiveXmlProject(ProjectType xmlProjectType,
 			File xmlProjectFile)
 	{
-		this.xmlProjectType = xmlProjectType;
-		this.xmlProjectFile = null;
+		this.activeXmlProject = xmlProjectType;
+		this.activeProjectFile = null;
 		if (projectDialog != null)
 		{
 			projectDialog.dispose();
@@ -1055,7 +1055,7 @@ public class QFixMessengerFrame extends JFrame
 	{
 		if (projectDialog == null || !projectDialog.isDisplayable())
 		{
-			projectDialog = new ProjectDialog(this, xmlProjectType);
+			projectDialog = new ProjectDialog(this, activeXmlProject);
 			projectDialog.launch();
 		} else
 		{
@@ -1267,7 +1267,7 @@ public class QFixMessengerFrame extends JFrame
 				{
 					MessageType xmlMessageType = frame.messagePanel
 							.getXmlMember();
-					ProjectType xmlProjectType = frame.getXmlProjectType();
+					ProjectType xmlProjectType = frame.getActiveXmlProject();
 					xmlProjectType.getMessages().getMessage()
 							.add(xmlMessageType);
 					frame.projectDialog.updateMessageAdded(xmlMessageType);
@@ -1584,7 +1584,7 @@ public class QFixMessengerFrame extends JFrame
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			if (frame.xmlProjectType != null)
+			if (frame.activeXmlProject != null)
 			{
 				frame.launchProjectDialog();
 			} else

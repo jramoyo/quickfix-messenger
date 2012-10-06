@@ -56,15 +56,15 @@ public class CloseProjectActionListener implements ActionListener
 	{
 		int choice = JOptionPane.showConfirmDialog(frame,
 				"Are you sure you want to close \""
-						+ frame.getXmlProjectType().getName() + "\"?",
+						+ frame.getActiveXmlProject().getName() + "\"?",
 				"Close Project", JOptionPane.YES_NO_OPTION);
 		if (choice == JOptionPane.YES_OPTION)
 		{
-			if (frame.getXmlProjectType() != null)
+			if (frame.getActiveXmlProject() != null)
 			{
 				choice = JOptionPane.showConfirmDialog(frame,
 						"Do you want to save \""
-								+ frame.getXmlProjectType().getName() + "\"?",
+								+ frame.getActiveXmlProject().getName() + "\"?",
 						"Save Current Project",
 						JOptionPane.YES_NO_CANCEL_OPTION);
 				switch (choice)
@@ -72,13 +72,13 @@ public class CloseProjectActionListener implements ActionListener
 				case JOptionPane.NO_OPTION:
 					break;
 				case JOptionPane.YES_OPTION:
-					frame.marshallXmlProjectType();
+					frame.marshallActiveXmlProject();
 					break;
 				case JOptionPane.CANCEL_OPTION:
 					return;
 				}
 			}
-			frame.setXmlProjectType(null, null);
+			frame.setActiveXmlProject(null, null);
 		}
 	}
 }
