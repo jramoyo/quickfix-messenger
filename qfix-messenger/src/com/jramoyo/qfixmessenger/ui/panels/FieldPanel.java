@@ -37,6 +37,7 @@ import java.awt.Cursor;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.Format;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -213,52 +214,60 @@ public class FieldPanel extends
 			fieldComboBox = new JComboBox<FieldValue>(
 					fieldValues.toArray(new FieldValue[] {}));
 			fieldComboBox.setRenderer(new FieldComboBoxCellRenderer());
+			fieldComboBox.setToolTipText("Select a value");
 
 			fieldValuePanel.add(fieldComboBox);
 		}
 
-		else if (isFieldUtcType())
-		{
-			fieldTextField = new JFormattedTextField(new SimpleDateFormat(
-					QFixMessengerConstants.UTC_DATE_FORMAT));
-			fieldTextField.setFocusLostBehavior(JFormattedTextField.COMMIT);
-			dateButton = new JButton("UTC Date");
-			dateButton.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(ActionEvent e)
-				{
-					fieldTextField.setText(generateUtcTimeStamp());
-				}
-			});
-
-			fieldValuePanel.add(new JLayer<JFormattedTextField>(fieldTextField,
-					layerUI));
-			fieldValuePanel.add(dateButton);
-		}
-
 		else
 		{
+			Format format;
+			String toolTip;
+			if (isFieldUtcType())
+			{
+				format = new SimpleDateFormat(
+						QFixMessengerConstants.UTC_DATE_FORMAT);
+				toolTip = "Enter a date in UTC format";
+
+				dateButton = new JButton("UTC Date");
+				dateButton.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(ActionEvent e)
+					{
+						fieldTextField.setText(generateUtcTimeStamp());
+					}
+				});
+			}
+
 			if (isFieldDoubleType())
 			{
-				fieldTextField = new JFormattedTextField(
-						NumberFormat.getNumberInstance());
+				format = NumberFormat.getNumberInstance();
+				toolTip = "Enter a floating point value";
 			}
 
 			else if (isFieldIntegerType())
 			{
-				fieldTextField = new JFormattedTextField(
-						NumberFormat.getIntegerInstance());
+				format = NumberFormat.getInstance();
+				toolTip = "Enter an integer value";
 			}
 
 			else
 			{
-				fieldTextField = new JFormattedTextField();
+				format = null;
+				toolTip = "Enter a value";
 			}
 
+			fieldTextField = new JFormattedTextField(format);
 			fieldTextField.setFocusLostBehavior(JFormattedTextField.COMMIT);
+			fieldTextField.setToolTipText(toolTip);
 			fieldValuePanel.add(new JLayer<JFormattedTextField>(fieldTextField,
 					layerUI));
+
+			if (dateButton != null)
+			{
+				fieldValuePanel.add(dateButton);
+			}
 		}
 
 		add(fieldLabel);
