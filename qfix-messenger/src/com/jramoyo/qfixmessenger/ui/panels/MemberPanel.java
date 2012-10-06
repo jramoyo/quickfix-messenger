@@ -71,4 +71,19 @@ public interface MemberPanel<M extends Member, Q, X>
 	 * @return the XML representation of this MemberPanel
 	 */
 	X getXmlMember();
+
+	/**
+	 * Returns whether this MemberPanel has valid contents
+	 * 
+	 * @return whether this MemberPanel has valid contents
+	 */
+	boolean hasValidContent();
+
+	/**
+	 * Populates this MemberPanel from its XML representation
+	 * 
+	 * @param xmlObject
+	 *            an XML representation
+	 */
+	void populateXml(X xmlObject);
 }

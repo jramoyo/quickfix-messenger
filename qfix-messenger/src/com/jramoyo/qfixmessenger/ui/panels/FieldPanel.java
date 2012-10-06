@@ -37,8 +37,8 @@ import java.awt.Cursor;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.text.Format;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -140,7 +140,21 @@ public class FieldPanel extends
 		}
 	}
 
-	public void populate(com.jramoyo.fix.xml.FieldType xmlFieldType)
+	@Override
+	public boolean hasValidContent()
+	{
+		if (fieldComboBox != null)
+		{
+			return true;
+		}
+
+		else
+		{
+			return fieldTextField.isEditValid();
+		}
+	}
+
+	public void populateXml(com.jramoyo.fix.xml.FieldType xmlFieldType)
 	{
 		if (fieldComboBox != null)
 		{
@@ -240,15 +254,15 @@ public class FieldPanel extends
 				});
 			}
 
-			if (isFieldDoubleType())
+			else if (isFieldDoubleType())
 			{
-				format = NumberFormat.getNumberInstance();
+				format = new DecimalFormat("###.###0");
 				toolTip = "Enter a floating point value";
 			}
 
 			else if (isFieldIntegerType())
 			{
-				format = NumberFormat.getInstance();
+				format = new DecimalFormat("###");
 				toolTip = "Enter an integer value";
 			}
 

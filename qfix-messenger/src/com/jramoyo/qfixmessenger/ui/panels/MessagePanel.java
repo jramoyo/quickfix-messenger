@@ -343,7 +343,30 @@ public class MessagePanel extends JPanel implements
 		return xmlMessageType;
 	}
 
-	public void populate(MessageType xmlMessageType)
+	@Override
+	public boolean hasValidContent()
+	{
+		boolean hasValidContent = true;
+
+		for (MemberPanel<?, ?, ?> memberPanel : headerMembers)
+		{
+			hasValidContent = hasValidContent && memberPanel.hasValidContent();
+		}
+
+		for (MemberPanel<?, ?, ?> memberPanel : bodyMembers)
+		{
+			hasValidContent = hasValidContent && memberPanel.hasValidContent();
+		}
+
+		for (MemberPanel<?, ?, ?> memberPanel : trailerMembers)
+		{
+			hasValidContent = hasValidContent && memberPanel.hasValidContent();
+		}
+
+		return hasValidContent;
+	}
+
+	public void populateXml(MessageType xmlMessageType)
 	{
 		HeaderType xmlHeaderType = xmlMessageType.getHeader();
 		if (xmlHeaderType != null)
@@ -356,7 +379,7 @@ public class MessagePanel extends JPanel implements
 					FieldPanel fieldPanel = (FieldPanel) MemberPanelUtil
 							.findMemberPanelByName(xmlFieldType.getName(),
 									headerMembers);
-					fieldPanel.populate(xmlFieldType);
+					fieldPanel.populateXml(xmlFieldType);
 				}
 			}
 		}
@@ -370,7 +393,7 @@ public class MessagePanel extends JPanel implements
 				FieldPanel fieldPanel = (FieldPanel) MemberPanelUtil
 						.findMemberPanelByName(xmlFieldType.getName(),
 								bodyMembers);
-				fieldPanel.populate(xmlFieldType);
+				fieldPanel.populateXml(xmlFieldType);
 			}
 
 			if (xmlMember instanceof GroupsType)
@@ -379,7 +402,7 @@ public class MessagePanel extends JPanel implements
 				GroupPanel groupPanel = (GroupPanel) MemberPanelUtil
 						.findMemberPanelByName(xmlGroupsType.getName(),
 								bodyMembers);
-				groupPanel.populate(xmlGroupsType);
+				groupPanel.populateXml(xmlGroupsType);
 			}
 
 			if (xmlMember instanceof ComponentType)
@@ -388,7 +411,7 @@ public class MessagePanel extends JPanel implements
 				ComponentPanel componentPanel = (ComponentPanel) MemberPanelUtil
 						.findMemberPanelByName(
 								xmlComponentTypeMember.getName(), bodyMembers);
-				componentPanel.populate(xmlComponentTypeMember);
+				componentPanel.populateXml(xmlComponentTypeMember);
 			}
 		}
 
@@ -403,7 +426,7 @@ public class MessagePanel extends JPanel implements
 					FieldPanel fieldPanel = (FieldPanel) MemberPanelUtil
 							.findMemberPanelByName(xmlFieldType.getName(),
 									trailerMembers);
-					fieldPanel.populate(xmlFieldType);
+					fieldPanel.populateXml(xmlFieldType);
 				}
 			}
 		}

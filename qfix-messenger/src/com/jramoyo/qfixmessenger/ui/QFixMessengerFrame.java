@@ -416,7 +416,7 @@ public class QFixMessengerFrame extends JFrame
 		{
 			if (selectMessage(xmlMessageType))
 			{
-				messagePanel.populate(xmlMessageType);
+				messagePanel.populateXml(xmlMessageType);
 			}
 		}
 	}
@@ -1625,7 +1625,25 @@ public class QFixMessengerFrame extends JFrame
 						quickfix.Message message = null;
 						if (!frame.activeMessage.equals(frame.freeTextMessage))
 						{
-							message = frame.messagePanel.getQuickFixMember();
+							if (frame.messagePanel.hasValidContent())
+							{
+								message = frame.messagePanel
+										.getQuickFixMember();
+							} else
+							{
+								int choice = JOptionPane
+										.showConfirmDialog(
+												frame,
+												"Message has validation errors, send anyway?",
+												"Validation Errors",
+												JOptionPane.YES_NO_OPTION,
+												JOptionPane.WARNING_MESSAGE);
+								if (choice == JOptionPane.YES_OPTION)
+								{
+									message = frame.messagePanel
+											.getQuickFixMember();
+								}
+							}
 						} else
 						{
 							message = frame.freeTextMessagePanel
@@ -1640,7 +1658,7 @@ public class QFixMessengerFrame extends JFrame
 										frame, message.toString(),
 										"Send FIX Message?",
 										JOptionPane.YES_NO_OPTION,
-										JOptionPane.QUESTION_MESSAGE);
+										JOptionPane.INFORMATION_MESSAGE);
 								if (choice == JOptionPane.YES_OPTION)
 								{
 									logger.info("Sending message "

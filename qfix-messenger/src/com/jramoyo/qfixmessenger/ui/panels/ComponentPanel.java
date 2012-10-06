@@ -172,7 +172,20 @@ public class ComponentPanel extends
 		return xmlComponentType;
 	}
 
-	public void populate(ComponentType xmlComponentType)
+	@Override
+	public boolean hasValidContent()
+	{
+		boolean hasValidContent = true;
+
+		for (MemberPanel<?, ?, ?> memberPanel : members)
+		{
+			hasValidContent = hasValidContent && memberPanel.hasValidContent();
+		}
+
+		return hasValidContent;
+	}
+
+	public void populateXml(ComponentType xmlComponentType)
 	{
 		for (Object xmlMember : xmlComponentType.getFieldOrGroupsOrComponent())
 		{
@@ -181,7 +194,7 @@ public class ComponentPanel extends
 				FieldType xmlFieldType = (FieldType) xmlMember;
 				FieldPanel fieldPanel = (FieldPanel) MemberPanelUtil
 						.findMemberPanelByName(xmlFieldType.getName(), members);
-				fieldPanel.populate(xmlFieldType);
+				fieldPanel.populateXml(xmlFieldType);
 			}
 
 			if (xmlMember instanceof GroupsType)
@@ -189,7 +202,7 @@ public class ComponentPanel extends
 				GroupsType xmlGroupsType = (GroupsType) xmlMember;
 				GroupPanel groupPanel = (GroupPanel) MemberPanelUtil
 						.findMemberPanelByName(xmlGroupsType.getName(), members);
-				groupPanel.populate(xmlGroupsType);
+				groupPanel.populateXml(xmlGroupsType);
 			}
 
 			if (xmlMember instanceof ComponentType)
@@ -198,7 +211,7 @@ public class ComponentPanel extends
 				ComponentPanel componentPanel = (ComponentPanel) MemberPanelUtil
 						.findMemberPanelByName(
 								xmlComponentTypeMember.getName(), members);
-				componentPanel.populate(xmlComponentTypeMember);
+				componentPanel.populateXml(xmlComponentTypeMember);
 			}
 		}
 	}

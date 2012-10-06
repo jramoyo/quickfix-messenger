@@ -242,7 +242,24 @@ public class GroupPanel extends
 		return xmlGroupsType;
 	}
 
-	public void populate(GroupsType xmlGroupsType)
+	@Override
+	public boolean hasValidContent()
+	{
+		boolean hasValidContent = true;
+
+		for (List<MemberPanel<?, ?, ?>> groupMembers : groups)
+		{
+			for (MemberPanel<?, ?, ?> memberPanel : groupMembers)
+			{
+				hasValidContent = hasValidContent
+						&& memberPanel.hasValidContent();
+			}
+		}
+
+		return hasValidContent;
+	}
+
+	public void populateXml(GroupsType xmlGroupsType)
 	{
 		groupTextField.setText(String.valueOf(xmlGroupsType.getCount()));
 		loadMembers();
@@ -260,7 +277,7 @@ public class GroupPanel extends
 					FieldPanel fieldPanel = (FieldPanel) MemberPanelUtil
 							.findMemberPanelByName(xmlFieldType.getName(),
 									groupMembers);
-					fieldPanel.populate(xmlFieldType);
+					fieldPanel.populateXml(xmlFieldType);
 				}
 
 				if (xmlMember instanceof GroupsType)
@@ -269,7 +286,7 @@ public class GroupPanel extends
 					GroupPanel groupPanel = (GroupPanel) MemberPanelUtil
 							.findMemberPanelByName(
 									xmlGroupsTypeMember.getName(), groupMembers);
-					groupPanel.populate(xmlGroupsTypeMember);
+					groupPanel.populateXml(xmlGroupsTypeMember);
 				}
 
 				if (xmlMember instanceof ComponentType)
@@ -278,7 +295,7 @@ public class GroupPanel extends
 					ComponentPanel componentPanel = (ComponentPanel) MemberPanelUtil
 							.findMemberPanelByName(xmlComponentType.getName(),
 									groupMembers);
-					componentPanel.populate(xmlComponentType);
+					componentPanel.populateXml(xmlComponentType);
 				}
 			}
 		}

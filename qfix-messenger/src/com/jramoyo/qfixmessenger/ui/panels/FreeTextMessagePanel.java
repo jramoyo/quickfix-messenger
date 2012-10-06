@@ -149,7 +149,13 @@ public class FreeTextMessagePanel extends JPanel implements
 				"FreeTextMessagePanel does not support XML Messages!");
 	}
 
-	public void populate(MessageType xmlMessageType)
+	@Override
+	public boolean hasValidContent()
+	{
+		return true;
+	}
+
+	public void populateXml(MessageType xmlMessageType)
 	{
 		throw new IllegalStateException(
 				"FreeTextMessagePanel does not support XML Messages!");
@@ -179,5 +185,4 @@ public class FreeTextMessagePanel extends JPanel implements
 
 		add(messageTextScrollPane, BorderLayout.NORTH);
 	}
-
 }
