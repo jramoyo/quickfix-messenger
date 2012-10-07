@@ -212,6 +212,11 @@ public class ComponentPanel extends
 		}
 	}
 
+	List<MemberPanel<?, ?, ?>> getMembers()
+	{
+		return members;
+	}
+
 	private void initComponents()
 	{
 		setLayout(new BorderLayout());

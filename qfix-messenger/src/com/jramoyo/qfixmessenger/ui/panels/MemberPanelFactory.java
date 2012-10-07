@@ -47,15 +47,16 @@ public class MemberPanelFactory
 	{
 		MemberPanel<?, ?, ?> prevMemberPanel = frame.getMemberPanelCache()
 				.getMemberPanel(component);
-		ComponentPanel componentPanel;
 		if (prevMemberPanel != null)
 		{
-			componentPanel = (ComponentPanel) prevMemberPanel;
-		} else
-		{
-			componentPanel = new ComponentPanel(frame, component,
-					isRequiredOnly, isRequired);
+			ComponentPanel prevComponentPanel = (ComponentPanel) prevMemberPanel;
+			frame.getMemberPanelCache().encacheAll(
+					prevComponentPanel.getMembers());
 		}
+
+		ComponentPanel componentPanel = new ComponentPanel(frame, component,
+				isRequiredOnly, isRequired);
+		frame.getMemberPanelCache().encache(componentPanel);
 
 		return componentPanel;
 	}

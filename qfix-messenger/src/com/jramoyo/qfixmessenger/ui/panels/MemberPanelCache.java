@@ -52,7 +52,12 @@ public class MemberPanelCache
 		cache = new ConcurrentHashMap<>();
 	}
 
-	public void encache(List<MemberPanel<?, ?, ?>> memberPanels)
+	public void encache(MemberPanel<?, ?, ?> memberPanel)
+	{
+		cache.put(memberPanel.getMember(), memberPanel);
+	}
+
+	public void encacheAll(List<MemberPanel<?, ?, ?>> memberPanels)
 	{
 		for (MemberPanel<?, ?, ?> memberPanel : memberPanels)
 		{
