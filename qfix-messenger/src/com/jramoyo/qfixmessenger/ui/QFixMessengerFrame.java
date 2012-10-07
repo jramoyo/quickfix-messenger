@@ -1678,7 +1678,7 @@ public class QFixMessengerFrame extends JFrame
 						quickfix.Message message = null;
 						if (!frame.activeMessage.equals(frame.freeTextMessage))
 						{
-							if (frame.messagePanel.hasValidContent())
+							if (frame.messagePanel.hasValidFormat())
 							{
 								message = frame.messagePanel
 										.getQuickFixMember();
@@ -1687,8 +1687,8 @@ public class QFixMessengerFrame extends JFrame
 								int choice = JOptionPane
 										.showConfirmDialog(
 												frame,
-												"Message has validation errors, send anyway?",
-												"Validation Errors",
+												"Some fields have format errors, send anyway?",
+												"Format Errors",
 												JOptionPane.YES_NO_OPTION,
 												JOptionPane.WARNING_MESSAGE);
 								if (choice == JOptionPane.YES_OPTION)

@@ -150,7 +150,7 @@ public class FreeTextMessagePanel extends JPanel implements
 	}
 
 	@Override
-	public boolean hasValidContent()
+	public boolean hasValidFormat()
 	{
 		return true;
 	}

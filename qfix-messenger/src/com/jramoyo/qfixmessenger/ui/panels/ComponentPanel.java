@@ -173,13 +173,13 @@ public class ComponentPanel extends
 	}
 
 	@Override
-	public boolean hasValidContent()
+	public boolean hasValidFormat()
 	{
 		boolean hasValidContent = true;
 
 		for (MemberPanel<?, ?, ?> memberPanel : members)
 		{
-			hasValidContent = hasValidContent && memberPanel.hasValidContent();
+			hasValidContent = hasValidContent && memberPanel.hasValidFormat();
 		}
 
 		return hasValidContent;

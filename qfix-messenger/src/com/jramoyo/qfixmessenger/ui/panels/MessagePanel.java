@@ -364,23 +364,23 @@ public class MessagePanel extends JPanel implements
 	}
 
 	@Override
-	public boolean hasValidContent()
+	public boolean hasValidFormat()
 	{
 		boolean hasValidContent = true;
 
 		for (MemberPanel<?, ?, ?> memberPanel : headerMembers)
 		{
-			hasValidContent = hasValidContent && memberPanel.hasValidContent();
+			hasValidContent = hasValidContent && memberPanel.hasValidFormat();
 		}
 
 		for (MemberPanel<?, ?, ?> memberPanel : bodyMembers)
 		{
-			hasValidContent = hasValidContent && memberPanel.hasValidContent();
+			hasValidContent = hasValidContent && memberPanel.hasValidFormat();
 		}
 
 		for (MemberPanel<?, ?, ?> memberPanel : trailerMembers)
 		{
-			hasValidContent = hasValidContent && memberPanel.hasValidContent();
+			hasValidContent = hasValidContent && memberPanel.hasValidFormat();
 		}
 
 		return hasValidContent;

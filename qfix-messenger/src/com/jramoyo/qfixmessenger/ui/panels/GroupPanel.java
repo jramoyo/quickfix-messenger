@@ -243,7 +243,7 @@ public class GroupPanel extends
 	}
 
 	@Override
-	public boolean hasValidContent()
+	public boolean hasValidFormat()
 	{
 		boolean hasValidContent = true;
 
@@ -252,7 +252,7 @@ public class GroupPanel extends
 			for (MemberPanel<?, ?, ?> memberPanel : groupMembers)
 			{
 				hasValidContent = hasValidContent
-						&& memberPanel.hasValidContent();
+						&& memberPanel.hasValidFormat();
 			}
 		}
 

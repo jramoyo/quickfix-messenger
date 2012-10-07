@@ -141,7 +141,7 @@ public class FieldPanel extends
 	}
 
 	@Override
-	public boolean hasValidContent()
+	public boolean hasValidFormat()
 	{
 		if (fieldComboBox != null)
 		{

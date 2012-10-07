@@ -73,11 +73,11 @@ public interface MemberPanel<M extends Member, Q, X>
 	X getXmlMember();
 
 	/**
-	 * Returns whether this MemberPanel has valid contents
+	 * Returns whether the contents of this MemberPanel has valid format
 	 * 
-	 * @return whether this MemberPanel has valid contents
+	 * @return whether the contents of this MemberPanel has valid format
 	 */
-	boolean hasValidContent();
+	boolean hasValidFormat();
 
 	/**
 	 * Populates this MemberPanel from its XML representation
