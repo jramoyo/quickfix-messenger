@@ -30,12 +30,16 @@
  * MemberPanelCache.java
  * Oct 4, 2012
  */
-package com.jramoyo.qfixmessenger.ui.panels;
+package com.jramoyo.qfixmessenger.ui.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jramoyo.qfixmessenger.ui.panels.MemberPanel;
+
 /**
+ * Cache for MemberPanels
+ * 
  * @author jramoyo
  */
 public class MemberPanelCache
@@ -51,6 +55,13 @@ public class MemberPanelCache
 		headerMembers = new ArrayList<>();
 		bodyMembers = new ArrayList<>();
 		trailerMembers = new ArrayList<>();
+	}
+
+	public void clear()
+	{
+		trailerMembers.clear();
+		bodyMembers.clear();
+		headerMembers.clear();
 	}
 
 	public List<MemberPanel<?, ?, ?>> getBodyMembers()

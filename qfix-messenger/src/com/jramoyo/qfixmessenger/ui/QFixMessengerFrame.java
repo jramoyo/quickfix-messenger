@@ -129,31 +129,35 @@ import com.jramoyo.qfixmessenger.ui.listeners.SessionsListSessionStateListener;
 import com.jramoyo.qfixmessenger.ui.models.MessagesTableModel;
 import com.jramoyo.qfixmessenger.ui.models.data.MessagesTableModelData;
 import com.jramoyo.qfixmessenger.ui.panels.FreeTextMessagePanel;
-import com.jramoyo.qfixmessenger.ui.panels.MemberPanelCache;
 import com.jramoyo.qfixmessenger.ui.panels.MessagePanel;
 import com.jramoyo.qfixmessenger.ui.panels.MessagePanel.MessagePanelBuilder;
 import com.jramoyo.qfixmessenger.ui.renderers.MessagesListCellRenderer;
 import com.jramoyo.qfixmessenger.ui.renderers.MessagesTableCellRender;
 import com.jramoyo.qfixmessenger.ui.renderers.SessionsListCellRenderer;
 import com.jramoyo.qfixmessenger.ui.util.Icons;
+import com.jramoyo.qfixmessenger.ui.util.MemberPanelCache;
 
 /**
- * Main frame
+ * Main application frame
  * 
  * @author jamoyo
  */
 public class QFixMessengerFrame extends JFrame
 {
-	public static final int LEFT_PANEL_WIDTH = 170;
-
 	private static final long serialVersionUID = 7906369617506618477L;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(QFixMessengerFrame.class);
 
+	private static final int FRAME_MIN_HEIGHT = 450;
+
+	private static final int FRAME_MIN_WIDTH = 600;
+
+	private static final int LEFT_PANEL_WIDTH = 170;
+
 	private static final String VERSION = "2.0";
 
-	private static final String EMPTY_PROJECT = "None";
+	private static final String EMPTY_PROJECT_NAME = "None";
 
 	/**
 	 * Launches the frame
@@ -194,11 +198,11 @@ public class QFixMessengerFrame extends JFrame
 
 	private String frameTitle;
 
-	private String projectTitle = EMPTY_PROJECT;
+	private String projectTitle = EMPTY_PROJECT_NAME;
 
-	private ProjectType activeXmlProject;
+	private volatile ProjectType activeXmlProject;
 
-	private File activeProjectFile;
+	private volatile File activeProjectFile;
 
 	private volatile FixDictionary activeDictionary;
 
@@ -491,7 +495,7 @@ public class QFixMessengerFrame extends JFrame
 			launchProjectDialog();
 		} else
 		{
-			projectTitle = EMPTY_PROJECT;
+			projectTitle = EMPTY_PROJECT_NAME;
 			loadFrameTitle();
 			saveProjectMenuItem.setEnabled(false);
 			closeProjectMenuItem.setEnabled(false);
@@ -636,6 +640,7 @@ public class QFixMessengerFrame extends JFrame
 				+ Icons.APP_ICON).getImage());
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new FrameWindowAdapter(this));
+		setMinimumSize(new Dimension(FRAME_MIN_WIDTH, FRAME_MIN_HEIGHT));
 	}
 
 	private void initHelpMenu()
@@ -1593,7 +1598,6 @@ public class QFixMessengerFrame extends JFrame
 
 					JScrollPane messageTextScrollPane = new JScrollPane(
 							messageText);
-					messageText.setPreferredSize(new Dimension(300, 200));
 					messageTextScrollPane.setBorder(new EtchedBorder());
 
 					c.gridx = 0;
@@ -1703,11 +1707,21 @@ public class QFixMessengerFrame extends JFrame
 						{
 							if (frame.isPreviewBeforeSend)
 							{
+								JTextArea messageText = new JTextArea(
+										message.toString(), 5, 50);
+								messageText.setLineWrap(true);
+								messageText.setEditable(false);
+
+								JScrollPane messageTextScrollPane = new JScrollPane(
+										messageText);
+								messageTextScrollPane
+										.setBorder(new EtchedBorder());
+
 								int choice = JOptionPane.showConfirmDialog(
-										frame, message.toString(),
-										"Send FIX Message?",
+										frame, messageTextScrollPane,
+										"Send Message?",
 										JOptionPane.YES_NO_OPTION,
-										JOptionPane.INFORMATION_MESSAGE);
+										JOptionPane.PLAIN_MESSAGE);
 								if (choice == JOptionPane.YES_OPTION)
 								{
 									logger.info("Sending message "

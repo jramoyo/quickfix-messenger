@@ -99,9 +99,9 @@ public class ComponentPanel extends
 	{
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < members.size(); i++)
+		for (MemberPanel<?, ?, ?> memberPanel : members)
 		{
-			sb.append(members.get(i).getFixString());
+			sb.append(memberPanel.getFixString());
 			sb.append(QFixMessengerConstants.SOH);
 		}
 

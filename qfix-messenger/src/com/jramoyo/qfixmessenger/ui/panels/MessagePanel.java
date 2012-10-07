@@ -67,6 +67,7 @@ import com.jramoyo.fix.xml.TrailerType;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 import com.jramoyo.qfixmessenger.quickfix.util.QFixUtil;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
+import com.jramoyo.qfixmessenger.ui.util.MemberPanelCache;
 import com.jramoyo.qfixmessenger.ui.util.TitledBorderUtil;
 
 /**
@@ -139,8 +140,27 @@ public class MessagePanel extends JPanel implements
 	@Override
 	public String getFixString()
 	{
-		// TODO There is currently no need for this
-		return null;
+		StringBuilder sb = new StringBuilder();
+
+		for (MemberPanel<?, ?, ?> memberPanel : headerMembers)
+		{
+			sb.append(memberPanel.getFixString());
+			sb.append(QFixMessengerConstants.SOH);
+		}
+
+		for (MemberPanel<?, ?, ?> memberPanel : bodyMembers)
+		{
+			sb.append(memberPanel.getFixString());
+			sb.append(QFixMessengerConstants.SOH);
+		}
+
+		for (MemberPanel<?, ?, ?> memberPanel : trailerMembers)
+		{
+			sb.append(memberPanel.getFixString());
+			sb.append(QFixMessengerConstants.SOH);
+		}
+
+		return sb.toString();
 	}
 
 	public List<MemberPanel<?, ?, ?>> getHeaderMembers()
