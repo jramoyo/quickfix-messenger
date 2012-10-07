@@ -14,6 +14,10 @@
  *   in the documentation and/or other materials provided with the
  *   distribution.
  *
+ * - Neither the name of the authors nor the names of its contributors 
+ *   may be used to endorse or promote products derived from this software 
+ *   without specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -27,8 +31,8 @@
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
  * DAMAGE.
  *
- * MemberPanelFactory.java
- * 14 Jun 2011
+ * GroupMemberPanelFactory.java
+ * Oct 8, 2012
  */
 package com.jramoyo.qfixmessenger.ui.panels;
 
@@ -38,17 +42,18 @@ import com.jramoyo.fix.model.Group;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 
 /**
- * Static factory for creating MemberPanels
+ * Static factory for creating MemberPanels belonging to a group
  * 
- * @author jamoyo
+ * @author jramoyo
  */
-public class MemberPanelFactory
+public class GroupMemberPanelFactory
 {
 	public static ComponentPanel createComponentPanel(QFixMessengerFrame frame,
-			Component component, boolean isRequiredOnly, boolean isRequired)
+			Component component, int index, boolean isRequiredOnly,
+			boolean isRequired)
 	{
 		MemberPanel<?, ?, ?> prevMemberPanel = frame.getMemberPanelCache()
-				.getMemberPanel(component);
+				.getGroupMemberPanel(index, component);
 		if (prevMemberPanel != null)
 		{
 			ComponentPanel prevComponentPanel = (ComponentPanel) prevMemberPanel;
@@ -58,16 +63,16 @@ public class MemberPanelFactory
 
 		ComponentPanel componentPanel = new ComponentPanel(frame, component,
 				isRequiredOnly, isRequired);
-		frame.getMemberPanelCache().encacheMember(componentPanel);
+		frame.getMemberPanelCache().encacheGroupMember(index, componentPanel);
 
 		return componentPanel;
 	}
 
 	public static FieldPanel createFieldPanel(QFixMessengerFrame frame,
-			Field field, boolean isRequired)
+			Field field, int index, boolean isRequired)
 	{
 		MemberPanel<?, ?, ?> prevMemberPanel = frame.getMemberPanelCache()
-				.getMemberPanel(field);
+				.getGroupMemberPanel(index, field);
 		FieldPanel fieldPanel;
 		if (prevMemberPanel != null)
 		{
@@ -81,10 +86,10 @@ public class MemberPanelFactory
 	}
 
 	public static GroupPanel createGroupPanel(QFixMessengerFrame frame,
-			Group group, boolean isRequiredOnly, boolean isRequired)
+			Group group, int index, boolean isRequiredOnly, boolean isRequired)
 	{
 		MemberPanel<?, ?, ?> prevMemberPanel = frame.getMemberPanelCache()
-				.getMemberPanel(group);
+				.getGroupMemberPanel(index, group);
 		int noOfGroups = -1;
 		if (prevMemberPanel != null)
 		{
@@ -92,7 +97,6 @@ public class MemberPanelFactory
 			noOfGroups = prevGroupPanel.getNoOfGroups();
 			for (int i = 0; i < prevGroupPanel.getGroups().size(); i++)
 			{
-				// Encache as a group member
 				frame.getMemberPanelCache().encacheGroupMembers(i,
 						prevGroupPanel.getGroups().get(i));
 			}
@@ -100,7 +104,7 @@ public class MemberPanelFactory
 
 		GroupPanel groupPanel = new GroupPanel(frame, group, isRequiredOnly,
 				isRequired, noOfGroups);
-		frame.getMemberPanelCache().encacheMember(groupPanel);
+		frame.getMemberPanelCache().encacheGroupMember(index, groupPanel);
 
 		return groupPanel;
 	}

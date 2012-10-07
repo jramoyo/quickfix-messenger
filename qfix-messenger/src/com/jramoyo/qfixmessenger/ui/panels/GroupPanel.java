@@ -389,9 +389,9 @@ public class GroupPanel extends
 
 	private void loadMembers()
 	{
-		if (getNoOfGroups() > 0)
+		if (noOfGroups > 0)
 		{
-			for (int i = 0; i < getNoOfGroups(); i++)
+			for (int i = 0; i < noOfGroups; i++)
 			{
 				List<MemberPanel<?, ?, ?>> groupMembers = new ArrayList<MemberPanel<?, ?, ?>>();
 
@@ -414,9 +414,9 @@ public class GroupPanel extends
 				{
 					if (firstMember instanceof Field)
 					{
-						FieldPanel fieldPanel = MemberPanelFactory
+						FieldPanel fieldPanel = GroupMemberPanelFactory
 								.createFieldPanel(getFrame(),
-										(Field) firstMember, true);
+										(Field) firstMember, i, true);
 						fieldPanel.setMaximumSize(new Dimension(
 								getPreferredSize().width, fieldPanel
 										.getPreferredSize().height));
@@ -430,9 +430,9 @@ public class GroupPanel extends
 
 					else if (firstMember instanceof Component)
 					{
-						ComponentPanel componentPanel = MemberPanelFactory
+						ComponentPanel componentPanel = GroupMemberPanelFactory
 								.createComponentPanel(getFrame(),
-										(Component) firstMember,
+										(Component) firstMember, i,
 										isRequiredOnly, true);
 						componentPanel.setMaximumSize(new Dimension(
 								getPreferredSize().width, componentPanel
@@ -459,8 +459,8 @@ public class GroupPanel extends
 						Field field = (Field) entry.getKey();
 						if (!field.equals(firstMember))
 						{
-							FieldPanel fieldPanel = MemberPanelFactory
-									.createFieldPanel(getFrame(), field,
+							FieldPanel fieldPanel = GroupMemberPanelFactory
+									.createFieldPanel(getFrame(), field, i,
 											entry.getValue());
 							fieldPanel.setMaximumSize(new Dimension(
 									getPreferredSize().width, fieldPanel
@@ -478,8 +478,8 @@ public class GroupPanel extends
 					{
 						Group group = (Group) entry.getKey();
 
-						GroupPanel memberGroupPanel = MemberPanelFactory
-								.createGroupPanel(getFrame(), group,
+						GroupPanel memberGroupPanel = GroupMemberPanelFactory
+								.createGroupPanel(getFrame(), group, i,
 										isRequiredOnly, entry.getValue());
 						groupPanel.setMaximumSize(new Dimension(
 								getPreferredSize().width, groupPanel
@@ -497,9 +497,9 @@ public class GroupPanel extends
 						Component component = (Component) entry.getKey();
 						if (!component.equals(firstMember))
 						{
-							ComponentPanel componentPanel = MemberPanelFactory
+							ComponentPanel componentPanel = GroupMemberPanelFactory
 									.createComponentPanel(getFrame(),
-											component, isRequiredOnly,
+											component, i, isRequiredOnly,
 											entry.getValue());
 							componentPanel.setMaximumSize(new Dimension(
 									getPreferredSize().width, componentPanel

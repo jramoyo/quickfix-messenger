@@ -327,9 +327,9 @@ public class QFixMessengerFrame extends JFrame
 	{
 		if (messagePanel != null)
 		{
-			memberPanelCache.encacheAll(messagePanel.getHeaderMembers());
-			memberPanelCache.encacheAll(messagePanel.getBodyMembers());
-			memberPanelCache.encacheAll(messagePanel.getTrailerMembers());
+			memberPanelCache.encacheMembers(messagePanel.getHeaderMembers());
+			memberPanelCache.encacheMembers(messagePanel.getBodyMembers());
+			memberPanelCache.encacheMembers(messagePanel.getTrailerMembers());
 		}
 
 		JPanel mainPanel;
