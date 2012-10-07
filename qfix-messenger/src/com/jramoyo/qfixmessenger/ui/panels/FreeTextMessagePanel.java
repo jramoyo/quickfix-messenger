@@ -34,7 +34,6 @@ package com.jramoyo.qfixmessenger.ui.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -163,15 +162,13 @@ public class FreeTextMessagePanel extends JPanel implements
 
 	private void initComponents()
 	{
-		setMaximumSize(new Dimension(this.getPreferredSize().width,
-				this.getPreferredSize().height));
 		setLayout(new BorderLayout());
 
 		TitledBorder titledBorder = new TitledBorder(
 				new LineBorder(Color.BLACK), "Free Text");
 		setBorder(TitledBorderUtil.formatTitle(titledBorder));
 
-		messageTextArea = new JTextArea(5, 60);
+		messageTextArea = new JTextArea(5, 20);
 		messageTextArea.setLineWrap(true);
 
 		JScrollPane messageTextScrollPane = new JScrollPane(messageTextArea);

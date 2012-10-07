@@ -1592,7 +1592,7 @@ public class QFixMessengerFrame extends JFrame
 					panel.add(messageLabel, c);
 
 					JTextArea messageText = new JTextArea(data.getMessage(), 5,
-							60);
+							40);
 					messageText.setLineWrap(true);
 					messageText.setEditable(false);
 
@@ -1708,7 +1708,7 @@ public class QFixMessengerFrame extends JFrame
 							if (frame.isPreviewBeforeSend)
 							{
 								JTextArea messageText = new JTextArea(
-										message.toString(), 5, 50);
+										message.toString(), 5, 40);
 								messageText.setLineWrap(true);
 								messageText.setEditable(false);
 
