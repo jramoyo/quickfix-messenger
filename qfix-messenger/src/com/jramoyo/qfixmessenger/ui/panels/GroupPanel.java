@@ -49,7 +49,6 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JLayer;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -83,6 +82,8 @@ public class GroupPanel extends
 
 	private final boolean isRequiredOnly;
 
+	private final List<List<MemberPanel<?, ?, ?>>> groups;
+
 	private JLabel groupLabel;
 
 	private LayerUI<JFormattedTextField> layerUI;
@@ -93,14 +94,15 @@ public class GroupPanel extends
 
 	private JPanel groupPanels;
 
-	private List<List<MemberPanel<?, ?, ?>>> groups;
+	private int noOfGroups;
 
 	public GroupPanel(QFixMessengerFrame frame, Group group,
-			boolean isRequiredOnly, boolean isRequired)
+			boolean isRequiredOnly, boolean isRequired, int noOfGroups)
 	{
 		super(frame, group);
 		this.isRequired = isRequired;
 		this.isRequiredOnly = isRequiredOnly;
+		this.noOfGroups = noOfGroups;
 
 		this.groups = new ArrayList<List<MemberPanel<?, ?, ?>>>();
 
@@ -301,6 +303,28 @@ public class GroupPanel extends
 		}
 	}
 
+	List<List<MemberPanel<?, ?, ?>>> getGroups()
+	{
+		return groups;
+	}
+
+	int getNoOfGroups()
+	{
+		String noOfGroupsString = groupTextField.getText().trim();
+		if (noOfGroupsString != null && !noOfGroupsString.equals(""))
+		{
+			try
+			{
+				return Integer.parseInt(noOfGroupsString);
+			} catch (NumberFormatException ex)
+			{
+				// JFormattedTextField should prevent this
+			}
+		}
+
+		return -1;
+	}
+
 	private void initComponents()
 	{
 		setLayout(new GridBagLayout());
@@ -324,13 +348,17 @@ public class GroupPanel extends
 		groupTextField = new JFormattedTextField(
 				NumberFormat.getIntegerInstance());
 		groupTextField.setFocusLostBehavior(JFormattedTextField.COMMIT);
+		if (noOfGroups > 0)
+		{
+			groupTextField.setText(String.valueOf(noOfGroups));
+		}
 		setButton = new JButton("Set");
 		setButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				loadMembers();
+				getFrame().displayMainPanel();
 			}
 		});
 
@@ -355,49 +383,85 @@ public class GroupPanel extends
 
 		c.gridx = 0;
 		c.gridy = 2;
+		loadMembers();
 		add(groupPanels, c);
 	}
 
 	private void loadMembers()
 	{
-		// Clear the members
-		groups.clear();
-		groupPanels.removeAll();
-
-		// Reload the members
-		String noOfGroupsString = groupTextField.getText().trim();
-		if (noOfGroupsString != null && !noOfGroupsString.equals(""))
+		if (getNoOfGroups() > 0)
 		{
-			try
+			for (int i = 0; i < getNoOfGroups(); i++)
 			{
-				int noOfGroups = Integer.parseInt(noOfGroupsString);
+				List<MemberPanel<?, ?, ?>> groupMembers = new ArrayList<MemberPanel<?, ?, ?>>();
 
-				for (int i = 0; i < noOfGroups; i++)
+				int rows = 0;
+				JPanel groupPanel = new JPanel();
+				groupPanel.setLayout(new GridBagLayout());
+				GridBagConstraints c = new GridBagConstraints();
+				c.fill = GridBagConstraints.BOTH;
+				c.weightx = 0.5;
+				c.weighty = 0.0;
+
+				TitledBorder titledBoarder = new TitledBorder(new LineBorder(
+						Color.BLACK), getMember().getName() + " [" + (i + 1)
+						+ "]");
+				groupPanel.setBorder(TitledBorderUtil
+						.formatTitle(titledBoarder));
+
+				Member firstMember = getMember().getFirstMember();
+				if (firstMember != null)
 				{
-					List<MemberPanel<?, ?, ?>> groupMembers = new ArrayList<MemberPanel<?, ?, ?>>();
-
-					int rows = 0;
-					JPanel groupPanel = new JPanel();
-					groupPanel.setLayout(new GridBagLayout());
-					GridBagConstraints c = new GridBagConstraints();
-					c.fill = GridBagConstraints.BOTH;
-					c.weightx = 0.5;
-					c.weighty = 0.0;
-
-					TitledBorder titledBoarder = new TitledBorder(
-							new LineBorder(Color.BLACK), getMember().getName()
-									+ " [" + (i + 1) + "]");
-					groupPanel.setBorder(TitledBorderUtil
-							.formatTitle(titledBoarder));
-
-					Member firstMember = getMember().getFirstMember();
-					if (firstMember != null)
+					if (firstMember instanceof Field)
 					{
-						if (firstMember instanceof Field)
-						{
-							FieldPanel fieldPanel = new FieldPanel(getFrame(),
-									(Field) firstMember, true);
+						FieldPanel fieldPanel = MemberPanelFactory
+								.createFieldPanel(getFrame(),
+										(Field) firstMember, true);
+						fieldPanel.setMaximumSize(new Dimension(
+								getPreferredSize().width, fieldPanel
+										.getPreferredSize().height));
 
+						c.gridx = 0;
+						c.gridy = rows;
+						groupPanel.add(fieldPanel, c);
+						groupMembers.add(fieldPanel);
+						rows++;
+					}
+
+					else if (firstMember instanceof Component)
+					{
+						ComponentPanel componentPanel = MemberPanelFactory
+								.createComponentPanel(getFrame(),
+										(Component) firstMember,
+										isRequiredOnly, true);
+						componentPanel.setMaximumSize(new Dimension(
+								getPreferredSize().width, componentPanel
+										.getPreferredSize().height));
+
+						c.gridx = 0;
+						c.gridy = rows;
+						groupPanel.add(componentPanel, c);
+						groupMembers.add(componentPanel);
+						rows++;
+					}
+				}
+
+				for (Entry<Member, Boolean> entry : getMember().getMembers()
+						.entrySet())
+				{
+					if (isRequiredOnly && !entry.getValue())
+					{
+						continue;
+					}
+
+					if (entry.getKey() instanceof Field)
+					{
+						Field field = (Field) entry.getKey();
+						if (!field.equals(firstMember))
+						{
+							FieldPanel fieldPanel = MemberPanelFactory
+									.createFieldPanel(getFrame(), field,
+											entry.getValue());
 							fieldPanel.setMaximumSize(new Dimension(
 									getPreferredSize().width, fieldPanel
 											.getPreferredSize().height));
@@ -408,13 +472,35 @@ public class GroupPanel extends
 							groupMembers.add(fieldPanel);
 							rows++;
 						}
+					}
 
-						else if (firstMember instanceof Component)
+					if (entry.getKey() instanceof Group)
+					{
+						Group group = (Group) entry.getKey();
+
+						GroupPanel memberGroupPanel = MemberPanelFactory
+								.createGroupPanel(getFrame(), group,
+										isRequiredOnly, entry.getValue());
+						groupPanel.setMaximumSize(new Dimension(
+								getPreferredSize().width, groupPanel
+										.getPreferredSize().height));
+
+						c.gridx = 0;
+						c.gridy = rows;
+						groupPanel.add(memberGroupPanel, c);
+						groupMembers.add(memberGroupPanel);
+						rows++;
+					}
+
+					if (entry.getKey() instanceof Component)
+					{
+						Component component = (Component) entry.getKey();
+						if (!component.equals(firstMember))
 						{
-							ComponentPanel componentPanel = new ComponentPanel(
-									getFrame(), (Component) firstMember,
-									isRequiredOnly, true);
-
+							ComponentPanel componentPanel = MemberPanelFactory
+									.createComponentPanel(getFrame(),
+											component, isRequiredOnly,
+											entry.getValue());
 							componentPanel.setMaximumSize(new Dimension(
 									getPreferredSize().width, componentPanel
 											.getPreferredSize().height));
@@ -426,90 +512,16 @@ public class GroupPanel extends
 							rows++;
 						}
 					}
-
-					for (Entry<Member, Boolean> entry : getMember()
-							.getMembers().entrySet())
-					{
-						if (isRequiredOnly && !entry.getValue())
-						{
-							continue;
-						}
-
-						if (entry.getKey() instanceof Field)
-						{
-							Field field = (Field) entry.getKey();
-							if (!field.equals(firstMember))
-							{
-								FieldPanel fieldPanel = new FieldPanel(
-										getFrame(), field, entry.getValue());
-
-								fieldPanel.setMaximumSize(new Dimension(
-										getPreferredSize().width, fieldPanel
-												.getPreferredSize().height));
-
-								c.gridx = 0;
-								c.gridy = rows;
-								groupPanel.add(fieldPanel, c);
-								groupMembers.add(fieldPanel);
-								rows++;
-							}
-						}
-
-						if (entry.getKey() instanceof Group)
-						{
-							Group group = (Group) entry.getKey();
-							GroupPanel memberGroupPanel = new GroupPanel(
-									getFrame(), group, isRequiredOnly,
-									entry.getValue());
-
-							groupPanel.setMaximumSize(new Dimension(
-									getPreferredSize().width, groupPanel
-											.getPreferredSize().height));
-
-							c.gridx = 0;
-							c.gridy = rows;
-							groupPanel.add(memberGroupPanel, c);
-							groupMembers.add(memberGroupPanel);
-							rows++;
-						}
-
-						if (entry.getKey() instanceof Component)
-						{
-							Component component = (Component) entry.getKey();
-							if (!component.equals(firstMember))
-							{
-								ComponentPanel componentPanel = new ComponentPanel(
-										getFrame(), component, isRequiredOnly,
-										entry.getValue());
-
-								componentPanel
-										.setMaximumSize(new Dimension(
-												getPreferredSize().width,
-												componentPanel
-														.getPreferredSize().height));
-
-								c.gridx = 0;
-								c.gridy = rows;
-								groupPanel.add(componentPanel, c);
-								groupMembers.add(componentPanel);
-								rows++;
-							}
-						}
-					}
-
-					groups.add(groupMembers);
-					groupPanels.add(groupPanel);
 				}
-			} catch (NumberFormatException ex)
-			{
-				JOptionPane.showMessageDialog(this, "Invalid number of group!",
-						"Error", JOptionPane.ERROR_MESSAGE);
+
+				groups.add(groupMembers);
+				groupPanels.add(groupPanel);
 			}
-		} else
+		}
+
+		else
 		{
 			groupPanels.removeAll();
 		}
-
-		getFrame().displayMainPanel();
 	}
 }

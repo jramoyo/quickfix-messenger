@@ -32,6 +32,8 @@
  */
 package com.jramoyo.qfixmessenger.ui.panels;
 
+import java.util.List;
+
 import com.jramoyo.fix.model.Component;
 import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.Group;
@@ -83,15 +85,21 @@ public class MemberPanelFactory
 	{
 		MemberPanel<?, ?, ?> prevMemberPanel = frame.getMemberPanelCache()
 				.getMemberPanel(group);
-		GroupPanel groupPanel;
+		int noOfGroups = 0;
 		if (prevMemberPanel != null)
 		{
-			groupPanel = (GroupPanel) prevMemberPanel;
-		} else
-		{
-			groupPanel = new GroupPanel(frame, group, isRequiredOnly,
-					isRequired);
+			GroupPanel prevGroupPanel = (GroupPanel) prevMemberPanel;
+			noOfGroups = prevGroupPanel.getNoOfGroups();
+			for (List<MemberPanel<?, ?, ?>> memberPanels : prevGroupPanel
+					.getGroups())
+			{
+				frame.getMemberPanelCache().encacheAll(memberPanels);
+			}
 		}
+
+		GroupPanel groupPanel = new GroupPanel(frame, group, isRequiredOnly,
+				isRequired, noOfGroups);
+		frame.getMemberPanelCache().encache(groupPanel);
 
 		return groupPanel;
 	}
