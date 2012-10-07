@@ -75,8 +75,6 @@ public class ComponentPanel extends
 
 	private final List<MemberPanel<?, ?, ?>> members;
 
-	private final List<MemberPanel<?, ?, ?>> prevMembers;
-
 	private JLabel componentLabel;
 
 	private JPanel membersPanel;
@@ -87,9 +85,7 @@ public class ComponentPanel extends
 		super(frame, component);
 		this.isRequiredOnly = isRequiredOnly;
 		this.isRequired = isRequired;
-
 		this.members = new ArrayList<MemberPanel<?, ?, ?>>();
-		this.prevMembers = new ArrayList<MemberPanel<?, ?, ?>>();
 
 		initComponents();
 	}
@@ -261,7 +257,7 @@ public class ComponentPanel extends
 		if (firstTag != null)
 		{
 			FieldPanel fieldPanel = MemberPanelFactory.createFieldPanel(
-					getFrame(), prevMembers, firstTag, true);
+					getFrame(), firstTag, true);
 			fieldPanel.setMaximumSize(new Dimension(getPreferredSize().width,
 					fieldPanel.getPreferredSize().height));
 
@@ -284,7 +280,7 @@ public class ComponentPanel extends
 				if (!field.equals(firstTag))
 				{
 					FieldPanel fieldPanel = MemberPanelFactory
-							.createFieldPanel(getFrame(), prevMembers, field,
+							.createFieldPanel(getFrame(), field,
 									entry.getValue());
 					fieldPanel.setMaximumSize(new Dimension(
 							getPreferredSize().width, fieldPanel
@@ -302,8 +298,7 @@ public class ComponentPanel extends
 				Group group = (Group) entry.getKey();
 
 				GroupPanel groupPanel = MemberPanelFactory.createGroupPanel(
-						getFrame(), prevMembers, group, isRequiredOnly,
-						entry.getValue());
+						getFrame(), group, isRequiredOnly, entry.getValue());
 				groupPanel.setMaximumSize(new Dimension(
 						getPreferredSize().width,
 						groupPanel.getPreferredSize().height));
@@ -319,8 +314,8 @@ public class ComponentPanel extends
 				Component component = (Component) entry.getKey();
 
 				ComponentPanel componentPanel = MemberPanelFactory
-						.createComponentPanel(getFrame(), prevMembers,
-								component, isRequiredOnly, entry.getValue());
+						.createComponentPanel(getFrame(), component,
+								isRequiredOnly, entry.getValue());
 				componentPanel.setMaximumSize(new Dimension(
 						getPreferredSize().width, componentPanel
 								.getPreferredSize().height));
@@ -331,8 +326,5 @@ public class ComponentPanel extends
 				members.add(componentPanel);
 			}
 		}
-
-		// Cleanup
-		prevMembers.clear();
 	}
 }

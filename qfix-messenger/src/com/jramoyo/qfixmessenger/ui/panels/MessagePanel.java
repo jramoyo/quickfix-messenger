@@ -67,7 +67,6 @@ import com.jramoyo.fix.xml.TrailerType;
 import com.jramoyo.qfixmessenger.QFixMessengerConstants;
 import com.jramoyo.qfixmessenger.quickfix.util.QFixUtil;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
-import com.jramoyo.qfixmessenger.ui.util.MemberPanelCache;
 import com.jramoyo.qfixmessenger.ui.util.TitledBorderUtil;
 
 /**
@@ -93,8 +92,6 @@ public class MessagePanel extends JPanel implements
 	private final boolean isModifyTrailer;
 
 	private final boolean isFixTSession;
-
-	private final MemberPanelCache memberPanelCache;
 
 	private final List<MemberPanel<?, ?, ?>> headerMembers;
 
@@ -123,8 +120,6 @@ public class MessagePanel extends JPanel implements
 		this.headerMembers = new ArrayList<MemberPanel<?, ?, ?>>();
 		this.bodyMembers = new ArrayList<MemberPanel<?, ?, ?>>();
 		this.trailerMembers = new ArrayList<MemberPanel<?, ?, ?>>();
-
-		this.memberPanelCache = builder.memberPanelCache;
 
 		this.dictionary = builder.dictionary;
 		this.fixTDictionary = builder.fixTDictionary;
@@ -471,18 +466,14 @@ public class MessagePanel extends JPanel implements
 				for (Entry<Member, Boolean> entry : dictionary.getHeader()
 						.getMembers().entrySet())
 				{
-					loadMember(headerPanel,
-							memberPanelCache.getHeaderMembers(), headerMembers,
-							entry);
+					loadMember(headerPanel, headerMembers, entry);
 				}
 			} else
 			{
 				for (Entry<Member, Boolean> entry : fixTDictionary.getHeader()
 						.getMembers().entrySet())
 				{
-					loadMember(headerPanel,
-							memberPanelCache.getHeaderMembers(), headerMembers,
-							entry);
+					loadMember(headerPanel, headerMembers, entry);
 				}
 			}
 
@@ -500,8 +491,7 @@ public class MessagePanel extends JPanel implements
 
 		for (Entry<Member, Boolean> entry : message.getMembers().entrySet())
 		{
-			loadMember(bodyPanel, memberPanelCache.getBodyMembers(),
-					bodyMembers, entry);
+			loadMember(bodyPanel, bodyMembers, entry);
 		}
 
 		add(bodyPanel);
@@ -522,18 +512,14 @@ public class MessagePanel extends JPanel implements
 				for (Entry<Member, Boolean> entry : dictionary.getTrailer()
 						.getMembers().entrySet())
 				{
-					loadMember(trailerPanel,
-							memberPanelCache.getTrailerMembers(),
-							trailerMembers, entry);
+					loadMember(trailerPanel, trailerMembers, entry);
 				}
 			} else
 			{
 				for (Entry<Member, Boolean> entry : fixTDictionary.getTrailer()
 						.getMembers().entrySet())
 				{
-					loadMember(trailerPanel,
-							memberPanelCache.getTrailerMembers(),
-							trailerMembers, entry);
+					loadMember(trailerPanel, trailerMembers, entry);
 				}
 			}
 
@@ -543,7 +529,6 @@ public class MessagePanel extends JPanel implements
 	}
 
 	private void loadMember(JPanel mainPanel,
-			List<MemberPanel<?, ?, ?>> previousMemberList,
 			List<MemberPanel<?, ?, ?>> memberList, Entry<Member, Boolean> entry)
 	{
 		if (isRequiredOnly && !entry.getValue())
@@ -556,7 +541,7 @@ public class MessagePanel extends JPanel implements
 			Field field = (Field) entry.getKey();
 
 			FieldPanel fieldPanel = MemberPanelFactory.createFieldPanel(frame,
-					previousMemberList, field, entry.getValue());
+					field, entry.getValue());
 			fieldPanel.setMaximumSize(new Dimension(
 					fieldPanel.getMaximumSize().width, fieldPanel
 							.getPreferredSize().height));
@@ -569,9 +554,8 @@ public class MessagePanel extends JPanel implements
 		{
 			Group group = (Group) entry.getKey();
 
-			GroupPanel groupPanel = MemberPanelFactory
-					.createGroupPanel(frame, previousMemberList, group,
-							isRequiredOnly, entry.getValue());
+			GroupPanel groupPanel = MemberPanelFactory.createGroupPanel(frame,
+					group, isRequiredOnly, entry.getValue());
 			groupPanel.setMaximumSize(new Dimension(
 					groupPanel.getMaximumSize().width, groupPanel
 							.getPreferredSize().height));
@@ -585,8 +569,8 @@ public class MessagePanel extends JPanel implements
 			Component component = (Component) entry.getKey();
 
 			ComponentPanel componentPanel = MemberPanelFactory
-					.createComponentPanel(frame, previousMemberList, component,
-							isRequiredOnly, entry.getValue());
+					.createComponentPanel(frame, component, isRequiredOnly,
+							entry.getValue());
 			componentPanel.setMaximumSize(new Dimension(componentPanel
 					.getMaximumSize().width,
 					componentPanel.getPreferredSize().height));
@@ -613,8 +597,6 @@ public class MessagePanel extends JPanel implements
 		private boolean isModifyTrailer;
 
 		private boolean isFixTSession;
-
-		private MemberPanelCache memberPanelCache;
 
 		private List<MemberPanel<?, ?, ?>> prevHeaderMembers;
 
@@ -649,11 +631,6 @@ public class MessagePanel extends JPanel implements
 		public QFixMessengerFrame getFrame()
 		{
 			return frame;
-		}
-
-		public MemberPanelCache getMemberPanelCache()
-		{
-			return memberPanelCache;
 		}
 
 		public Message getMessage()
@@ -739,11 +716,6 @@ public class MessagePanel extends JPanel implements
 		public void setIsRequiredOnly(boolean isRequiredOnly)
 		{
 			this.isRequiredOnly = isRequiredOnly;
-		}
-
-		public void setMemberPanelCache(MemberPanelCache memberPanelCache)
-		{
-			this.memberPanelCache = memberPanelCache;
 		}
 
 		public void setMessage(Message message)

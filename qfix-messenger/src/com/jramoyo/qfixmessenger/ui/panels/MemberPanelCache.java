@@ -30,12 +30,13 @@
  * MemberPanelCache.java
  * Oct 4, 2012
  */
-package com.jramoyo.qfixmessenger.ui.util;
+package com.jramoyo.qfixmessenger.ui.panels;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-import com.jramoyo.qfixmessenger.ui.panels.MemberPanel;
+import com.jramoyo.fix.model.Member;
 
 /**
  * Cache for MemberPanels
@@ -44,38 +45,23 @@ import com.jramoyo.qfixmessenger.ui.panels.MemberPanel;
  */
 public class MemberPanelCache
 {
-	private final List<MemberPanel<?, ?, ?>> headerMembers;
-
-	private final List<MemberPanel<?, ?, ?>> bodyMembers;
-
-	private final List<MemberPanel<?, ?, ?>> trailerMembers;
+	private final ConcurrentMap<Member, MemberPanel<?, ?, ?>> cache;
 
 	public MemberPanelCache()
 	{
-		headerMembers = new ArrayList<>();
-		bodyMembers = new ArrayList<>();
-		trailerMembers = new ArrayList<>();
+		cache = new ConcurrentHashMap<>();
 	}
 
-	public void clear()
+	public void encache(List<MemberPanel<?, ?, ?>> memberPanels)
 	{
-		trailerMembers.clear();
-		bodyMembers.clear();
-		headerMembers.clear();
+		for (MemberPanel<?, ?, ?> memberPanel : memberPanels)
+		{
+			cache.put(memberPanel.getMember(), memberPanel);
+		}
 	}
 
-	public List<MemberPanel<?, ?, ?>> getBodyMembers()
+	public MemberPanel<?, ?, ?> getMemberPanel(Member member)
 	{
-		return bodyMembers;
-	}
-
-	public List<MemberPanel<?, ?, ?>> getHeaderMembers()
-	{
-		return headerMembers;
-	}
-
-	public List<MemberPanel<?, ?, ?>> getTrailerMembers()
-	{
-		return trailerMembers;
+		return cache.get(member);
 	}
 }

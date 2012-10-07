@@ -32,12 +32,9 @@
  */
 package com.jramoyo.qfixmessenger.ui.panels;
 
-import java.util.List;
-
 import com.jramoyo.fix.model.Component;
 import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.Group;
-import com.jramoyo.fix.model.Member;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 
 /**
@@ -46,11 +43,10 @@ import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 public class MemberPanelFactory
 {
 	public static ComponentPanel createComponentPanel(QFixMessengerFrame frame,
-			List<MemberPanel<?, ?, ?>> prevMembers, Component component,
-			boolean isRequiredOnly, boolean isRequired)
+			Component component, boolean isRequiredOnly, boolean isRequired)
 	{
-		MemberPanel<?, ?, ?> prevMemberPanel = findPreviousPanelByMember(
-				prevMembers, component);
+		MemberPanel<?, ?, ?> prevMemberPanel = frame.getMemberPanelCache()
+				.getMemberPanel(component);
 		ComponentPanel componentPanel;
 		if (prevMemberPanel != null)
 		{
@@ -65,11 +61,10 @@ public class MemberPanelFactory
 	}
 
 	public static FieldPanel createFieldPanel(QFixMessengerFrame frame,
-			List<MemberPanel<?, ?, ?>> prevMembers, Field field,
-			boolean isRequired)
+			Field field, boolean isRequired)
 	{
-		MemberPanel<?, ?, ?> prevMemberPanel = findPreviousPanelByMember(
-				prevMembers, field);
+		MemberPanel<?, ?, ?> prevMemberPanel = frame.getMemberPanelCache()
+				.getMemberPanel(field);
 		FieldPanel fieldPanel;
 		if (prevMemberPanel != null)
 		{
@@ -83,11 +78,10 @@ public class MemberPanelFactory
 	}
 
 	public static GroupPanel createGroupPanel(QFixMessengerFrame frame,
-			List<MemberPanel<?, ?, ?>> prevMembers, Group group,
-			boolean isRequiredOnly, boolean isRequired)
+			Group group, boolean isRequiredOnly, boolean isRequired)
 	{
-		MemberPanel<?, ?, ?> prevMemberPanel = findPreviousPanelByMember(
-				prevMembers, group);
+		MemberPanel<?, ?, ?> prevMemberPanel = frame.getMemberPanelCache()
+				.getMemberPanel(group);
 		GroupPanel groupPanel;
 		if (prevMemberPanel != null)
 		{
@@ -99,19 +93,5 @@ public class MemberPanelFactory
 		}
 
 		return groupPanel;
-	}
-
-	private static MemberPanel<?, ?, ?> findPreviousPanelByMember(
-			List<MemberPanel<?, ?, ?>> prevMembers, Member member)
-	{
-		for (MemberPanel<?, ?, ?> memberPanel : prevMembers)
-		{
-			if (memberPanel.getMember().equals(member))
-			{
-				return memberPanel;
-			}
-		}
-
-		return null;
 	}
 }

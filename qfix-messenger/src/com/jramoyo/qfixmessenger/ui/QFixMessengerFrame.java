@@ -129,13 +129,13 @@ import com.jramoyo.qfixmessenger.ui.listeners.SessionsListSessionStateListener;
 import com.jramoyo.qfixmessenger.ui.models.MessagesTableModel;
 import com.jramoyo.qfixmessenger.ui.models.data.MessagesTableModelData;
 import com.jramoyo.qfixmessenger.ui.panels.FreeTextMessagePanel;
+import com.jramoyo.qfixmessenger.ui.panels.MemberPanelCache;
 import com.jramoyo.qfixmessenger.ui.panels.MessagePanel;
 import com.jramoyo.qfixmessenger.ui.panels.MessagePanel.MessagePanelBuilder;
 import com.jramoyo.qfixmessenger.ui.renderers.MessagesListCellRenderer;
 import com.jramoyo.qfixmessenger.ui.renderers.MessagesTableCellRender;
 import com.jramoyo.qfixmessenger.ui.renderers.SessionsListCellRenderer;
 import com.jramoyo.qfixmessenger.ui.util.Icons;
-import com.jramoyo.qfixmessenger.ui.util.MemberPanelCache;
 
 /**
  * Main application frame
@@ -195,6 +195,8 @@ public class QFixMessengerFrame extends JFrame
 	private final QFixMessenger messenger;
 
 	private final FixDictionary fixTDictionary;
+
+	private final MemberPanelCache memberPanelCache;
 
 	private String frameTitle;
 
@@ -266,8 +268,6 @@ public class QFixMessengerFrame extends JFrame
 
 	private ProjectDialog projectDialog;
 
-	private MemberPanelCache memberPanelCache;
-
 	private QFixMessengerFrame(QFixMessenger messenger)
 	{
 		super();
@@ -327,12 +327,9 @@ public class QFixMessengerFrame extends JFrame
 	{
 		if (messagePanel != null)
 		{
-			memberPanelCache.getHeaderMembers().addAll(
-					messagePanel.getHeaderMembers());
-			memberPanelCache.getBodyMembers().addAll(
-					messagePanel.getBodyMembers());
-			memberPanelCache.getTrailerMembers().addAll(
-					messagePanel.getTrailerMembers());
+			memberPanelCache.encache(messagePanel.getHeaderMembers());
+			memberPanelCache.encache(messagePanel.getBodyMembers());
+			memberPanelCache.encache(messagePanel.getTrailerMembers());
 		}
 
 		JPanel mainPanel;
@@ -350,7 +347,6 @@ public class QFixMessengerFrame extends JFrame
 				builder.setIsModifyHeader(isModifyHeader);
 				builder.setIsModifyTrailer(isModifyTrailer);
 				builder.setIsFixTSession(isFixTSession);
-				builder.setMemberPanelCache(memberPanelCache);
 				builder.setDictionary(activeDictionary);
 				builder.setFixTDictionary(fixTDictionary);
 
@@ -380,6 +376,11 @@ public class QFixMessengerFrame extends JFrame
 	public ProjectType getActiveXmlProject()
 	{
 		return activeXmlProject;
+	}
+
+	public MemberPanelCache getMemberPanelCache()
+	{
+		return memberPanelCache;
 	}
 
 	/**
