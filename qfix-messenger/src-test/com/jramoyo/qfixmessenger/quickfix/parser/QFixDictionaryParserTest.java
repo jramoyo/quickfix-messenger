@@ -32,24 +32,22 @@
  */
 package com.jramoyo.qfixmessenger.quickfix.parser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.fail;
 
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
 
 import com.jramoyo.fix.model.Component;
 import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.FieldValue;
 import com.jramoyo.fix.model.FixDictionary;
 import com.jramoyo.fix.model.Group;
-import com.jramoyo.fix.model.Member;
+import com.jramoyo.fix.model.MemberOrder;
 import com.jramoyo.fix.model.Message;
 import com.jramoyo.fix.model.parser.FixDictionaryParser;
 import com.jramoyo.fix.model.parser.FixParsingException;
@@ -59,7 +57,7 @@ import com.jramoyo.fix.model.parser.FixParsingException;
  * 
  * @author jamoyo
  */
-@RunWith(BlockJUnit4ClassRunner.class)
+
 public class QFixDictionaryParserTest
 {
 	private static final String INDENT = "   ";
@@ -363,7 +361,7 @@ public class QFixDictionaryParserTest
 	{
 		assertNotNull(component.getName());
 		assertNotNull(component.getMembers());
-		for (Member member : component.getMembers().keySet())
+		for (MemberOrder member : component.getMembers().keySet())
 		{
 			assertMembers(member);
 		}
@@ -389,29 +387,29 @@ public class QFixDictionaryParserTest
 		assertNotNull(group.getName());
 		assertNotNull(group.getNumber());
 		assertNotNull(group.getMembers());
-		for (Member member : group.getMembers().keySet())
+		for (MemberOrder member : group.getMembers().keySet())
 		{
 			assertMembers(member);
 		}
 	}
 
-	private void assertMembers(Member member)
+	private void assertMembers(MemberOrder member)
 	{
-		if (member instanceof Field)
+		if (member.getMember() instanceof Field)
 		{
-			Field field = (Field) member;
+			Field field = (Field) member.getMember();
 			assertField(field);
 		}
 
-		if (member instanceof Group)
+		if (member.getMember() instanceof Group)
 		{
-			Group group = (Group) member;
+			Group group = (Group) member.getMember();
 			assertGroup(group);
 		}
 
-		if (member instanceof Component)
+		if (member.getMember() instanceof Component)
 		{
-			Component component = (Component) member;
+			Component component = (Component) member.getMember();
 			assertComponent(component);
 		}
 	}
@@ -421,7 +419,7 @@ public class QFixDictionaryParserTest
 		assertNotNull(message.getName());
 		assertNotNull(message.getMsgType());
 		assertNotNull(message.getCategory());
-		for (Member member : message.getMembers().keySet())
+		for (MemberOrder member : message.getMembers().keySet())
 		{
 			assertMembers(member);
 		}
@@ -495,25 +493,25 @@ public class QFixDictionaryParserTest
 		displayMembers(indent + INDENT, group.getMembers());
 	}
 
-	private void displayMembers(String indent, Map<Member, Boolean> members)
+	private void displayMembers(String indent, Map<MemberOrder, Boolean> members)
 	{
-		for (Entry<Member, Boolean> entry : members.entrySet())
+		for (Entry<MemberOrder, Boolean> entry : members.entrySet())
 		{
-			if (entry.getKey() instanceof Field)
+			if (entry.getKey().getMember() instanceof Field)
 			{
-				Field field = (Field) entry.getKey();
+				Field field = (Field) entry.getKey().getMember();
 				displayField(indent, field, entry.getValue());
 			}
 
-			if (entry.getKey() instanceof Group)
+			if (entry.getKey().getMember() instanceof Group)
 			{
-				Group group = (Group) entry.getKey();
+				Group group = (Group) entry.getKey().getMember();
 				displayGroup(indent, group, entry.getValue());
 			}
 
-			if (entry.getKey() instanceof Component)
+			if (entry.getKey().getMember() instanceof Component)
 			{
-				Component component = (Component) entry.getKey();
+				Component component = (Component) entry.getKey().getMember();
 				displayComponent(indent, component, entry.getValue());
 			}
 		}

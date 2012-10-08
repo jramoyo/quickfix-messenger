@@ -46,19 +46,20 @@ public final class Group extends AbstractMember
 {
 	private final Field field;
 	private final Member firstMember;
-	private final SortedMap<Member, Boolean> members;
+	private final SortedMap<MemberOrder, Boolean> members;
 
-	public Group(Field field, Map<Member, Boolean> members, Member firstMember)
+	public Group(Field field, Map<MemberOrder, Boolean> members,
+			Member firstMember)
 	{
 		this.field = field;
-		this.members = new TreeMap<Member, Boolean>(members);
+		this.members = new TreeMap<MemberOrder, Boolean>(members);
 		this.firstMember = firstMember;
 	}
 
 	public Group(Group group)
 	{
 		this.field = group.field;
-		this.members = new TreeMap<Member, Boolean>(group.members);
+		this.members = new TreeMap<MemberOrder, Boolean>(group.members);
 		this.firstMember = group.firstMember;
 	}
 
@@ -67,7 +68,7 @@ public final class Group extends AbstractMember
 		return firstMember;
 	}
 
-	public Map<Member, Boolean> getMembers()
+	public Map<MemberOrder, Boolean> getMembers()
 	{
 		return Collections.unmodifiableMap(members);
 	}
@@ -86,8 +87,9 @@ public final class Group extends AbstractMember
 	@Override
 	public String toString()
 	{
-		return new StringBuilder(field.getName()).append("(").append(
-				field.getNumber()).append(")").append(" [GROUP]").toString();
+		return new StringBuilder(field.getName()).append("(")
+				.append(field.getNumber()).append(")").append(" [GROUP]")
+				.toString();
 	}
 
 	@Override

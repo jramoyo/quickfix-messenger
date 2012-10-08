@@ -44,19 +44,19 @@ import java.util.TreeMap;
  */
 public class Header
 {
-	private final SortedMap<Member, Boolean> members;
+	private final SortedMap<MemberOrder, Boolean> members;
 
-	public Header(Map<Member, Boolean> members)
+	public Header(Map<MemberOrder, Boolean> members)
 	{
-		this.members = new TreeMap<Member, Boolean>(members);
+		this.members = new TreeMap<MemberOrder, Boolean>(members);
 	}
 
 	public Header(Header header)
 	{
-		this.members = new TreeMap<Member, Boolean>(header.members);
+		this.members = new TreeMap<MemberOrder, Boolean>(header.members);
 	}
 
-	public Map<Member, Boolean> getMembers()
+	public Map<MemberOrder, Boolean> getMembers()
 	{
 		return Collections.unmodifiableMap(members);
 	}

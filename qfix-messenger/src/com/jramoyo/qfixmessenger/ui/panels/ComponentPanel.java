@@ -52,7 +52,7 @@ import quickfix.StringField;
 import com.jramoyo.fix.model.Component;
 import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.Group;
-import com.jramoyo.fix.model.Member;
+import com.jramoyo.fix.model.MemberOrder;
 import com.jramoyo.fix.xml.ComponentType;
 import com.jramoyo.fix.xml.FieldType;
 import com.jramoyo.fix.xml.GroupsType;
@@ -272,16 +272,17 @@ public class ComponentPanel extends
 			members.add(fieldPanel);
 		}
 
-		for (Entry<Member, Boolean> entry : getMember().getMembers().entrySet())
+		for (Entry<MemberOrder, Boolean> entry : getMember().getMembers()
+				.entrySet())
 		{
 			if (isRequiredOnly && !entry.getValue())
 			{
 				continue;
 			}
 
-			if (entry.getKey() instanceof Field)
+			if (entry.getKey().getMember() instanceof Field)
 			{
-				Field field = (Field) entry.getKey();
+				Field field = (Field) entry.getKey().getMember();
 				if (!field.equals(firstTag))
 				{
 					FieldPanel fieldPanel = MemberPanelFactory
@@ -298,9 +299,9 @@ public class ComponentPanel extends
 				}
 			}
 
-			if (entry.getKey() instanceof Group)
+			if (entry.getKey().getMember() instanceof Group)
 			{
-				Group group = (Group) entry.getKey();
+				Group group = (Group) entry.getKey().getMember();
 
 				GroupPanel groupPanel = MemberPanelFactory.createGroupPanel(
 						getFrame(), group, isRequiredOnly, entry.getValue());
@@ -314,9 +315,9 @@ public class ComponentPanel extends
 				members.add(groupPanel);
 			}
 
-			if (entry.getKey() instanceof Component)
+			if (entry.getKey().getMember() instanceof Component)
 			{
-				Component component = (Component) entry.getKey();
+				Component component = (Component) entry.getKey().getMember();
 
 				ComponentPanel componentPanel = MemberPanelFactory
 						.createComponentPanel(getFrame(), component,

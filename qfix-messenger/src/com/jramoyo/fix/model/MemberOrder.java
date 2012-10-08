@@ -25,64 +25,46 @@
  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF 
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
- * DAMAGE. 
- * 
- * Component.java
- * 6 Jun 2011
+ * DAMAGE.
+ *
+ * MemberOrder.java
+ * 8 Oct 2012
  */
 package com.jramoyo.fix.model;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 /**
- * Represents a FIX Message Component
+ * Encapsulates the order in which a member is defined.
  * 
- * @author jamoyo
+ * @author jramoyo
  */
-public final class Component extends AbstractMember
+public final class MemberOrder implements Comparable<MemberOrder>
 {
-	private final String name;
-	private final SortedMap<MemberOrder, Boolean> members;
-	private final Field firstTag;
+	private final Integer index;
+	private final Member member;
 
-	public Component(String name, Map<MemberOrder, Boolean> members,
-			Field firstTag)
+	public MemberOrder(Integer index, Member member)
 	{
-		this.name = name;
-		this.members = new TreeMap<MemberOrder, Boolean>(members);
-		this.firstTag = firstTag;
+		this.index = index;
+		this.member = member;
 	}
 
-	public Component(Component component)
-	{
-		this.name = component.name;
-		this.members = new TreeMap<MemberOrder, Boolean>(component.members);
-		this.firstTag = component.firstTag;
-	}
-
+	/**
+	 * MemberOrders are compared against the index
+	 */
 	@Override
-	public String getName()
+	public int compareTo(MemberOrder memberOrder)
 	{
-		return name;
+		return index.compareTo(memberOrder.index);
 	}
 
-	public Map<MemberOrder, Boolean> getMembers()
+	public int getIndex()
 	{
-		return Collections.unmodifiableMap(members);
+		return index;
 	}
 
-	public Field getFirstField()
+	public Member getMember()
 	{
-		return firstTag;
-	}
-
-	@Override
-	public String toString()
-	{
-		return name;
+		return member;
 	}
 
 	@Override
@@ -90,10 +72,8 @@ public final class Component extends AbstractMember
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((firstTag == null) ? 0 : firstTag.hashCode());
-		result = prime * result + ((members == null) ? 0 : members.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((index == null) ? 0 : index.hashCode());
+		result = prime * result + ((member == null) ? 0 : member.hashCode());
 		return result;
 	}
 
@@ -106,24 +86,18 @@ public final class Component extends AbstractMember
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Component other = (Component) obj;
-		if (firstTag == null)
+		MemberOrder other = (MemberOrder) obj;
+		if (index == null)
 		{
-			if (other.firstTag != null)
+			if (other.index != null)
 				return false;
-		} else if (!firstTag.equals(other.firstTag))
+		} else if (!index.equals(other.index))
 			return false;
-		if (members == null)
+		if (member == null)
 		{
-			if (other.members != null)
+			if (other.member != null)
 				return false;
-		} else if (!members.equals(other.members))
-			return false;
-		if (name == null)
-		{
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
+		} else if (!member.equals(other.member))
 			return false;
 		return true;
 	}

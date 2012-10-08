@@ -36,9 +36,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -62,6 +63,7 @@ import com.jramoyo.fix.model.FixDictionary;
 import com.jramoyo.fix.model.Group;
 import com.jramoyo.fix.model.Header;
 import com.jramoyo.fix.model.Member;
+import com.jramoyo.fix.model.MemberOrder;
 import com.jramoyo.fix.model.Message;
 import com.jramoyo.fix.model.MessageCategory;
 import com.jramoyo.fix.model.Trailer;
@@ -196,7 +198,7 @@ public class QFixDictionaryParser implements FixDictionaryParser
 			firstTag = dictionary.getFields().get(firstTagName);
 		}
 
-		Map<Member, Boolean> members = parseMembers(dictionary,
+		Map<MemberOrder, Boolean> members = parseMembers(dictionary,
 				componentElement);
 
 		return new Component(name, members, firstTag);
@@ -315,7 +317,8 @@ public class QFixDictionaryParser implements FixDictionaryParser
 		String groupName = groupElement.getAttributeValue("name");
 
 		Field field = dictionary.getFields().get(groupName);
-		Map<Member, Boolean> members = parseMembers(dictionary, groupElement);
+		Map<MemberOrder, Boolean> members = parseMembers(dictionary,
+				groupElement);
 
 		Member firstMember = null;
 		Element firstChildElement = (Element) groupElement.getChildren().get(0);
@@ -345,19 +348,22 @@ public class QFixDictionaryParser implements FixDictionaryParser
 	private void parseHeader(FixDictionary dictionary, Element headerElement)
 			throws FixParsingException
 	{
-		Map<Member, Boolean> members = parseMembers(dictionary, headerElement);
+		Map<MemberOrder, Boolean> members = parseMembers(dictionary,
+				headerElement);
 		dictionary.setHeader(new Header(members));
 	}
 
-	private Map<Member, Boolean> parseMembers(FixDictionary dictionary,
-			Element element) throws FixParsingException
+	private SortedMap<MemberOrder, Boolean> parseMembers(
+			FixDictionary dictionary, Element element)
+			throws FixParsingException
 	{
-		Map<Member, Boolean> members = new HashMap<Member, Boolean>();
+		SortedMap<MemberOrder, Boolean> members = new TreeMap<MemberOrder, Boolean>();
 
 		@SuppressWarnings("unchecked")
 		List<Element> memberElements = element.getChildren();
-		for (Element memberElement : memberElements)
+		for (int i = 0; i < memberElements.size(); i++)
 		{
+			Element memberElement = memberElements.get(i);
 			if (memberElement.getName().equals("field"))
 			{
 				String fieldName = memberElement.getAttributeValue("name");
@@ -367,7 +373,7 @@ public class QFixDictionaryParser implements FixDictionaryParser
 				Field field = dictionary.getFields().get(fieldName);
 				if (field != null)
 				{
-					members.put(field, isRequired);
+					members.put(new MemberOrder(i, field), isRequired);
 				} else
 				{
 					throw new FixParsingException(fieldName
@@ -375,14 +381,17 @@ public class QFixDictionaryParser implements FixDictionaryParser
 				}
 			}
 
-			if (memberElement.getName().equals("group"))
+			else if (memberElement.getName().equals("group"))
 			{
 				Boolean isRequired = convertStringToBoolean(memberElement
 						.getAttributeValue("required"));
-				members.put(parseGroup(dictionary, memberElement), isRequired);
+				members.put(
+						new MemberOrder(i,
+								parseGroup(dictionary, memberElement)),
+						isRequired);
 			}
 
-			if (memberElement.getName().equals("component"))
+			else if (memberElement.getName().equals("component"))
 			{
 				String componentName = memberElement.getAttributeValue("name");
 				Boolean isRequired = convertStringToBoolean(memberElement
@@ -408,7 +417,7 @@ public class QFixDictionaryParser implements FixDictionaryParser
 						}
 					}
 				}
-				members.put(component, isRequired);
+				members.put(new MemberOrder(i, component), isRequired);
 			}
 		}
 
@@ -424,7 +433,8 @@ public class QFixDictionaryParser implements FixDictionaryParser
 		String msgType = messageElement.getAttributeValue("msgtype");
 		MessageCategory category = MessageCategory.valueOf(messageElement
 				.getAttributeValue("msgcat"));
-		Map<Member, Boolean> members = parseMembers(dictionary, messageElement);
+		Map<MemberOrder, Boolean> members = parseMembers(dictionary,
+				messageElement);
 
 		return new Message(name, msgType, category, members);
 	}
@@ -492,7 +502,8 @@ public class QFixDictionaryParser implements FixDictionaryParser
 	private void parseTrailer(FixDictionary dictionary, Element trailerElement)
 			throws FixParsingException
 	{
-		Map<Member, Boolean> members = parseMembers(dictionary, trailerElement);
+		Map<MemberOrder, Boolean> members = parseMembers(dictionary,
+				trailerElement);
 		dictionary.setTrailer(new Trailer(members));
 	}
 

@@ -99,7 +99,7 @@ import quickfix.Session;
 import quickfix.SessionID;
 
 import com.jramoyo.fix.model.FixDictionary;
-import com.jramoyo.fix.model.Member;
+import com.jramoyo.fix.model.MemberOrder;
 import com.jramoyo.fix.model.Message;
 import com.jramoyo.fix.model.parser.FixDictionaryParser;
 import com.jramoyo.fix.model.parser.FixParsingException;
@@ -188,7 +188,7 @@ public class QFixMessengerFrame extends JFrame
 	}
 
 	private final Message freeTextMessage = new Message("Free Text",
-			"FIX Message", null, new HashMap<Member, Boolean>());
+			"FIX Message", null, new HashMap<MemberOrder, Boolean>());
 
 	private final JPanel blankPanel = new JPanel();
 

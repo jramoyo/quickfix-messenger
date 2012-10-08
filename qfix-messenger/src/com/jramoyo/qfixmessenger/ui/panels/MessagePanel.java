@@ -53,7 +53,7 @@ import com.jramoyo.fix.model.Component;
 import com.jramoyo.fix.model.Field;
 import com.jramoyo.fix.model.FixDictionary;
 import com.jramoyo.fix.model.Group;
-import com.jramoyo.fix.model.Member;
+import com.jramoyo.fix.model.MemberOrder;
 import com.jramoyo.fix.model.Message;
 import com.jramoyo.fix.xml.BodyType;
 import com.jramoyo.fix.xml.ComponentType;
@@ -463,15 +463,15 @@ public class MessagePanel extends JPanel implements
 
 			if (!isFixTSession)
 			{
-				for (Entry<Member, Boolean> entry : dictionary.getHeader()
+				for (Entry<MemberOrder, Boolean> entry : dictionary.getHeader()
 						.getMembers().entrySet())
 				{
 					loadMember(headerPanel, headerMembers, entry);
 				}
 			} else
 			{
-				for (Entry<Member, Boolean> entry : fixTDictionary.getHeader()
-						.getMembers().entrySet())
+				for (Entry<MemberOrder, Boolean> entry : fixTDictionary
+						.getHeader().getMembers().entrySet())
 				{
 					loadMember(headerPanel, headerMembers, entry);
 				}
@@ -489,7 +489,8 @@ public class MessagePanel extends JPanel implements
 				"Message Body");
 		bodyPanel.setBorder(TitledBorderUtil.formatTitle(bodyBorder));
 
-		for (Entry<Member, Boolean> entry : message.getMembers().entrySet())
+		for (Entry<MemberOrder, Boolean> entry : message.getMembers()
+				.entrySet())
 		{
 			loadMember(bodyPanel, bodyMembers, entry);
 		}
@@ -509,15 +510,15 @@ public class MessagePanel extends JPanel implements
 
 			if (!isFixTSession)
 			{
-				for (Entry<Member, Boolean> entry : dictionary.getTrailer()
-						.getMembers().entrySet())
+				for (Entry<MemberOrder, Boolean> entry : dictionary
+						.getTrailer().getMembers().entrySet())
 				{
 					loadMember(trailerPanel, trailerMembers, entry);
 				}
 			} else
 			{
-				for (Entry<Member, Boolean> entry : fixTDictionary.getTrailer()
-						.getMembers().entrySet())
+				for (Entry<MemberOrder, Boolean> entry : fixTDictionary
+						.getTrailer().getMembers().entrySet())
 				{
 					loadMember(trailerPanel, trailerMembers, entry);
 				}
@@ -529,16 +530,17 @@ public class MessagePanel extends JPanel implements
 	}
 
 	private void loadMember(JPanel mainPanel,
-			List<MemberPanel<?, ?, ?>> memberList, Entry<Member, Boolean> entry)
+			List<MemberPanel<?, ?, ?>> memberList,
+			Entry<MemberOrder, Boolean> entry)
 	{
 		if (isRequiredOnly && !entry.getValue())
 		{
 			return;
 		}
 
-		if (entry.getKey() instanceof Field)
+		if (entry.getKey().getMember() instanceof Field)
 		{
-			Field field = (Field) entry.getKey();
+			Field field = (Field) entry.getKey().getMember();
 
 			FieldPanel fieldPanel = MemberPanelFactory.createFieldPanel(frame,
 					field, entry.getValue());
@@ -550,9 +552,9 @@ public class MessagePanel extends JPanel implements
 			memberList.add(fieldPanel);
 		}
 
-		if (entry.getKey() instanceof Group)
+		if (entry.getKey().getMember() instanceof Group)
 		{
-			Group group = (Group) entry.getKey();
+			Group group = (Group) entry.getKey().getMember();
 
 			GroupPanel groupPanel = MemberPanelFactory.createGroupPanel(frame,
 					group, isRequiredOnly, entry.getValue());
@@ -564,9 +566,9 @@ public class MessagePanel extends JPanel implements
 			memberList.add(groupPanel);
 		}
 
-		if (entry.getKey() instanceof Component)
+		if (entry.getKey().getMember() instanceof Component)
 		{
-			Component component = (Component) entry.getKey();
+			Component component = (Component) entry.getKey().getMember();
 
 			ComponentPanel componentPanel = MemberPanelFactory
 					.createComponentPanel(frame, component, isRequiredOnly,

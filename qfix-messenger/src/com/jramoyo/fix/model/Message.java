@@ -47,15 +47,15 @@ public final class Message extends AbstractMember
 	private final String name;
 	private final String msgType;
 	private final MessageCategory category;
-	private final SortedMap<Member, Boolean> members;
+	private final SortedMap<MemberOrder, Boolean> members;
 
 	public Message(String name, String msgType, MessageCategory category,
-			Map<Member, Boolean> members)
+			Map<MemberOrder, Boolean> members)
 	{
 		this.name = name;
 		this.msgType = msgType;
 		this.category = category;
-		this.members = new TreeMap<Member, Boolean>(members);
+		this.members = new TreeMap<MemberOrder, Boolean>(members);
 	}
 
 	public Message(Message message)
@@ -63,7 +63,7 @@ public final class Message extends AbstractMember
 		this.name = message.name;
 		this.msgType = message.msgType;
 		this.category = message.category;
-		this.members = new TreeMap<Member, Boolean>(message.members);
+		this.members = new TreeMap<MemberOrder, Boolean>(message.members);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public final class Message extends AbstractMember
 		return msgType;
 	}
 
-	public Map<Member, Boolean> getMembers()
+	public Map<MemberOrder, Boolean> getMembers()
 	{
 		return Collections.unmodifiableMap(members);
 	}

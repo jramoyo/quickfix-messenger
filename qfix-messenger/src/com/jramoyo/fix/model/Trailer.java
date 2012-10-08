@@ -44,19 +44,19 @@ import java.util.TreeMap;
  */
 public class Trailer
 {
-	private final SortedMap<Member, Boolean> members;
+	private final SortedMap<MemberOrder, Boolean> members;
 
-	public Trailer(Map<Member, Boolean> members)
+	public Trailer(Map<MemberOrder, Boolean> members)
 	{
-		this.members = new TreeMap<Member, Boolean>(members);
+		this.members = new TreeMap<MemberOrder, Boolean>(members);
 	}
 
 	public Trailer(Trailer trailer)
 	{
-		this.members = new TreeMap<Member, Boolean>(trailer.members);
+		this.members = new TreeMap<MemberOrder, Boolean>(trailer.members);
 	}
 
-	public Map<Member, Boolean> getMembers()
+	public Map<MemberOrder, Boolean> getMembers()
 	{
 		return Collections.unmodifiableMap(members);
 	}
