@@ -381,7 +381,7 @@ public class GroupPanel extends
 		groupValuePanel.add(setButton);
 
 		groupPanels = new JPanel();
-		groupPanels.setLayout(new BoxLayout(groupPanels, BoxLayout.Y_AXIS));
+		groupPanels.setLayout(new GridBagLayout());
 
 		loadMembers();
 
@@ -503,7 +503,7 @@ public class GroupPanel extends
 				}
 
 				groups.add(groupMembers);
-				groupPanels.add(groupPanel);
+				groupPanels.add(groupPanel, createGridBagConstraints());
 			}
 		}
 

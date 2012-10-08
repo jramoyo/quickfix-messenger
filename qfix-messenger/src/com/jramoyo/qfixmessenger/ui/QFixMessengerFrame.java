@@ -748,6 +748,23 @@ public class QFixMessengerFrame extends JFrame
 		messagesList.addMouseListener(new MessagesListMouseAdapter(this));
 	}
 
+	private GridBagConstraints createRightPanelConstraints()
+	{
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+
+		c.weightx = 0.5;
+		c.weighty = 0.0;
+
+		c.ipadx = 2;
+		c.ipady = 2;
+
+		c.gridx = 0;
+		c.gridy = GridBagConstraints.RELATIVE;
+
+		return c;
+	}
+
 	private void initRightPanel()
 	{
 		rightPanel = new JPanel();
@@ -830,12 +847,6 @@ public class QFixMessengerFrame extends JFrame
 
 		JPanel sendPanel = new JPanel();
 		sendPanel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 0.5;
-		c.weighty = 0.0;
-		c.ipadx = 2;
-		c.ipady = 2;
 
 		previewBeforeSendCheckBox = new JCheckBox("Preview Before Sending",
 				false);
@@ -873,17 +884,9 @@ public class QFixMessengerFrame extends JFrame
 		sendButton.addActionListener(new SendActionListener(this));
 		sendButton.setToolTipText("Sends the message across the session");
 
-		c.gridx = 0;
-		c.gridy = 0;
-		sendPanel.add(addButton, c);
-
-		c.gridx = 0;
-		c.gridy = 1;
-		sendPanel.add(sendButton, c);
-
-		c.gridx = 0;
-		c.gridy = 2;
-		sendPanel.add(previewBeforeSendCheckBox, c);
+		sendPanel.add(addButton, createRightPanelConstraints());
+		sendPanel.add(sendButton, createRightPanelConstraints());
+		sendPanel.add(previewBeforeSendCheckBox, createRightPanelConstraints());
 
 		rightPanel.add(optionsPanel, BorderLayout.NORTH);
 		rightPanel.add(sendPanel, BorderLayout.SOUTH);
