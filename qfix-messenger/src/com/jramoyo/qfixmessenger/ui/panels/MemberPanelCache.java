@@ -55,6 +55,12 @@ public class MemberPanelCache
 		groupCache = new HashMap<>();
 	}
 
+	public void clear()
+	{
+		cache.clear();
+		groupCache.clear();
+	}
+
 	public void encacheGroupMember(int index, MemberPanel<?, ?, ?> memberPanel)
 	{
 		groupCache.put(new GroupMemberKey(index, memberPanel.getMember()),

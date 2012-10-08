@@ -40,10 +40,10 @@ public final class Icons
 	public static String APP_ICON = "/app.png";
 
 	public static String ADD_ICON = "/add.png";
-
 	public static String SEND_ICON = "/send.png";
-	public static String NEW_ICON = "/new.png";
+	public static String DESTROY_ICON = "/destroy.png";
 
+	public static String NEW_ICON = "/new.png";
 	public static String OPEN_ICON = "/open.png";
 	public static String SAVE_ICON = "/save.png";
 	public static String CLOSE_ICON = "/close.png";

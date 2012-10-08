@@ -149,7 +149,7 @@ public class QFixMessengerFrame extends JFrame
 	private static final Logger logger = LoggerFactory
 			.getLogger(QFixMessengerFrame.class);
 
-	private static final int FRAME_MIN_HEIGHT = 450;
+	private static final int FRAME_MIN_HEIGHT = 510;
 
 	private static final int FRAME_MIN_WIDTH = 600;
 
@@ -255,6 +255,8 @@ public class QFixMessengerFrame extends JFrame
 	private JCheckBox modifyTrailerCheckBox;
 
 	private JCheckBox previewBeforeSendCheckBox;
+
+	private JButton destroyButton;
 
 	private JButton addButton;
 
@@ -504,6 +506,23 @@ public class QFixMessengerFrame extends JFrame
 		}
 	}
 
+	private GridBagConstraints createRightPanelConstraints()
+	{
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+
+		c.weightx = 0.5;
+		c.weighty = 0.0;
+
+		c.ipadx = 2;
+		c.ipady = 2;
+
+		c.gridx = 0;
+		c.gridy = GridBagConstraints.RELATIVE;
+
+		return c;
+	}
+
 	private void initAppVersionsComboBox()
 	{
 		appVersionsComboBox.setEnabled(false);
@@ -748,23 +767,6 @@ public class QFixMessengerFrame extends JFrame
 		messagesList.addMouseListener(new MessagesListMouseAdapter(this));
 	}
 
-	private GridBagConstraints createRightPanelConstraints()
-	{
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-
-		c.weightx = 0.5;
-		c.weighty = 0.0;
-
-		c.ipadx = 2;
-		c.ipady = 2;
-
-		c.gridx = 0;
-		c.gridy = GridBagConstraints.RELATIVE;
-
-		return c;
-	}
-
 	private void initRightPanel()
 	{
 		rightPanel = new JPanel();
@@ -871,6 +873,12 @@ public class QFixMessengerFrame extends JFrame
 			}
 		});
 
+		ImageIcon destroyImageIcon = new ImageIcon(messenger.getConfig()
+				.getIconsLocation() + Icons.DESTROY_ICON);
+		destroyButton = new JButton(destroyImageIcon);
+		destroyButton.addActionListener(new DestroyMessageActionListener(this));
+		destroyButton.setToolTipText("Destroys the message");
+
 		ImageIcon addImageIcon = new ImageIcon(messenger.getConfig()
 				.getIconsLocation() + Icons.ADD_ICON);
 		addButton = new JButton(addImageIcon);
@@ -884,6 +892,7 @@ public class QFixMessengerFrame extends JFrame
 		sendButton.addActionListener(new SendActionListener(this));
 		sendButton.setToolTipText("Sends the message across the session");
 
+		sendPanel.add(destroyButton, createRightPanelConstraints());
 		sendPanel.add(addButton, createRightPanelConstraints());
 		sendPanel.add(sendButton, createRightPanelConstraints());
 		sendPanel.add(previewBeforeSendCheckBox, createRightPanelConstraints());
@@ -1286,6 +1295,24 @@ public class QFixMessengerFrame extends JFrame
 				logger.debug("Selected dictionary " + frame.activeDictionary);
 			}
 			frame.loadMessagesList();
+		}
+	}
+
+	private static class DestroyMessageActionListener implements ActionListener
+	{
+		private QFixMessengerFrame frame;
+
+		private DestroyMessageActionListener(QFixMessengerFrame frame)
+		{
+			this.frame = frame;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			frame.messagePanel = null;
+			frame.getMemberPanelCache().clear();
+			frame.displayMainPanel();
 		}
 	}
 
