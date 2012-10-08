@@ -1310,9 +1310,15 @@ public class QFixMessengerFrame extends JFrame
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			frame.messagePanel = null;
-			frame.getMemberPanelCache().clear();
-			frame.displayMainPanel();
+			int choice = JOptionPane.showConfirmDialog(frame,
+					"This will clear all stored fields", "Destroy Message?",
+					JOptionPane.YES_NO_OPTION);
+			if (choice == JOptionPane.YES_OPTION)
+			{
+				frame.messagePanel = null;
+				frame.getMemberPanelCache().clear();
+				frame.displayMainPanel();
+			}
 		}
 	}
 

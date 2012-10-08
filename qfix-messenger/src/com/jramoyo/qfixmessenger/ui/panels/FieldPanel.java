@@ -88,10 +88,14 @@ public class FieldPanel extends
 
 	private JButton dateButton;
 
-	public FieldPanel(QFixMessengerFrame frame, Field field, boolean isRequired)
+	private final String initialValue;
+
+	public FieldPanel(QFixMessengerFrame frame, Field field,
+			boolean isRequired, String initialValue)
 	{
 		super(frame, field);
 		this.isRequired = isRequired;
+		this.initialValue = initialValue;
 
 		initComponents();
 	}
@@ -156,32 +160,10 @@ public class FieldPanel extends
 
 	public void populateXml(com.jramoyo.fix.xml.FieldType xmlFieldType)
 	{
-		if (fieldComboBox != null)
-		{
-			ComboBoxModel<FieldValue> comboBoxModel = fieldComboBox.getModel();
-			for (int i = 0; i < comboBoxModel.getSize(); i++)
-			{
-				FieldValue fieldValue = comboBoxModel.getElementAt(i);
-				if (fieldValue.getEnumValue().equals(xmlFieldType.getValue()))
-				{
-					fieldComboBox.setSelectedIndex(i);
-				}
-			}
-		}
-
-		else
-		{
-			fieldTextField.setText(xmlFieldType.getValue());
-		}
+		setValue(xmlFieldType.getValue());
 	}
 
-	private String generateUtcTimeStamp()
-	{
-		return new SimpleDateFormat(QFixMessengerConstants.UTC_DATE_FORMAT)
-				.format(new Date());
-	}
-
-	private String getValue()
+	String getValue()
 	{
 		if (fieldComboBox != null)
 		{
@@ -194,6 +176,12 @@ public class FieldPanel extends
 		{
 			return fieldTextField.getText().trim();
 		}
+	}
+
+	private String generateUtcTimeStamp()
+	{
+		return new SimpleDateFormat(QFixMessengerConstants.UTC_DATE_FORMAT)
+				.format(new Date());
 	}
 
 	private void initComponents()
@@ -280,6 +268,10 @@ public class FieldPanel extends
 				fieldValuePanel.add(dateButton);
 			}
 		}
+		if (initialValue != null)
+		{
+			setValue(initialValue);
+		}
 
 		add(fieldLabel);
 		add(fieldValuePanel);
@@ -318,5 +310,26 @@ public class FieldPanel extends
 		}
 
 		return false;
+	}
+
+	private void setValue(String value)
+	{
+		if (fieldComboBox != null)
+		{
+			ComboBoxModel<FieldValue> comboBoxModel = fieldComboBox.getModel();
+			for (int i = 0; i < comboBoxModel.getSize(); i++)
+			{
+				FieldValue fieldValue = comboBoxModel.getElementAt(i);
+				if (fieldValue.getEnumValue().equals(value))
+				{
+					fieldComboBox.setSelectedIndex(i);
+				}
+			}
+		}
+
+		else
+		{
+			fieldTextField.setText(value);
+		}
 	}
 }

@@ -73,15 +73,14 @@ public class GroupMemberPanelFactory
 	{
 		MemberPanel<?, ?, ?> prevMemberPanel = frame.getMemberPanelCache()
 				.getGroupMemberPanel(index, field);
-		FieldPanel fieldPanel;
+		String value = null;
 		if (prevMemberPanel != null)
 		{
-			fieldPanel = (FieldPanel) prevMemberPanel;
-		} else
-		{
-			fieldPanel = new FieldPanel(frame, field, isRequired);
+			FieldPanel prevFieldPanel = (FieldPanel) prevMemberPanel;
+			value = prevFieldPanel.getValue();
 		}
 
+		FieldPanel fieldPanel = new FieldPanel(frame, field, isRequired, value);
 		return fieldPanel;
 	}
 

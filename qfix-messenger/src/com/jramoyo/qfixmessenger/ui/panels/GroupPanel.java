@@ -95,15 +95,15 @@ public class GroupPanel extends
 
 	private JPanel groupPanels;
 
-	private int noOfGroups;
+	private int initialNoOfGroups;
 
 	public GroupPanel(QFixMessengerFrame frame, Group group,
-			boolean isRequiredOnly, boolean isRequired, int noOfGroups)
+			boolean isRequiredOnly, boolean isRequired, int initialNoOfGroups)
 	{
 		super(frame, group);
 		this.isRequired = isRequired;
 		this.isRequiredOnly = isRequiredOnly;
-		this.noOfGroups = noOfGroups;
+		this.initialNoOfGroups = initialNoOfGroups;
 
 		this.groups = new ArrayList<List<MemberPanel<?, ?, ?>>>();
 
@@ -364,9 +364,9 @@ public class GroupPanel extends
 		groupTextField = new JFormattedTextField(
 				NumberFormat.getIntegerInstance());
 		groupTextField.setFocusLostBehavior(JFormattedTextField.COMMIT);
-		if (noOfGroups > 0)
+		if (initialNoOfGroups > 0)
 		{
-			groupTextField.setText(String.valueOf(noOfGroups));
+			groupTextField.setText(String.valueOf(initialNoOfGroups));
 		}
 		setButton = new JButton("Set");
 		setButton.addActionListener(new ActionListener()
@@ -394,9 +394,9 @@ public class GroupPanel extends
 
 	private void loadMembers()
 	{
-		if (noOfGroups > 0)
+		if (initialNoOfGroups > 0)
 		{
-			for (int i = 0; i < noOfGroups; i++)
+			for (int i = 0; i < initialNoOfGroups; i++)
 			{
 				List<MemberPanel<?, ?, ?>> groupMembers = new ArrayList<MemberPanel<?, ?, ?>>();
 
