@@ -492,7 +492,6 @@ public class QFixMessengerFrame extends JFrame
 		{
 			projectTitle = xmlProjectType.getName();
 			loadFrameTitle();
-			addButton.setEnabled(true);
 			saveProjectMenuItem.setEnabled(true);
 			closeProjectMenuItem.setEnabled(true);
 			launchProjectDialog();
@@ -502,8 +501,9 @@ public class QFixMessengerFrame extends JFrame
 			loadFrameTitle();
 			saveProjectMenuItem.setEnabled(false);
 			closeProjectMenuItem.setEnabled(false);
-			addButton.setEnabled(false);
 		}
+
+		updateButtons();
 	}
 
 	private GridBagConstraints createRightPanelConstraints()
@@ -878,6 +878,7 @@ public class QFixMessengerFrame extends JFrame
 		destroyButton = new JButton(destroyImageIcon);
 		destroyButton.addActionListener(new DestroyMessageActionListener(this));
 		destroyButton.setToolTipText("Destroys the message");
+		destroyButton.setEnabled(false);
 
 		ImageIcon addImageIcon = new ImageIcon(messenger.getConfig()
 				.getIconsLocation() + Icons.ADD_ICON);
@@ -891,6 +892,7 @@ public class QFixMessengerFrame extends JFrame
 		sendButton = new JButton(sendImageIcon);
 		sendButton.addActionListener(new SendActionListener(this));
 		sendButton.setToolTipText("Sends the message across the session");
+		sendButton.setEnabled(false);
 
 		sendPanel.add(destroyButton, createRightPanelConstraints());
 		sendPanel.add(addButton, createRightPanelConstraints());
@@ -1205,6 +1207,27 @@ public class QFixMessengerFrame extends JFrame
 		return true;
 	}
 
+	private void updateButtons()
+	{
+		if (activeMessage != null)
+		{
+			destroyButton.setEnabled(true);
+			sendButton.setEnabled(true);
+			if (activeXmlProject != null)
+			{
+				addButton.setEnabled(true);
+			} else
+			{
+				addButton.setEnabled(false);
+			}
+		} else
+		{
+			destroyButton.setEnabled(false);
+			sendButton.setEnabled(false);
+			addButton.setEnabled(false);
+		}
+	}
+
 	public static class XmlFileFilter extends FileFilter
 	{
 		public static final XmlFileFilter INSTANCE = new XmlFileFilter();
@@ -1238,26 +1261,16 @@ public class QFixMessengerFrame extends JFrame
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			if (frame.activeMessage != null)
+			if (!frame.activeMessage.equals(frame.freeTextMessage))
 			{
-				if (!frame.activeMessage.equals(frame.freeTextMessage))
-				{
-					MessageType xmlMessageType = frame.messagePanel
-							.getXmlMember();
-					ProjectType xmlProjectType = frame.getActiveXmlProject();
-					xmlProjectType.getMessages().getMessage()
-							.add(xmlMessageType);
-					frame.projectDialog.updateMessageAdded(xmlMessageType);
-				} else
-				{
-					JOptionPane.showMessageDialog(frame,
-							"Projects do not support free text messages!",
-							"Error", JOptionPane.WARNING_MESSAGE);
-				}
+				MessageType xmlMessageType = frame.messagePanel.getXmlMember();
+				ProjectType xmlProjectType = frame.getActiveXmlProject();
+				xmlProjectType.getMessages().getMessage().add(xmlMessageType);
+				frame.projectDialog.updateMessageAdded(xmlMessageType);
 			} else
 			{
 				JOptionPane.showMessageDialog(frame,
-						"Please create a message!", "Error",
+						"Projects do not support free text messages!", "Error",
 						JOptionPane.WARNING_MESSAGE);
 			}
 		}
@@ -1311,7 +1324,7 @@ public class QFixMessengerFrame extends JFrame
 		public void actionPerformed(ActionEvent e)
 		{
 			int choice = JOptionPane.showConfirmDialog(frame,
-					"This will clear all stored fields", "Destroy Message?",
+					"Clear all stored fields?", "Destroy Message",
 					JOptionPane.YES_NO_OPTION);
 			if (choice == JOptionPane.YES_OPTION)
 			{
@@ -1334,23 +1347,14 @@ public class QFixMessengerFrame extends JFrame
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			if (frame.activeMessage != null)
+			if (!frame.activeMessage.equals(frame.freeTextMessage))
 			{
-				if (!frame.activeMessage.equals(frame.freeTextMessage))
-				{
-					MessageType xmlMessageType = frame.messagePanel
-							.getXmlMember();
-					frame.marshallXmlMessage(xmlMessageType);
-				} else
-				{
-					JOptionPane.showMessageDialog(frame,
-							"Free text message cannot be exported!", "Error",
-							JOptionPane.WARNING_MESSAGE);
-				}
+				MessageType xmlMessageType = frame.messagePanel.getXmlMember();
+				frame.marshallXmlMessage(xmlMessageType);
 			} else
 			{
 				JOptionPane.showMessageDialog(frame,
-						"Please create a message!", "Error",
+						"Free text message cannot be exported!", "Error",
 						JOptionPane.WARNING_MESSAGE);
 			}
 		}
@@ -1539,6 +1543,7 @@ public class QFixMessengerFrame extends JFrame
 				frame.modifyHeaderCheckBox.setSelected(false);
 				frame.modifyTrailerCheckBox.setSelected(false);
 
+				frame.updateButtons();
 				frame.displayMainPanel();
 			}
 		}
@@ -1784,7 +1789,7 @@ public class QFixMessengerFrame extends JFrame
 					JOptionPane.showMessageDialog(frame,
 							QFixUtil.getSessionName(session.getSessionID())
 									+ " is not logged on!", "Error",
-							JOptionPane.ERROR_MESSAGE);
+							JOptionPane.WARNING_MESSAGE);
 				}
 			} else
 			{
@@ -1911,6 +1916,7 @@ public class QFixMessengerFrame extends JFrame
 				}
 
 				frame.activeMessage = null;
+				frame.updateButtons();
 				frame.displayMainPanel();
 				frame.loadMessagesList();
 			}
