@@ -217,6 +217,20 @@ public class ComponentPanel extends
 		return members;
 	}
 
+	private GridBagConstraints createGridBagConstraints()
+	{
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+
+		c.weightx = 0.5;
+		c.weighty = 0.0;
+
+		c.gridx = 0;
+		c.gridy = GridBagConstraints.RELATIVE;
+
+		return c;
+	}
+
 	private void initComponents()
 	{
 		setLayout(new BorderLayout());
@@ -250,13 +264,7 @@ public class ComponentPanel extends
 
 	private void loadMembers()
 	{
-		int index = 0;
-
 		membersPanel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 0.5;
-		c.weighty = 0.0;
 
 		Field firstTag = getMember().getFirstField();
 		if (firstTag != null)
@@ -266,9 +274,7 @@ public class ComponentPanel extends
 			fieldPanel.setMaximumSize(new Dimension(getPreferredSize().width,
 					fieldPanel.getPreferredSize().height));
 
-			c.gridx = 0;
-			c.gridy = index++;
-			membersPanel.add(fieldPanel, c);
+			membersPanel.add(fieldPanel, createGridBagConstraints());
 			members.add(fieldPanel);
 		}
 
@@ -292,9 +298,7 @@ public class ComponentPanel extends
 							getPreferredSize().width, fieldPanel
 									.getPreferredSize().height));
 
-					c.gridx = 0;
-					c.gridy = index++;
-					membersPanel.add(fieldPanel, c);
+					membersPanel.add(fieldPanel, createGridBagConstraints());
 					members.add(fieldPanel);
 				}
 			}
@@ -309,9 +313,7 @@ public class ComponentPanel extends
 						getPreferredSize().width,
 						groupPanel.getPreferredSize().height));
 
-				c.gridx = 0;
-				c.gridy = index++;
-				membersPanel.add(groupPanel, c);
+				membersPanel.add(groupPanel, createGridBagConstraints());
 				members.add(groupPanel);
 			}
 
@@ -326,9 +328,7 @@ public class ComponentPanel extends
 						getPreferredSize().width, componentPanel
 								.getPreferredSize().height));
 
-				c.gridx = 0;
-				c.gridy = index++;
-				membersPanel.add(componentPanel, c);
+				membersPanel.add(componentPanel, createGridBagConstraints());
 				members.add(componentPanel);
 			}
 		}

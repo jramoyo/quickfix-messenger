@@ -326,10 +326,23 @@ public class GroupPanel extends
 		return -1;
 	}
 
+	private GridBagConstraints createGridBagConstraints()
+	{
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+
+		c.weightx = 0.5;
+		c.weighty = 0.0;
+
+		c.gridx = 0;
+		c.gridy = GridBagConstraints.RELATIVE;
+
+		return c;
+	}
+
 	private void initComponents()
 	{
 		setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
 
 		layerUI = new FieldValidationLayerUI(getFrame());
 
@@ -370,22 +383,11 @@ public class GroupPanel extends
 		groupPanels = new JPanel();
 		groupPanels.setLayout(new BoxLayout(groupPanels, BoxLayout.Y_AXIS));
 
-		c.fill = GridBagConstraints.BOTH;
-		c.weightx = 0.5;
-		c.weighty = 0.0;
-
-		c.gridx = 0;
-		c.gridy = 0;
-		add(groupLabel, c);
-
-		c.gridx = 0;
-		c.gridy = 1;
-		add(groupValuePanel, c);
-
-		c.gridx = 0;
-		c.gridy = 2;
 		loadMembers();
-		add(groupPanels, c);
+
+		add(groupLabel, createGridBagConstraints());
+		add(groupValuePanel, createGridBagConstraints());
+		add(groupPanels, createGridBagConstraints());
 	}
 
 	private void loadMembers()
@@ -396,13 +398,8 @@ public class GroupPanel extends
 			{
 				List<MemberPanel<?, ?, ?>> groupMembers = new ArrayList<MemberPanel<?, ?, ?>>();
 
-				int rows = 0;
 				JPanel groupPanel = new JPanel();
 				groupPanel.setLayout(new GridBagLayout());
-				GridBagConstraints c = new GridBagConstraints();
-				c.fill = GridBagConstraints.BOTH;
-				c.weightx = 0.5;
-				c.weighty = 0.0;
 
 				TitledBorder titledBoarder = new TitledBorder(new LineBorder(
 						Color.BLACK), getMember().getName() + " [" + (i + 1)
@@ -422,11 +419,8 @@ public class GroupPanel extends
 								getPreferredSize().width, fieldPanel
 										.getPreferredSize().height));
 
-						c.gridx = 0;
-						c.gridy = rows;
-						groupPanel.add(fieldPanel, c);
+						groupPanel.add(fieldPanel, createGridBagConstraints());
 						groupMembers.add(fieldPanel);
-						rows++;
 					}
 
 					else if (firstMember instanceof Component)
@@ -439,11 +433,9 @@ public class GroupPanel extends
 								getPreferredSize().width, componentPanel
 										.getPreferredSize().height));
 
-						c.gridx = 0;
-						c.gridy = rows;
-						groupPanel.add(componentPanel, c);
+						groupPanel.add(componentPanel,
+								createGridBagConstraints());
 						groupMembers.add(componentPanel);
-						rows++;
 					}
 				}
 
@@ -467,15 +459,13 @@ public class GroupPanel extends
 									getPreferredSize().width, fieldPanel
 											.getPreferredSize().height));
 
-							c.gridx = 0;
-							c.gridy = rows;
-							groupPanel.add(fieldPanel, c);
+							groupPanel.add(fieldPanel,
+									createGridBagConstraints());
 							groupMembers.add(fieldPanel);
-							rows++;
 						}
 					}
 
-					if (entry.getKey().getMember() instanceof Group)
+					else if (entry.getKey().getMember() instanceof Group)
 					{
 						Group group = (Group) entry.getKey().getMember();
 
@@ -486,14 +476,12 @@ public class GroupPanel extends
 								getPreferredSize().width, groupPanel
 										.getPreferredSize().height));
 
-						c.gridx = 0;
-						c.gridy = rows;
-						groupPanel.add(memberGroupPanel, c);
+						groupPanel.add(memberGroupPanel,
+								createGridBagConstraints());
 						groupMembers.add(memberGroupPanel);
-						rows++;
 					}
 
-					if (entry.getKey().getMember() instanceof Component)
+					else if (entry.getKey().getMember() instanceof Component)
 					{
 						Component component = (Component) entry.getKey()
 								.getMember();
@@ -507,11 +495,9 @@ public class GroupPanel extends
 									getPreferredSize().width, componentPanel
 											.getPreferredSize().height));
 
-							c.gridx = 0;
-							c.gridy = rows;
-							groupPanel.add(componentPanel, c);
+							groupPanel.add(componentPanel,
+									createGridBagConstraints());
 							groupMembers.add(componentPanel);
-							rows++;
 						}
 					}
 				}
