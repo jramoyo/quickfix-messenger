@@ -150,6 +150,7 @@ public class GroupPanel extends
 						firstField.getNumber());
 			}
 
+			int i = 0;
 			for (MemberPanel<?, ?, ?> memberPanel : groupMembers)
 			{
 				if (memberPanel instanceof FieldPanel)
@@ -157,7 +158,7 @@ public class GroupPanel extends
 					FieldPanel fieldPanel = (FieldPanel) memberPanel;
 					if (fieldPanel.getQuickFixMember() != null)
 					{
-						qfixGroup.setField(fieldPanel.getQuickFixMember());
+						qfixGroup.setField(++i, fieldPanel.getQuickFixMember());
 					}
 				}
 
@@ -167,7 +168,7 @@ public class GroupPanel extends
 					for (StringField qfixField : componentPanel
 							.getQuickFixMember().getFields())
 					{
-						qfixGroup.setField(qfixField);
+						qfixGroup.setField(++i, qfixField);
 					}
 
 					for (quickfix.Group group : componentPanel
@@ -182,6 +183,7 @@ public class GroupPanel extends
 					GroupPanel groupPanel = (GroupPanel) memberPanel;
 					qfixGroups.addAll(groupPanel.getQuickFixMember());
 				}
+
 			}
 
 			qfixGroups.add(qfixGroup);
