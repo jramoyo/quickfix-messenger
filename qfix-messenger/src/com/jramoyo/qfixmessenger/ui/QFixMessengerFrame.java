@@ -1324,7 +1324,7 @@ public class QFixMessengerFrame extends JFrame
 		public void actionPerformed(ActionEvent e)
 		{
 			int choice = JOptionPane.showConfirmDialog(frame,
-					"Clear all stored fields?", "Destroy Message",
+					"Clear all saved fields?", "Destroy Message?",
 					JOptionPane.YES_NO_OPTION);
 			if (choice == JOptionPane.YES_OPTION)
 			{
@@ -1468,9 +1468,9 @@ public class QFixMessengerFrame extends JFrame
 			try
 			{
 				get();
-				logger.debug("Message exported to " + xmlProjectType.getName());
-				JOptionPane.showMessageDialog(frame, "Project saved to "
-						+ xmlProjectType.getName(), "Export",
+				logger.debug("Project saved to " + file.getName());
+				JOptionPane.showMessageDialog(frame,
+						"Project saved to " + file.getName(), "Export",
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception ex)
 			{
