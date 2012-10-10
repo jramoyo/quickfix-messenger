@@ -174,7 +174,7 @@ public class QFixMessenger
 		try
 		{
 			String useSystemLookAndFeelProperty = System
-					.getProperty("useSystemLAF");
+					.getProperty("useSystemLaF");
 			if (Boolean.valueOf(useSystemLookAndFeelProperty))
 			{
 				UIManager.setLookAndFeel(UIManager

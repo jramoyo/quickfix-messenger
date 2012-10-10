@@ -1347,14 +1347,23 @@ public class QFixMessengerFrame extends JFrame
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			if (!frame.activeMessage.equals(frame.freeTextMessage))
+			if (frame.activeMessage != null)
 			{
-				MessageType xmlMessageType = frame.messagePanel.getXmlMember();
-				frame.marshallXmlMessage(xmlMessageType);
+				if (!frame.activeMessage.equals(frame.freeTextMessage))
+				{
+					MessageType xmlMessageType = frame.messagePanel
+							.getXmlMember();
+					frame.marshallXmlMessage(xmlMessageType);
+				} else
+				{
+					JOptionPane.showMessageDialog(frame,
+							"Free text message cannot be exported!", "Error",
+							JOptionPane.WARNING_MESSAGE);
+				}
 			} else
 			{
 				JOptionPane.showMessageDialog(frame,
-						"Free text message cannot be exported!", "Error",
+						"Please create a message!", "Error",
 						JOptionPane.WARNING_MESSAGE);
 			}
 		}
