@@ -157,7 +157,7 @@ public class ProjectDialog extends JDialog
 	{
 		int width = getSize().width;
 		int height = frame.getSize().height;
-		int x = frame.getLocation().x - 320;
+		int x = frame.getLocation().x - 310;
 		int y = frame.getLocation().y;
 		setSize(width, height);
 		setLocation((x > 0) ? x : 0, y);

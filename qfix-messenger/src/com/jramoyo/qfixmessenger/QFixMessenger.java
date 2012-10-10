@@ -44,6 +44,8 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.xml.bind.JAXBContext;
@@ -181,6 +183,8 @@ public class QFixMessenger
 			{
 				UIManager
 						.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceDustLookAndFeel");
+				JFrame.setDefaultLookAndFeelDecorated(true);
+				JDialog.setDefaultLookAndFeelDecorated(true);
 			}
 		} catch (Exception ex)
 		{

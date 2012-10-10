@@ -202,23 +202,23 @@ public class QFixMessengerFrame extends JFrame
 
 	private String projectTitle = EMPTY_PROJECT_NAME;
 
-	private volatile ProjectType activeXmlProject;
+	private ProjectType activeXmlProject;
 
-	private volatile File activeProjectFile;
+	private File activeProjectFile;
 
-	private volatile FixDictionary activeDictionary;
+	private FixDictionary activeDictionary;
 
-	private volatile Message activeMessage;
+	private Message activeMessage;
 
-	private volatile boolean isRequiredOnly = true;
+	private boolean isRequiredOnly = true;
 
-	private volatile boolean isModifyHeader;
+	private boolean isModifyHeader;
 
-	private volatile boolean isModifyTrailer;
+	private boolean isModifyTrailer;
 
-	private volatile boolean isFixTSession;
+	private boolean isFixTSession;
 
-	private volatile boolean isPreviewBeforeSend;
+	private boolean isPreviewBeforeSend;
 
 	private JMenuBar menuBar;
 
