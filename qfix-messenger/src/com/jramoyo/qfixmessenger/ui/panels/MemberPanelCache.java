@@ -51,8 +51,8 @@ public class MemberPanelCache
 
 	public MemberPanelCache()
 	{
-		cache = new HashMap<>();
-		groupCache = new HashMap<>();
+		cache = new HashMap<Member, MemberPanel<?, ?, ?>>();
+		groupCache = new HashMap<GroupMemberKey, MemberPanel<?, ?, ?>>();
 	}
 
 	public void clear()
