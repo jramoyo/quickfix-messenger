@@ -507,6 +507,7 @@ public class QFixMessenger
 				firstFieldType = (FieldType) firstMember;
 			}
 
+			int i = 0;
 			Group group = new Group(xmlGroupsType.getId(),
 					firstFieldType.getId());
 			for (Object xmlObject : xmlGroupType.getFieldOrGroupsOrComponent())
@@ -514,16 +515,7 @@ public class QFixMessenger
 				if (xmlObject instanceof FieldType)
 				{
 					FieldType xmlFieldType = (FieldType) xmlObject;
-					group.setField(createStringField(xmlFieldType));
-				}
-
-				else if (xmlObject instanceof GroupsType)
-				{
-					GroupsType memberXmlGroupsType = (GroupsType) xmlObject;
-					for (Group memberGroup : createGroups(memberXmlGroupsType))
-					{
-						group.addGroup(memberGroup);
-					}
+					group.setField(++i, createStringField(xmlFieldType));
 				}
 
 				else if (xmlObject instanceof ComponentType)
@@ -532,10 +524,19 @@ public class QFixMessenger
 					ComponentHelper componentHelper = createComponent(xmlComponentType);
 					for (StringField stringField : componentHelper.getFields())
 					{
-						group.setField(stringField);
+						group.setField(++i, stringField);
 					}
 
 					for (Group memberGroup : componentHelper.getGroups())
+					{
+						group.addGroup(memberGroup);
+					}
+				}
+
+				else if (xmlObject instanceof GroupsType)
+				{
+					GroupsType memberXmlGroupsType = (GroupsType) xmlObject;
+					for (Group memberGroup : createGroups(memberXmlGroupsType))
 					{
 						group.addGroup(memberGroup);
 					}
