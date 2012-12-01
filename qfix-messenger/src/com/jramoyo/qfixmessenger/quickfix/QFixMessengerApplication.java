@@ -140,45 +140,72 @@ public class QFixMessengerApplication implements Application
 		{
 			try
 			{
-				String usernameSetting = sessionSettings.getString(sessionId,
-						"Username");
-				if (!StringUtil.isNullOrEmpty(usernameSetting))
+				try
 				{
-					message.setField(new Username(usernameSetting));
+					String usernameSetting = sessionSettings.getString(
+							sessionId, "Username");
+					if (!StringUtil.isNullOrEmpty(usernameSetting))
+					{
+						message.setField(new Username(usernameSetting));
+					}
+				} catch (ConfigError ex)
+				{
+					logger.debug(ex.getMessage());
 				}
 
-				String passwordSetting = sessionSettings.getString(sessionId,
-						"Password");
-				if (!StringUtil.isNullOrEmpty(passwordSetting))
+				try
 				{
-					message.setField(new Password(passwordSetting));
+					String passwordSetting = sessionSettings.getString(
+							sessionId, "Password");
+					if (!StringUtil.isNullOrEmpty(passwordSetting))
+					{
+						message.setField(new Password(passwordSetting));
+					}
+				} catch (ConfigError ex)
+				{
+					logger.debug(ex.getMessage());
 				}
 
-				String rawDataSetting = sessionSettings.getString(sessionId,
-						"RawData");
-				if (!StringUtil.isNullOrEmpty(rawDataSetting))
+				try
 				{
-					message.setField(new RawData(rawDataSetting));
+					String rawDataSetting = sessionSettings.getString(
+							sessionId, "RawData");
+					if (!StringUtil.isNullOrEmpty(rawDataSetting))
+					{
+						message.setField(new RawData(rawDataSetting));
+					}
+				} catch (ConfigError ex)
+				{
+					logger.debug(ex.getMessage());
 				}
 
-				long rawDataLengthSetting = sessionSettings.getLong(sessionId,
-						"RawDataLength");
-				if (rawDataLengthSetting > 0)
+				try
 				{
-					message.setField(new RawDataLength(
-							(int) rawDataLengthSetting));
+					long rawDataLengthSetting = sessionSettings.getLong(
+							sessionId, "RawDataLength");
+					if (rawDataLengthSetting > 0)
+					{
+						message.setField(new RawDataLength(
+								(int) rawDataLengthSetting));
+					}
+				} catch (ConfigError ex)
+				{
+					logger.debug(ex.getMessage());
 				}
 
-				String testMessageIndicatorSetting = sessionSettings.getString(
-						sessionId, "TestMessageIndicator");
-				if (!StringUtil.isNullOrEmpty(testMessageIndicatorSetting))
+				try
 				{
-					message.setField(new TestMessageIndicator(Boolean
-							.valueOf(testMessageIndicatorSetting)));
+					String testMessageIndicatorSetting = sessionSettings
+							.getString(sessionId, "TestMessageIndicator");
+					if (!StringUtil.isNullOrEmpty(testMessageIndicatorSetting))
+					{
+						message.setField(new TestMessageIndicator(Boolean
+								.valueOf(testMessageIndicatorSetting)));
+					}
+				} catch (ConfigError ex)
+				{
+					logger.debug(ex.getMessage());
 				}
-			} catch (ConfigError ex)
-			{
-				logger.debug(ex.getMessage());
 			} catch (FieldConvertError ex)
 			{
 				logger.error("An error occured while "
