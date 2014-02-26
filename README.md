@@ -1,4 +1,6 @@
 # QuickFIX Messenger
+[![Build Status](https://travis-ci.org/jramoyo/quickfix-messenger.png?branch=master)](https://travis-ci.org/jramoyo/quickfix-messenger)
+
 QuickFIX Messenger is a front-end messaging application built on-top of the [QuickFIX/J](http://www.quickfixj.org) engine.
 
 It is a tool designed for technical individuals working on the Financial Information eXchange ("[FIX](http://fixprotocol.org/)") Protocol. The FIX Protocol is an industry-driven messaging standard for the electronic communication of trade-related messages.
