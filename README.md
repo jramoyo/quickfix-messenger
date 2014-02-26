@@ -13,6 +13,9 @@ For support, questions, or general discussions, kindly visit our [forum](https:/
 
 Because of new features added to version 2.0, **Java 7 (JRE 1.7)** or later is required to run QuickFIX Messenger. 
 
+## Downloads
+  * Version 2.0 [[bin](https://code.google.com/p/quickfix-messenger/downloads/detail?name=qfix-messenger-2.0-bin.zip)] [[src](https://code.google.com/p/quickfix-messenger/downloads/detail?name=qfix-messenger-2.0-src.zip)]
+
 ## Features
 QuickFIX Messenger is fully open source and supports the following features:
   * FIX versions 4.0 to 5.0 (including FIXT 1.1)
