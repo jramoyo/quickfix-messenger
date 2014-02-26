@@ -441,18 +441,18 @@ public class QFixDictionaryParserTest
 
 	private void displayDictionary(FixDictionary dictionary)
 	{
-		System.out.println("FIX Version: " + dictionary.getFullVersion());
-
-		System.out.println("Messages");
-		displayMessages(INDENT, dictionary.getMessages());
-
-		System.out.println("Header");
-		displayMembers(INDENT, dictionary.getHeader().getMembers());
-		System.out.println();
-
-		System.out.println("Trailer");
-		displayMembers(INDENT, dictionary.getTrailer().getMembers());
-		System.out.println();
+//		System.out.println("FIX Version: " + dictionary.getFullVersion());
+//
+//		System.out.println("Messages");
+//		displayMessages(INDENT, dictionary.getMessages());
+//
+//		System.out.println("Header");
+//		displayMembers(INDENT, dictionary.getHeader().getMembers());
+//		System.out.println();
+//
+//		System.out.println("Trailer");
+//		displayMembers(INDENT, dictionary.getTrailer().getMembers());
+//		System.out.println();
 	}
 
 	private void displayField(String indent, Field field, Boolean isRequired)
