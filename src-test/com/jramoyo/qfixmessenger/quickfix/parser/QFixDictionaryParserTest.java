@@ -41,6 +41,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 
 import com.jramoyo.fix.model.Component;
 import com.jramoyo.fix.model.Field;
@@ -57,7 +59,7 @@ import com.jramoyo.fix.model.parser.FixParsingException;
  * 
  * @author jamoyo
  */
-
+@RunWith(BlockJUnit4ClassRunner.class)
 public class QFixDictionaryParserTest
 {
 	private static final String INDENT = "   ";

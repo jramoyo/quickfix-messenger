@@ -9,12 +9,22 @@
 		</fileset>
 	</path>
 
+	<path id="lib.test.classpath">
+		<fileset id="lib.test.fileset" dir="${lib.test.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
 	<target name="xjc.message">
 		<echo message="Generating JAXB code..." />
 	</target>
 
 	<target name="build.message">
 		<echo message="Building qfix-messenger..." />
+	</target>
+
+	<target name="build.test.message">
+		<echo message="Building qfix-messenger tests..." />
 	</target>
 
 	<target name="clean.message">
@@ -35,6 +45,10 @@
 
 	<target name="source.message">
 		<echo message="Packaging qfix-messenger source..." />
+	</target>
+
+	<target name="test.message">
+		<echo message="Running tests..." />
 	</target>
 
 	<target name="clean" depends="clean.message">
@@ -63,6 +77,13 @@
 		</javac>
 		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${src.dir}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
 			<classpath refid="lib.classpath" />
+		</javac>
+	</target>
+
+	<target name="build.test" depends="build.test.message">
+		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${test.dir}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
+			<classpath refid="lib.classpath" />
+			<classpath refid="lib.test.classpath" />
 		</javac>
 	</target>
 
@@ -95,6 +116,22 @@
 		<zip basedir="${deploy.dir}" destfile="${package.dir}/qfix-messenger-${app.version}-bin.zip" includes="qfix-messenger/**/*" />
 	</target>
 
+	<target name="test" depends="build,build.test,test.message">
+		<junit>
+			<classpath>
+				<pathelement location="${classes.dir}" />
+			</classpath>
+			<classpath refid="lib.classpath" />
+			<classpath refid="lib.test.classpath" />
+			<batchtest>
+				<fileset dir="${test.dir}">
+					<include name="**/*Test*" />
+				</fileset>
+			</batchtest>
+			<formatter type="brief" usefile="false" />
+		</junit>
+	</target>
+
 	<target name="source" depends="source.message">
 		<zip basedir="${basedir}/../" destfile="${package.dir}/qfix-messenger-${app.version}-src.zip" includes="qfix-messenger/**/*" />
 	</target>
@@ -108,5 +145,7 @@
 	<target name="clean.release" depends="clean,release" />
 
 	<target name="clean.source" depends="clean,source" />
+
+	<target name="clean.test" depends="clean,test" />
 
 </project>
