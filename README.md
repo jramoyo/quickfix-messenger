@@ -11,7 +11,7 @@ If you'd like to report a bug or request for a new feature, please log a ticket 
 
 For support, questions, or general discussions, kindly visit our [forum](https://groups.google.com/forum/?fromgroups#!forum/quickfix-messenger-discuss).
 
-Because of new features added to version 2.0, *Java 7 (JRE 1.7)* or later is required to run QuickFIX Messenger. 
+Because of new features added to version 2.0, **Java 7 (JRE 1.7)** or later is required to run QuickFIX Messenger. 
 
 ## Features
 QuickFIX Messenger is fully open source and supports the following features:
