@@ -5,7 +5,7 @@ It is a tool designed for technical individuals working on the Financial Informa
 
 QuickFIX Messenger is ideal for testing different messages and scenarios on FIX infrastructures. It provides a simple graphical user interface (GUI) for constructing and sending FIX messages across a given FIX session.
 
-Visit our [User's Guide](http://code.google.com/p/quickfix-messenger/wiki/Index) for more information.
+Visit our [User's Guide](https://github.com/jramoyo/quickfix-messenger/wiki/User's-Guide) for more information.
 
 If you'd like to report a bug or request for a new feature, please log a ticket on our [tracker](https://github.com/jramoyo/quickfix-messenger/issues).
 
