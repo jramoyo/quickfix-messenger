@@ -31,13 +31,13 @@ QuickFIX Messenger is fully open source and supports the following features:
   * _Quick links_ to [FIXwiki](http://fixwiki.org/) (i.e. messages, fields, components)
 
 ## Screenshots
-The stand-alone application
+The stand-alone application:
 
-![The stand-alone application](http://quickfix-messenger.googlecode.com/svn/images/2_0/main.png)
+![](http://quickfix-messenger.googlecode.com/svn/images/2_0/main.png)
 
-The application in "Project" mode
+The application in "Project" mode:
 
-![The application in "Project" mode](http://quickfix-messenger.googlecode.com/svn/images/2_0/project-view.png)
+![](http://quickfix-messenger.googlecode.com/svn/images/2_0/project-view.png)
 
 ## Technology
 QuickFIX Messenger is written in Java/Swing and would run on most platforms.
