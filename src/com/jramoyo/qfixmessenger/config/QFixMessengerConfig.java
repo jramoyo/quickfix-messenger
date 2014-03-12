@@ -42,6 +42,7 @@ import com.jramoyo.qfixmessenger.QFixMessengerConstants;
  * Represents a QuickFIX Messenger configuration
  * 
  * @author jamoyo
+ * @author derek.yang
  */
 public class QFixMessengerConfig
 {
@@ -61,6 +62,8 @@ public class QFixMessengerConfig
 	private static final String DICT_FIX50_PROP = "messenger.dict.fix50";
 	private static final String DICT_FIXT11_PROP = "messenger.dict.fixt11";
 
+	private static final String LOG_PATH = "logFilePath";
+	
 	private final Properties properties;
 
 	public QFixMessengerConfig(String configFileName) throws IOException
@@ -184,4 +187,9 @@ public class QFixMessengerConfig
 		return Integer.parseInt(properties.getProperty(PARSER_THREADS_PROP,
 				"20"));
 	}
+	
+	public String getLogFilePath(){
+		return properties.getProperty(LOG_PATH);
+	}
+	
 }
