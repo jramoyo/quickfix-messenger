@@ -519,6 +519,7 @@ public class QFixDictionaryParserTest
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void displayMessages(String indent, Map<String, Message> messages)
 	{
 		for (Entry<String, Message> message : messages.entrySet())
