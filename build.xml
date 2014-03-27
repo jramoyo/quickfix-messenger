@@ -4,7 +4,7 @@
 	<property file="./build.properties" />
 
 	<path id="lib.classpath">
-		<fileset id="lib.fileset" dir="${lib.dir}">
+		<fileset id="lib.fileset" dir="${lib.compile.dir}">
 			<include name="*.jar" />
 		</fileset>
 	</path>
@@ -66,13 +66,15 @@
 		<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
 			<classpath refid="lib.classpath" />
 		</taskdef>
-		<xjc destdir="${gen.dir}" extension="true" readonly="true">
+		<mkdir dir="${gen.dir}/xjc" />
+		<xjc destdir="${gen.dir}/xjc" extension="true" readonly="true">
 			<schema dir="${resources.dir}/xsd" includes="*.xsd" />
 		</xjc>
 	</target>
 
 	<target name="build" depends="xjc,build.message">
-		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${gen.dir}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
+	    <mkdir dir="${classes.dir}" />
+		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${gen.dir}/xjc" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
 			<classpath refid="lib.classpath" />
 		</javac>
 		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${src.dir}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
@@ -93,7 +95,7 @@
 
 	<target name="deploy" depends="package,deploy.message">
 		<copy todir="${deploy.dir}/lib/">
-			<fileset dir="${lib.dir}" includes="*.jar" />
+			<fileset dir="${lib.compile.dir}" includes="*.jar" />
 		</copy>
 		<copy todir="${deploy.dir}/lib/">
 			<fileset dir="${package.dir}" includes="*.jar" />
@@ -110,10 +112,10 @@
 	</target>
 
 	<target name="release" depends="deploy,release.message">
-		<copy todir="${deploy.dir}/qfix-messenger">
+		<copy todir="${release.dir}/qfix-messenger">
 			<fileset dir="${deploy.dir}" includes="**/*" />
 		</copy>
-		<zip basedir="${deploy.dir}" destfile="${package.dir}/qfix-messenger-${app.version}-bin.zip" includes="qfix-messenger/**/*" />
+		<zip basedir="${release.dir}" destfile="${package.dir}/qfix-messenger-${app.version}-bin.zip" includes="qfix-messenger/**/*" />
 	</target>
 
 	<target name="test" depends="build,build.test,test.message">
