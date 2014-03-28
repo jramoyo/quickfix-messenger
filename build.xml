@@ -75,6 +75,9 @@
 			<classpath refid="lib.compile.classpath" />
 		</javac>
 		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${src.dir}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
+			<classpath>
+				<pathelement location="${classes.dir}" />
+			</classpath>
 			<classpath refid="lib.compile.classpath" />
 		</javac>
 	</target>
@@ -118,7 +121,7 @@
 		<zip basedir="${release.dir}" destfile="${target.dir}/qfix-messenger-${app.version}-bin.zip" includes="qfix-messenger/**/*" />
 	</target>
 
-	<target name="test" depends="clean,build,build.test,test.message">
+	<target name="test" depends="build,build.test,test.message">
 		<junit>
 			<classpath>
 				<pathelement location="${classes.dir}" />
