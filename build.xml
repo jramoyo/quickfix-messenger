@@ -99,6 +99,7 @@
 		</copy>
 		<copy todir="${deploy.dir}/resources">
 			<fileset dir="${resources.dir}" includes="**/*">
+				<exclude name="**/log4j.properties" />
 				<exclude name="**/cfg/**" />
 			</fileset>
 		</copy>
