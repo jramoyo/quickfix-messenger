@@ -98,7 +98,9 @@
 			<fileset dir="${target.dir}" includes="*.jar" />
 		</copy>
 		<copy todir="${deploy.dir}/resources">
-			<fileset dir="${resources.dir}" includes="**/*" />
+			<fileset dir="${resources.dir}" includes="**/*">
+				<exclude name="**/cfg/**" />
+			</fileset>
 		</copy>
 		<copy todir="${deploy.dir}/cfg">
 			<fileset dir="${cfg.dir}" includes="**/*" />
