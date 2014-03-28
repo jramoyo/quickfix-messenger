@@ -67,13 +67,14 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIX40()
 	{
-		String fileName = "src/main/resources/dictionary/FIX40.xml";
+		String path = "/dictionary/FIX40.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
 		{
 			long startTime = System.currentTimeMillis();
-			FixDictionary dictionary = parser.parse(fileName);
+			FixDictionary dictionary = parser.parse(getClass()
+					.getResourceAsStream(path));
 			long elapsedTime = System.currentTimeMillis() - startTime;
 
 			assertEquals("4", dictionary.getMajorVersion());
@@ -103,20 +104,21 @@ public class QFixDictionaryParserTest
 			System.out.println("Time taken to parse: " + elapsedTime + "ms");
 		} catch (FixParsingException ex)
 		{
-			fail("A QFIXParsingException occurred: " + ex);
+			fail("A FixParsingException occurred: " + ex);
 		}
 	}
 
 	@Test
 	public void testParseFIX41()
 	{
-		String fileName = "src/main/resources/dictionary/FIX41.xml";
+		String path = "/dictionary/FIX41.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
 		{
 			long startTime = System.currentTimeMillis();
-			FixDictionary dictionary = parser.parse(fileName);
+			FixDictionary dictionary = parser.parse(getClass()
+					.getResourceAsStream(path));
 			long elapsedTime = System.currentTimeMillis() - startTime;
 
 			assertEquals("4", dictionary.getMajorVersion());
@@ -152,13 +154,14 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIX42()
 	{
-		String fileName = "src/main/resources/dictionary/FIX42.xml";
+		String path = "/dictionary/FIX42.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
 		{
 			long startTime = System.currentTimeMillis();
-			FixDictionary dictionary = parser.parse(fileName);
+			FixDictionary dictionary = parser.parse(getClass()
+					.getResourceAsStream(path));
 			long elapsedTime = System.currentTimeMillis() - startTime;
 
 			assertEquals("4", dictionary.getMajorVersion());
@@ -194,13 +197,14 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIX43()
 	{
-		String fileName = "src/main/resources/dictionary/FIX43.xml";
+		String path = "/dictionary/FIX43.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
 		{
 			long startTime = System.currentTimeMillis();
-			FixDictionary dictionary = parser.parse(fileName);
+			FixDictionary dictionary = parser.parse(getClass()
+					.getResourceAsStream(path));
 			long elapsedTime = System.currentTimeMillis() - startTime;
 
 			assertEquals("4", dictionary.getMajorVersion());
@@ -236,13 +240,14 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIX44()
 	{
-		String fileName = "src/main/resources/dictionary/FIX44.xml";
+		String path = "/dictionary/FIX44.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
 		{
 			long startTime = System.currentTimeMillis();
-			FixDictionary dictionary = parser.parse(fileName);
+			FixDictionary dictionary = parser.parse(getClass()
+					.getResourceAsStream(path));
 			long elapsedTime = System.currentTimeMillis() - startTime;
 
 			assertEquals("4", dictionary.getMajorVersion());
@@ -278,13 +283,14 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIX50()
 	{
-		String fileName = "src/main/resources/dictionary/FIX50.xml";
+		String path = "/dictionary/FIX50.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
 		{
 			long startTime = System.currentTimeMillis();
-			FixDictionary dictionary = parser.parse(fileName);
+			FixDictionary dictionary = parser.parse(getClass()
+					.getResourceAsStream(path));
 			long elapsedTime = System.currentTimeMillis() - startTime;
 
 			assertEquals("5", dictionary.getMajorVersion());
@@ -320,13 +326,14 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIXT11()
 	{
-		String fileName = "src/main/resources/dictionary/FIXT11.xml";
+		String path = "/dictionary/FIXT11.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
 		{
 			long startTime = System.currentTimeMillis();
-			FixDictionary dictionary = parser.parse(fileName);
+			FixDictionary dictionary = parser.parse(getClass()
+					.getResourceAsStream(path));
 			long elapsedTime = System.currentTimeMillis() - startTime;
 
 			assertEquals("1", dictionary.getMajorVersion());
@@ -441,18 +448,18 @@ public class QFixDictionaryParserTest
 
 	private void displayDictionary(FixDictionary dictionary)
 	{
-//		System.out.println("FIX Version: " + dictionary.getFullVersion());
-//
-//		System.out.println("Messages");
-//		displayMessages(INDENT, dictionary.getMessages());
-//
-//		System.out.println("Header");
-//		displayMembers(INDENT, dictionary.getHeader().getMembers());
-//		System.out.println();
-//
-//		System.out.println("Trailer");
-//		displayMembers(INDENT, dictionary.getTrailer().getMembers());
-//		System.out.println();
+		// System.out.println("FIX Version: " + dictionary.getFullVersion());
+		//
+		// System.out.println("Messages");
+		// displayMessages(INDENT, dictionary.getMessages());
+		//
+		// System.out.println("Header");
+		// displayMembers(INDENT, dictionary.getHeader().getMembers());
+		// System.out.println();
+		//
+		// System.out.println("Trailer");
+		// displayMembers(INDENT, dictionary.getTrailer().getMembers());
+		// System.out.println();
 	}
 
 	private void displayField(String indent, Field field, Boolean isRequired)

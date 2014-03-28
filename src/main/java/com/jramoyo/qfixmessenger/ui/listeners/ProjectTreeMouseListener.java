@@ -37,7 +37,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -48,7 +47,7 @@ import com.jramoyo.fix.xml.ProjectType;
 import com.jramoyo.qfixmessenger.QFixMessengerException;
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
 import com.jramoyo.qfixmessenger.ui.models.ProjectTreeModel;
-import com.jramoyo.qfixmessenger.ui.util.Icons;
+import com.jramoyo.qfixmessenger.ui.util.IconBuilder;
 
 /**
  * @author jramoyo
@@ -72,16 +71,15 @@ public class ProjectTreeMouseListener extends MouseAdapter
 			JPopupMenu popUpMenu = new JPopupMenu();
 
 			JMenuItem sendAllMenuItem = new JMenuItem("Send All Messages");
-			sendAllMenuItem.setIcon(new ImageIcon(frame.getMessenger()
-					.getConfig().getIconsLocation()
-					+ Icons.SEND_ALL_ICON));
+			sendAllMenuItem.setIcon(IconBuilder.build(frame.getMessenger()
+					.getConfig(), IconBuilder.SEND_ALL_ICON));
 			sendAllMenuItem.addActionListener(new ActionListener()
 			{
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					for (MessageType xmlMessageType : frame.getActiveXmlProject()
-							.getMessages().getMessage())
+					for (MessageType xmlMessageType : frame
+							.getActiveXmlProject().getMessages().getMessage())
 					{
 						try
 						{
@@ -100,9 +98,8 @@ public class ProjectTreeMouseListener extends MouseAdapter
 			});
 
 			JMenuItem collapseAllMenuItem = new JMenuItem("Collapse All");
-			collapseAllMenuItem.setIcon(new ImageIcon(frame.getMessenger()
-					.getConfig().getIconsLocation()
-					+ Icons.COLLAPSE_ICON));
+			collapseAllMenuItem.setIcon(IconBuilder.build(frame.getMessenger()
+					.getConfig(), IconBuilder.COLLAPSE_ICON));
 			collapseAllMenuItem.addActionListener(new ActionListener()
 			{
 				@Override
@@ -121,9 +118,8 @@ public class ProjectTreeMouseListener extends MouseAdapter
 			});
 
 			JMenuItem expandAllMenuItem = new JMenuItem("Expand All");
-			expandAllMenuItem.setIcon(new ImageIcon(frame.getMessenger()
-					.getConfig().getIconsLocation()
-					+ Icons.EXPAND_ICON));
+			expandAllMenuItem.setIcon(IconBuilder.build(frame.getMessenger()
+					.getConfig(), IconBuilder.EXPAND_ICON));
 			expandAllMenuItem.addActionListener(new ActionListener()
 			{
 				@Override
@@ -145,9 +141,8 @@ public class ProjectTreeMouseListener extends MouseAdapter
 					&& projectTree.getLastSelectedPathComponent() instanceof MessageType)
 			{
 				JMenuItem loadMessageMenuItem = new JMenuItem("Load Message");
-				loadMessageMenuItem.setIcon(new ImageIcon(frame.getMessenger()
-						.getConfig().getIconsLocation()
-						+ Icons.LOAD_ICON));
+				loadMessageMenuItem.setIcon(IconBuilder.build(frame
+						.getMessenger().getConfig(), IconBuilder.LOAD_ICON));
 				loadMessageMenuItem.addActionListener(new ActionListener()
 				{
 					@Override
@@ -160,9 +155,8 @@ public class ProjectTreeMouseListener extends MouseAdapter
 				});
 
 				JMenuItem sendMenuItem = new JMenuItem("Send Message");
-				sendMenuItem.setIcon(new ImageIcon(frame.getMessenger()
-						.getConfig().getIconsLocation()
-						+ Icons.SEND_SMALL_ICON));
+				sendMenuItem.setIcon(IconBuilder.build(frame.getMessenger()
+						.getConfig(), IconBuilder.SEND_SMALL_ICON));
 				sendMenuItem.addActionListener(new ActionListener()
 				{
 					@Override
@@ -185,9 +179,8 @@ public class ProjectTreeMouseListener extends MouseAdapter
 				});
 
 				JMenuItem exportMenuItem = new JMenuItem("Export Message");
-				exportMenuItem.setIcon(new ImageIcon(frame.getMessenger()
-						.getConfig().getIconsLocation()
-						+ Icons.EXPORT_ICON));
+				exportMenuItem.setIcon(IconBuilder.build(frame.getMessenger()
+						.getConfig(), IconBuilder.EXPORT_ICON));
 				exportMenuItem.addActionListener(new ActionListener()
 				{
 					@Override
@@ -201,9 +194,8 @@ public class ProjectTreeMouseListener extends MouseAdapter
 
 				JMenuItem deleteMessageMenuItem = new JMenuItem(
 						"Delete Message");
-				deleteMessageMenuItem.setIcon(new ImageIcon(frame
-						.getMessenger().getConfig().getIconsLocation()
-						+ Icons.DELETE_ICON));
+				deleteMessageMenuItem.setIcon(IconBuilder.build(frame
+						.getMessenger().getConfig(), IconBuilder.DELETE_ICON));
 				deleteMessageMenuItem.addActionListener(new ActionListener()
 				{
 					@Override

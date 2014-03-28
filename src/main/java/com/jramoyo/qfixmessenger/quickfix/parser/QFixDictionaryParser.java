@@ -35,6 +35,7 @@ package com.jramoyo.qfixmessenger.quickfix.parser;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -101,15 +102,31 @@ public class QFixDictionaryParser implements FixDictionaryParser
 	@Override
 	public FixDictionary parse(String fileName) throws FixParsingException
 	{
+		FixDictionary dictionary;
+		try
+		{
+			FileInputStream fileInputStream = new FileInputStream(fileName);
+			dictionary = parse(fileInputStream);
+
+		} catch (FileNotFoundException ex)
+		{
+			throw new FixParsingException("File " + fileName + " not foud!", ex);
+		}
+
+		return dictionary;
+	}
+
+	@Override
+	public FixDictionary parse(InputStream inputStream)
+			throws FixParsingException
+	{
 		long startTime = System.currentTimeMillis();
 
 		FixDictionary dictionary;
 		try
 		{
-			FileInputStream fileInputStream = new FileInputStream(fileName);
-
 			SAXBuilder saxBuilder = new SAXBuilder();
-			Document document = saxBuilder.build(fileInputStream);
+			Document document = saxBuilder.build(inputStream);
 
 			Element root = document.getRootElement();
 
@@ -160,9 +177,6 @@ public class QFixDictionaryParser implements FixDictionaryParser
 
 			Element trailerElement = root.getChild("trailer");
 			parseTrailer(dictionary, trailerElement);
-		} catch (FileNotFoundException ex)
-		{
-			throw new FixParsingException("File " + fileName + " not foud!", ex);
 		} catch (IOException ex)
 		{
 			throw new FixParsingException("An IOException occured!", ex);
@@ -177,6 +191,7 @@ public class QFixDictionaryParser implements FixDictionaryParser
 			logger.debug("Time taken to parse dictionary " + dictionary + ": "
 					+ elapsedTime + " ms.");
 		}
+
 		return dictionary;
 	}
 
@@ -526,4 +541,5 @@ public class QFixDictionaryParser implements FixDictionaryParser
 			return new Thread(r, "parser");
 		}
 	}
+
 }

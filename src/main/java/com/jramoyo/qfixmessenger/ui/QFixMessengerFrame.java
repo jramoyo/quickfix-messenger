@@ -139,7 +139,7 @@ import com.jramoyo.qfixmessenger.ui.panels.MessagePanel.MessagePanelBuilder;
 import com.jramoyo.qfixmessenger.ui.renderers.MessagesListCellRenderer;
 import com.jramoyo.qfixmessenger.ui.renderers.MessagesTableCellRender;
 import com.jramoyo.qfixmessenger.ui.renderers.SessionsListCellRenderer;
-import com.jramoyo.qfixmessenger.ui.util.Icons;
+import com.jramoyo.qfixmessenger.ui.util.IconBuilder;
 
 /**
  * Main application frame
@@ -299,7 +299,8 @@ public class QFixMessengerFrame extends JFrame
 		FixDictionary dictionary = null;
 		try
 		{
-			dictionary = parser.parse(fixTDictionaryFile);
+			dictionary = parser.parse(getClass().getResourceAsStream(
+					fixTDictionaryFile));
 		} catch (FixParsingException ex)
 		{
 			logger.error("Unable to parse FIXT 1.1 Dictionary!", ex);
@@ -589,8 +590,8 @@ public class QFixMessengerFrame extends JFrame
 		fileMenu.setMnemonic('F');
 
 		JMenuItem newProjectMenuItem = new JMenuItem("New Project");
-		newProjectMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.NEW_ICON));
+		newProjectMenuItem.setIcon(IconBuilder.build(
+				getMessenger().getConfig(), IconBuilder.NEW_ICON));
 		newProjectMenuItem.setMnemonic('N');
 		newProjectMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
 				InputEvent.CTRL_DOWN_MASK));
@@ -598,8 +599,8 @@ public class QFixMessengerFrame extends JFrame
 				.addActionListener(new NewProjectActionListener(this));
 
 		saveProjectMenuItem = new JMenuItem("Save Project");
-		saveProjectMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.SAVE_ICON));
+		saveProjectMenuItem.setIcon(IconBuilder.build(getMessenger()
+				.getConfig(), IconBuilder.SAVE_ICON));
 		saveProjectMenuItem.setMnemonic('S');
 		saveProjectMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
@@ -608,8 +609,8 @@ public class QFixMessengerFrame extends JFrame
 		saveProjectMenuItem.setEnabled(false);
 
 		JMenuItem openProjectMenuItem = new JMenuItem("Open Project");
-		openProjectMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.OPEN_ICON));
+		openProjectMenuItem.setIcon(IconBuilder.build(getMessenger()
+				.getConfig(), IconBuilder.OPEN_ICON));
 		openProjectMenuItem.setMnemonic('O');
 		openProjectMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
@@ -617,16 +618,16 @@ public class QFixMessengerFrame extends JFrame
 				this));
 
 		closeProjectMenuItem = new JMenuItem("Close Project");
-		closeProjectMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.CLOSE_ICON));
+		closeProjectMenuItem.setIcon(IconBuilder.build(getMessenger()
+				.getConfig(), IconBuilder.CLOSE_ICON));
 		closeProjectMenuItem.setMnemonic('C');
 		closeProjectMenuItem.addActionListener(new CloseProjectActionListener(
 				this));
 		closeProjectMenuItem.setEnabled(false);
 
 		JMenuItem importMessageMenuItem = new JMenuItem("Import Message");
-		importMessageMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.IMPORT_ICON));
+		importMessageMenuItem.setIcon(IconBuilder.build(getMessenger()
+				.getConfig(), IconBuilder.IMPORT_ICON));
 		importMessageMenuItem.setMnemonic('I');
 		importMessageMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK));
@@ -634,8 +635,8 @@ public class QFixMessengerFrame extends JFrame
 				.addActionListener(new ImportMessageActionListener(this));
 
 		JMenuItem exportMessageMenuItem = new JMenuItem("Export Message");
-		exportMessageMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.EXPORT_ICON));
+		exportMessageMenuItem.setIcon(IconBuilder.build(getMessenger()
+				.getConfig(), IconBuilder.EXPORT_ICON));
 		exportMessageMenuItem
 				.addActionListener(new ExportMessageActionListener(this));
 		exportMessageMenuItem.setMnemonic('X');
@@ -643,8 +644,8 @@ public class QFixMessengerFrame extends JFrame
 				KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
 
 		JMenuItem exitMenuItem = new JMenuItem("Exit");
-		exitMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.EXIT_ICON));
+		exitMenuItem.setIcon(IconBuilder.build(getMessenger().getConfig(),
+				IconBuilder.EXIT_ICON));
 		exitMenuItem.setMnemonic('x');
 		exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
 				InputEvent.ALT_DOWN_MASK));
@@ -671,8 +672,8 @@ public class QFixMessengerFrame extends JFrame
 			frameTitle = "QuickFIX Messenger " + VERSION + " (Acceptor)";
 		}
 		loadFrameTitle();
-		setIconImage(new ImageIcon(messenger.getConfig().getIconsLocation()
-				+ Icons.APP_ICON).getImage());
+		setIconImage(IconBuilder.build(getMessenger().getConfig(),
+				IconBuilder.APP_ICON).getImage());
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new FrameWindowAdapter(this));
 		setMinimumSize(new Dimension(FRAME_MIN_WIDTH, FRAME_MIN_HEIGHT));
@@ -684,8 +685,8 @@ public class QFixMessengerFrame extends JFrame
 		helpMenu.setMnemonic('H');
 
 		JMenuItem helpMenuItem = new JMenuItem("Help");
-		helpMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.HELP_ICON));
+		helpMenuItem.setIcon(IconBuilder.build(getMessenger().getConfig(),
+				IconBuilder.HELP_ICON));
 		helpMenuItem.setMnemonic('H');
 		helpMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2,
 				InputEvent.SHIFT_DOWN_MASK));
@@ -909,22 +910,22 @@ public class QFixMessengerFrame extends JFrame
 			}
 		});
 
-		ImageIcon destroyImageIcon = new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.DESTROY_ICON);
+		ImageIcon destroyImageIcon = IconBuilder.build(getMessenger()
+				.getConfig(), IconBuilder.DESTROY_ICON);
 		destroyButton = new JButton(destroyImageIcon);
 		destroyButton.addActionListener(new DestroyMessageActionListener(this));
 		destroyButton.setToolTipText("Destroys the message");
 		destroyButton.setEnabled(false);
 
-		ImageIcon addImageIcon = new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.ADD_ICON);
+		ImageIcon addImageIcon = IconBuilder.build(getMessenger().getConfig(),
+				IconBuilder.ADD_ICON);
 		addButton = new JButton(addImageIcon);
 		addButton.addActionListener(new AddMessageActionListener(this));
 		addButton.setToolTipText("Adds the message to the current project");
 		addButton.setEnabled(false);
 
-		ImageIcon sendImageIcon = new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.SEND_ICON);
+		ImageIcon sendImageIcon = IconBuilder.build(getMessenger().getConfig(),
+				IconBuilder.SEND_ICON);
 		sendButton = new JButton(sendImageIcon);
 		sendButton.addActionListener(new SendActionListener(this));
 		sendButton.setToolTipText("Sends the message across the session");
@@ -983,8 +984,8 @@ public class QFixMessengerFrame extends JFrame
 
 		JMenuItem logonAllSessionsMenuItem = new JMenuItem(
 				"All Sessions - Logon");
-		logonAllSessionsMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.LOGON_ICON));
+		logonAllSessionsMenuItem.setIcon(IconBuilder.build(getMessenger()
+				.getConfig(), IconBuilder.LOGON_ICON));
 		logonAllSessionsMenuItem.setMnemonic('n');
 		logonAllSessionsMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
@@ -993,8 +994,8 @@ public class QFixMessengerFrame extends JFrame
 
 		JMenuItem logoffAllSessionsMenuItem = new JMenuItem(
 				"All Sessions - Logoff");
-		logoffAllSessionsMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.LOGOFF_ICON));
+		logoffAllSessionsMenuItem.setIcon(IconBuilder.build(getMessenger()
+				.getConfig(), IconBuilder.LOGOFF_ICON));
 		logoffAllSessionsMenuItem.setMnemonic('f');
 		logoffAllSessionsMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK));
@@ -1003,8 +1004,8 @@ public class QFixMessengerFrame extends JFrame
 
 		JMenuItem resetAllSessionsMenuItem = new JMenuItem(
 				"All Sessions - Reset");
-		resetAllSessionsMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.RESET_ICON));
+		resetAllSessionsMenuItem.setIcon(IconBuilder.build(getMessenger()
+				.getConfig(), IconBuilder.RESET_ICON));
 		resetAllSessionsMenuItem.setMnemonic('R');
 		resetAllSessionsMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
@@ -1057,16 +1058,16 @@ public class QFixMessengerFrame extends JFrame
 		JMenuItem projectWindowMenuItem = new JMenuItem("Project Window");
 		JMenuItem logfileWindowMenuItem = new JMenuItem("Logfile Window");
 
-		projectWindowMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.WINDOW_ICON));
+		projectWindowMenuItem.setIcon(IconBuilder.build(getMessenger()
+				.getConfig(), IconBuilder.WINDOW_ICON));
 		projectWindowMenuItem.setMnemonic('P');
 		projectWindowMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
 		projectWindowMenuItem
 				.addActionListener(new ProjectWindowActionListener(this));
 
-		logfileWindowMenuItem.setIcon(new ImageIcon(messenger.getConfig()
-				.getIconsLocation() + Icons.WINDOW_ICON));
+		logfileWindowMenuItem.setIcon(IconBuilder.build(getMessenger()
+				.getConfig(), IconBuilder.WINDOW_ICON));
 		logfileWindowMenuItem.setMnemonic('L');
 		logfileWindowMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK));
@@ -1380,9 +1381,10 @@ public class QFixMessengerFrame extends JFrame
 					.getSelectedItem();
 			try
 			{
+				String fixDictionaryLocation = frame.messenger.getConfig()
+						.getFixDictionaryLocation(appVersion);
 				frame.activeDictionary = frame.messenger.getParser().parse(
-						frame.messenger.getConfig().getFixDictionaryLocation(
-								appVersion));
+						getClass().getResourceAsStream(fixDictionaryLocation));
 			} catch (FixParsingException ex)
 			{
 				JOptionPane.showMessageDialog(frame, "An error occured while"
@@ -1835,9 +1837,8 @@ public class QFixMessengerFrame extends JFrame
 				JMenuItem clearAllMenuItem = new JMenuItem("Clear All");
 				JMenuItem resendMenuItem = new JMenuItem("Resend");
 
-				clearAllMenuItem.setIcon(new ImageIcon(frame.getMessenger()
-						.getConfig().getIconsLocation()
-						+ Icons.CLEAR_ALL_ICON));
+				clearAllMenuItem.setIcon(IconBuilder.build(getMessenger()
+						.getConfig(), IconBuilder.CLEAR_ALL_ICON));
 				clearAllMenuItem.addActionListener(new ActionListener()
 				{
 					@Override
@@ -1849,9 +1850,8 @@ public class QFixMessengerFrame extends JFrame
 					}
 				});
 
-				resendMenuItem.setIcon(new ImageIcon(frame.getMessenger()
-						.getConfig().getIconsLocation()
-						+ Icons.SEND_SMALL_ICON));
+				resendMenuItem.setIcon(IconBuilder.build(getMessenger()
+						.getConfig(), IconBuilder.SEND_SMALL_ICON));
 				resendMenuItem
 						.addActionListener(new ResendMessagesActionListener(
 								frame, e));
@@ -1869,7 +1869,7 @@ public class QFixMessengerFrame extends JFrame
 		private QFixMessengerFrame frame;
 		private MouseEvent event;
 		private Session session;
-		
+
 		public ResendMessagesActionListener(QFixMessengerFrame frame,
 				MouseEvent event)
 		{
@@ -1889,10 +1889,11 @@ public class QFixMessengerFrame extends JFrame
 			MessagesTableModel model = (MessagesTableModel) frame.messagesTable
 					.getModel();
 			MessagesTableModelData data = model.getData(modelRow);
-			
+
 			try
 			{
-				message.fromString(data.getMessage(), session.getDataDictionary(), false);
+				message.fromString(data.getMessage(),
+						session.getDataDictionary(), false);
 				session.send(message);
 			} catch (InvalidMessage e1)
 			{
@@ -2187,9 +2188,11 @@ public class QFixMessengerFrame extends JFrame
 					{
 						FixDictionaryParser parser = frame.messenger
 								.getParser();
-						frame.activeDictionary = parser.parse(frame.messenger
+						String fixDictionaryLocation = frame.messenger
 								.getConfig().getFixDictionaryLocation(
-										sessionId.getBeginString()));
+										sessionId.getBeginString());
+						frame.activeDictionary = parser.parse(getClass()
+								.getResourceAsStream(fixDictionaryLocation));
 					} catch (FixParsingException ex)
 					{
 						JOptionPane.showMessageDialog(frame,

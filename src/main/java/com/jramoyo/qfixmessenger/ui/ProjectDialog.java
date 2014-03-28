@@ -36,7 +36,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -50,7 +49,7 @@ import com.jramoyo.qfixmessenger.ui.editors.ProjectTreeCellEditor;
 import com.jramoyo.qfixmessenger.ui.listeners.ProjectTreeMouseListener;
 import com.jramoyo.qfixmessenger.ui.models.ProjectTreeModel;
 import com.jramoyo.qfixmessenger.ui.renderers.ProjectTreeCellRenderer;
-import com.jramoyo.qfixmessenger.ui.util.Icons;
+import com.jramoyo.qfixmessenger.ui.util.IconBuilder;
 
 /**
  * ProjectDialog
@@ -135,9 +134,8 @@ public class ProjectDialog extends JDialog
 
 	private void initDialog()
 	{
-		setIconImage(new ImageIcon(frame.getMessenger().getConfig()
-				.getIconsLocation()
-				+ Icons.APP_ICON).getImage());
+		setIconImage(IconBuilder.build(frame.getMessenger().getConfig(),
+				IconBuilder.APP_ICON).getImage());
 		String title = "Project View";
 		if (frame.getMessenger().getConfig().isInitiator())
 		{

@@ -43,7 +43,7 @@ import javax.swing.JLayer;
 import javax.swing.plaf.LayerUI;
 
 import com.jramoyo.qfixmessenger.ui.QFixMessengerFrame;
-import com.jramoyo.qfixmessenger.ui.util.Icons;
+import com.jramoyo.qfixmessenger.ui.util.IconBuilder;
 
 /**
  * @author jramoyo
@@ -83,9 +83,9 @@ public class FieldValidationLayerUI extends LayerUI<JFormattedTextField>
 			int pad = 10;
 			int x = w - pad - s;
 			int y = (h - s) / 2;
-			ImageIcon icon = new ImageIcon(frame.getMessenger().getConfig()
-					.getIconsLocation()
-					+ Icons.INVALID_FIELD);
+			ImageIcon icon = IconBuilder
+					.build(frame.getMessenger().getConfig(),
+							IconBuilder.INVALID_FIELD);
 			g2.drawImage(icon.getImage(), x, y, null);
 			g2.dispose();
 		}
