@@ -71,14 +71,10 @@
 
 	<target name="build" depends="xjc,build.message">
 		<mkdir dir="${classes.dir}" />
-		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${gen.dir}/xjc" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
+		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
 			<classpath refid="lib.compile.classpath" />
-		</javac>
-		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${src.dir}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
-			<classpath>
-				<pathelement location="${classes.dir}" />
-			</classpath>
-			<classpath refid="lib.compile.classpath" />
+			<src path="${gen.dir}/xjc" />
+			<src path="${src.dir}" />
 		</javac>
 	</target>
 
