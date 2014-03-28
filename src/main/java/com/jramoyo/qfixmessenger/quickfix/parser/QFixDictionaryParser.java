@@ -100,6 +100,7 @@ public class QFixDictionaryParser implements FixDictionaryParser
 	}
 
 	@Override
+	@Deprecated
 	public FixDictionary parse(String fileName) throws FixParsingException
 	{
 		FixDictionary dictionary;
