@@ -66,6 +66,7 @@
 		<mkdir dir="${gen.dir}/xjc" />
 		<xjc destdir="${gen.dir}/xjc" extension="true" readonly="true">
 			<schema dir="${resources.dir}/xsd" includes="*.xsd" />
+			<produces dir="${gen.dir}/xjc" includes="* impl/*" />
 		</xjc>
 	</target>
 
