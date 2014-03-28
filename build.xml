@@ -3,14 +3,14 @@
 
 	<property file="./build.properties" />
 
-	<path id="lib.classpath">
-		<fileset id="lib.fileset" dir="${lib.compile.dir}">
+	<path id="lib.compile.classpath">
+		<fileset dir="${lib.compile.dir}">
 			<include name="*.jar" />
 		</fileset>
 	</path>
 
 	<path id="lib.test.classpath">
-		<fileset id="lib.test.fileset" dir="${lib.test.dir}">
+		<fileset dir="${lib.test.dir}">
 			<include name="*.jar" />
 		</fileset>
 	</path>
@@ -61,7 +61,7 @@
 
 	<target name="xjc" depends="xjc.message">
 		<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
-			<classpath refid="lib.classpath" />
+			<classpath refid="lib.compile.classpath" />
 		</taskdef>
 		<mkdir dir="${gen.dir}/xjc" />
 		<xjc destdir="${gen.dir}/xjc" extension="true" readonly="true">
@@ -70,18 +70,18 @@
 	</target>
 
 	<target name="build" depends="xjc,build.message">
-	    <mkdir dir="${classes.dir}" />
+		<mkdir dir="${classes.dir}" />
 		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${gen.dir}/xjc" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
-			<classpath refid="lib.classpath" />
+			<classpath refid="lib.compile.classpath" />
 		</javac>
 		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${src.dir}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
-			<classpath refid="lib.classpath" />
+			<classpath refid="lib.compile.classpath" />
 		</javac>
 	</target>
 
 	<target name="build.test" depends="build.test.message">
 		<javac includeantruntime="true" source="${java.source.version}" target="${java.source.version}" srcdir="${test.dir}" destdir="${classes.dir}" deprecation="${compile.deprecation}" debug="${compile.debug}" verbose="${compile.verbose}">
-			<classpath refid="lib.classpath" />
+			<classpath refid="lib.compile.classpath" />
 			<classpath refid="lib.test.classpath" />
 		</javac>
 	</target>
@@ -118,12 +118,13 @@
 		<zip basedir="${release.dir}" destfile="${target.dir}/qfix-messenger-${app.version}-bin.zip" includes="qfix-messenger/**/*" />
 	</target>
 
-	<target name="test" depends="build,build.test,test.message">
+	<target name="test" depends="clean,build,build.test,test.message">
 		<junit>
 			<classpath>
 				<pathelement location="${classes.dir}" />
+				<pathelement location="${resources.dir}" />
 			</classpath>
-			<classpath refid="lib.classpath" />
+			<classpath refid="lib.compile.classpath" />
 			<classpath refid="lib.test.classpath" />
 			<batchtest>
 				<fileset dir="${test.dir}">
@@ -134,7 +135,7 @@
 		</junit>
 	</target>
 
-	<target name="source" depends="source.message">		
+	<target name="source" depends="source.message">
 		<zip basedir="${basedir}/../" destfile="${target.dir}/qfix-messenger-${app.version}-src.zip" includes="quickfix-messenger/**/*" />
 	</target>
 
