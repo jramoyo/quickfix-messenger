@@ -63,7 +63,7 @@ public class QFixMessengerConfig
 	private static final String DICT_FIXT11_PROP = "messenger.dict.fixt11";
 
 	private static final String LOG_PATH = "logFilePath";
-	
+
 	private final Properties properties;
 
 	public QFixMessengerConfig(String configFileName) throws IOException
@@ -74,32 +74,32 @@ public class QFixMessengerConfig
 
 	public String getFix40DictionaryLocation()
 	{
-		return properties.getProperty(DICT_FIX40_PROP, "resources/FIX40.xml");
+		return properties.getProperty(DICT_FIX40_PROP, "/FIX40.xml");
 	}
 
 	public String getFix41DictionaryLocation()
 	{
-		return properties.getProperty(DICT_FIX41_PROP, "resources/FIX41.xml");
+		return properties.getProperty(DICT_FIX41_PROP, "/FIX41.xml");
 	}
 
 	public String getFix42DictionaryLocation()
 	{
-		return properties.getProperty(DICT_FIX42_PROP, "resources/FIX42.xml");
+		return properties.getProperty(DICT_FIX42_PROP, "/FIX42.xml");
 	}
 
 	public String getFix43DictionaryLocation()
 	{
-		return properties.getProperty(DICT_FIX43_PROP, "resources/FIX43.xml");
+		return properties.getProperty(DICT_FIX43_PROP, "/FIX43.xml");
 	}
 
 	public String getFix44DictionaryLocation()
 	{
-		return properties.getProperty(DICT_FIX44_PROP, "resources/FIX44.xml");
+		return properties.getProperty(DICT_FIX44_PROP, "/FIX44.xml");
 	}
 
 	public String getFix50DictionaryLocation()
 	{
-		return properties.getProperty(DICT_FIX50_PROP, "resources/FIX50.xml");
+		return properties.getProperty(DICT_FIX50_PROP, "/FIX50.xml");
 	}
 
 	public String getFixDictionaryLocation(String beginString)
@@ -144,7 +144,7 @@ public class QFixMessengerConfig
 
 	public String getFixT11DictionaryLocation()
 	{
-		return properties.getProperty(DICT_FIXT11_PROP, "resources/FIXT11.xml");
+		return properties.getProperty(DICT_FIXT11_PROP, "/FIXT11.xml");
 	}
 
 	public boolean isInitiator()
@@ -156,24 +156,25 @@ public class QFixMessengerConfig
 
 	public String getIconsLocation()
 	{
-		return properties.getProperty(ICONS_PROP, "resources/icons/");
+		return properties.getProperty(ICONS_PROP, "/icons/");
 	}
 
-	public String getLicenseFileLocation()
+	public String getLicenseLocation()
 	{
-		return properties.getProperty(LICENSE_PROP, "resources/license.txt");
+		return properties.getProperty(LICENSE_PROP, "/license.txt");
 	}
 
 	public String getHomeUrl()
 	{
 		return properties.getProperty(HOME_URL_PROP,
-				"https://code.google.com/p/quickfix-messenger/");
+				"https://github.com/jramoyo/quickfix-messenger");
 	}
 
 	public String getHelpUrl()
 	{
-		return properties.getProperty(HELP_URL_PROP,
-				"http://code.google.com/p/quickfix-messenger/wiki/Index");
+		return properties
+				.getProperty(HELP_URL_PROP,
+						"https://github.com/jramoyo/quickfix-messenger/wiki/User's-Guide");
 	}
 
 	public String getFixWikiUrl()
@@ -187,9 +188,10 @@ public class QFixMessengerConfig
 		return Integer.parseInt(properties.getProperty(PARSER_THREADS_PROP,
 				"20"));
 	}
-	
-	public String getLogFilePath(){
+
+	public String getLogFilePath()
+	{
 		return properties.getProperty(LOG_PATH);
 	}
-	
+
 }

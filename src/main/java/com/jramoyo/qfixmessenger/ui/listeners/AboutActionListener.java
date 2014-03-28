@@ -41,8 +41,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 
 import javax.swing.Box;
@@ -149,8 +149,10 @@ public class AboutActionListener implements ActionListener
 		BufferedReader reader = null;
 		try
 		{
-			reader = new BufferedReader(new FileReader(frame.getMessenger()
-					.getConfig().getLicenseFileLocation()));
+			reader = new BufferedReader(new InputStreamReader(getClass()
+					.getResourceAsStream(
+							frame.getMessenger().getConfig()
+									.getLicenseLocation())));
 
 			String line = null;
 			while ((line = reader.readLine()) != null)
@@ -203,7 +205,8 @@ public class AboutActionListener implements ActionListener
 				} catch (IOException ex)
 				{
 					logger.error("An exception occured!", ex);
-					JOptionPane.showMessageDialog(listener.frame,
+					JOptionPane.showMessageDialog(
+							listener.frame,
 							"An exception occured:\n"
 									+ Arrays.toString(ex.getStackTrace()),
 							"Error", JOptionPane.ERROR_MESSAGE);
