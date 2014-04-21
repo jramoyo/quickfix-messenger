@@ -116,10 +116,15 @@ public class FreeTextMessagePanel extends JPanel implements
 				DataDictionary sessionDictionary = null;
 				try
 				{
-					sessionDictionary = new DataDictionary(messenger
-							.getConfig().getFixT11DictionaryLocation());
-					appDictionary = new DataDictionary(messenger.getConfig()
-							.getFixDictionaryLocation(appVersion));
+					String sessionDictionaryLocation = messenger.getConfig()
+							.getFixT11DictionaryLocation();
+					sessionDictionary = new DataDictionary(getClass()
+							.getResourceAsStream(sessionDictionaryLocation));
+
+					String appDictionaryLocation = messenger.getConfig()
+							.getFixDictionaryLocation(appVersion);
+					appDictionary = new DataDictionary(getClass()
+							.getResourceAsStream(appDictionaryLocation));
 					message.fromString(getFixString(), sessionDictionary,
 							appDictionary, false);
 				} catch (ConfigError ex)
