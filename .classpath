@@ -11,9 +11,9 @@
 	<classpathentry kind="lib" path="lib/compile/jdom.jar"/>
 	<classpathentry kind="lib" path="lib/compile/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="lib/compile/mina-core-1.1.7.jar"/>
-	<classpathentry kind="lib" path="lib/compile/quickfixj-all-1.5.2.jar"/>
-	<classpathentry kind="lib" path="lib/compile/slf4j-api-1.6.1.jar"/>
-	<classpathentry kind="lib" path="lib/compile/slf4j-log4j12-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/compile/quickfixj-all-1.5.3.jar"/>
+	<classpathentry kind="lib" path="lib/compile/slf4j-api-1.6.3.jar"/>
+	<classpathentry kind="lib" path="lib/compile/slf4j-log4j12-1.6.3.jar"/>
 	<classpathentry kind="lib" path="lib/compile/substance.jar"/>
 	<classpathentry kind="lib" path="lib/compile/trident.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
