@@ -1,5 +1,6 @@
 # QuickFIX Messenger
 [![Build Status](https://travis-ci.org/jramoyo/quickfix-messenger.png?branch=master)](https://travis-ci.org/jramoyo/quickfix-messenger)
+[![Gittip](http://img.shields.io/gittip/jramoyo.svg)](https://www.gittip.com/jramoyo/)
 
 QuickFIX Messenger is a front-end messaging application built on-top of the [QuickFIX/J](http://www.quickfixj.org) engine.
 
