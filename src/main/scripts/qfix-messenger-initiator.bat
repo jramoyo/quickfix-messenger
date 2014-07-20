@@ -1,11 +1,4 @@
 @echo off
 
-echo ************************************
-echo * It is safe to close this console *
-echo ************************************
-
-set CLASSPATH=cfg\acceptor\
-set CLASSPATH=%CLASSPATH%;dictionary\
-set CLASSPATH=%CLASSPATH%;lib\*
-
-javaw -cp %CLASSPATH% com.jramoyo.qfixmessenger.QFixMessenger "cfg\initiator\messenger.cfg" "cfg\initiator\quickfix.cfg"
+set JAVA_EXE=%JAVA_HOME%\bin\javaw.exe
+start bin\quickfix-messenger "cfg\initiator\messenger.cfg" "cfg\initiator\quickfix.cfg"

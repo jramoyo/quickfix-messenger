@@ -1,3 +1,6 @@
+.gradle
+/bin
+/build
 /data
 /log
 /target

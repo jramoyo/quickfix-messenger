@@ -1,0 +1,86 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+
+def generateSourceDir = new File("${project.buildDir}/gen-src/main/java")
+
+version             = '2.1-SNAPSHOT'
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+mainClassName       = "com.jramoyo.qfixmessenger.QFixMessenger"
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    xjc
+}
+
+dependencies {
+    xjc         'com.sun.xml.bind:jaxb-xjc:2.2.7'
+    compile     fileTree(dir: 'lib/compile', include: '*.jar')
+    testCompile fileTree(dir: 'lib/test',    include: '*.jar')
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir generateSourceDir
+        }
+    }
+}
+
+task createDirs () {
+    generateSourceDir.mkdirs();
+}
+
+task xjc(dependsOn: createDirs) {
+    ant.taskdef(
+        name:      'xjc',
+        classname: 'com.sun.tools.xjc.XJCTask',
+        classpath: configurations.xjc.asPath
+    )
+
+    ant.xjc(
+        destdir:   generateSourceDir,
+        extension: true,
+        readonly:  true,
+    ) {
+        schema(
+            dir: 'src/main/xsd',
+            includes: '*.xsd'
+        )
+    }
+}
+
+task generateSource (dependsOn: xjc) {
+}
+
+compileJava.dependsOn generateSource
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'QuickFIX Messenger', 'Implementation-Version': version
+    }
+}
+
+applicationDistribution.from('src/main/cfg') {
+    into 'cfg'
+}
+
+applicationDistribution.from('src/main/cfg/log4j.properties') {
+    into 'lib/log4j'
+}
+
+applicationDistribution.from('src/main/dictionary') {
+    into 'lib/dictionary'
+}
+
+applicationDistribution.from('src/main/scripts') {
+    into '.'
+}
+
+startScripts.classpath.add(files('$APP_HOME/dictionary'))
+
+startScripts.classpath.add(files('$APP_HOME/log4j'))
