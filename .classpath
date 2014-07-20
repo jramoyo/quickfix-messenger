@@ -16,5 +16,6 @@
 	<classpathentry kind="lib" path="lib/compile/slf4j-log4j12-1.6.3.jar"/>
 	<classpathentry kind="lib" path="lib/compile/substance.jar"/>
 	<classpathentry kind="lib" path="lib/compile/trident.jar"/>
+	<classpathentry kind="lib" path="src/main/dictionary"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

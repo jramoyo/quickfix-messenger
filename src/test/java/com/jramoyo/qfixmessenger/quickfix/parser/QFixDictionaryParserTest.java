@@ -67,7 +67,7 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIX40()
 	{
-		String path = "/dictionary/FIX40.xml";
+		String path = "/FIX40.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
@@ -111,7 +111,7 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIX41()
 	{
-		String path = "/dictionary/FIX41.xml";
+		String path = "/FIX41.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
@@ -154,7 +154,7 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIX42()
 	{
-		String path = "/dictionary/FIX42.xml";
+		String path = "/FIX42.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
@@ -197,7 +197,7 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIX43()
 	{
-		String path = "/dictionary/FIX43.xml";
+		String path = "/FIX43.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
@@ -240,7 +240,7 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIX44()
 	{
-		String path = "/dictionary/FIX44.xml";
+		String path = "/FIX44.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
@@ -283,7 +283,7 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIX50()
 	{
-		String path = "/dictionary/FIX50.xml";
+		String path = "/FIX50.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try
@@ -326,7 +326,7 @@ public class QFixDictionaryParserTest
 	@Test
 	public void testParseFIXT11()
 	{
-		String path = "/dictionary/FIXT11.xml";
+		String path = "/FIXT11.xml";
 		FixDictionaryParser parser = new QFixDictionaryParser(20);
 
 		try

@@ -65,7 +65,7 @@
 		</taskdef>
 		<mkdir dir="${gen.dir}/xjc" />
 		<xjc destdir="${gen.dir}/xjc" extension="true" readonly="true">
-			<schema dir="${resources.dir}/xsd" includes="*.xsd" />
+			<schema dir="${xsd.dir}" includes="*.xsd" />
 			<produces dir="${gen.dir}/xjc" includes="* impl/*" />
 		</xjc>
 	</target>
@@ -87,7 +87,10 @@
 	</target>
 
 	<target name="jar" depends="build,jar.message">
-		<jar destfile="${target.dir}/qfix-messenger.jar" basedir="${classes.dir}" />
+		<jar destfile="${target.dir}/qfix-messenger.jar">
+			<fileset dir="${classes.dir}" />
+			<fileset dir="${resources.dir}" />
+		</jar>
 	</target>
 
 	<target name="deploy" depends="jar,deploy.message">
@@ -97,11 +100,8 @@
 		<copy todir="${deploy.dir}/lib/">
 			<fileset dir="${target.dir}" includes="*.jar" />
 		</copy>
-		<copy todir="${deploy.dir}/resources">
-			<fileset dir="${resources.dir}" includes="**/*">
-				<exclude name="**/log4j.properties" />
-				<exclude name="**/cfg/**" />
-			</fileset>
+		<copy todir="${deploy.dir}/dictionary">
+			<fileset dir="${dictionary.dir}" includes="**/*" />
 		</copy>
 		<copy todir="${deploy.dir}/cfg">
 			<fileset dir="${cfg.dir}" includes="**/*" />

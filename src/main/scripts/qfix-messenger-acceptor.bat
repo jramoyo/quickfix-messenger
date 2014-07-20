@@ -5,7 +5,7 @@ echo * It is safe to close this console *
 echo ************************************
 
 set CLASSPATH=cfg\acceptor\
-set CLASSPATH=%CLASSPATH%;resources\
+set CLASSPATH=%CLASSPATH%;dictionary\
 set CLASSPATH=%CLASSPATH%;lib\*
 
 javaw -cp %CLASSPATH% com.jramoyo.qfixmessenger.QFixMessenger "cfg\acceptor\messenger.cfg" "cfg\acceptor\quickfix.cfg"
